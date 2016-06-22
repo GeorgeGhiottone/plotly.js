@@ -1590,7 +1590,9 @@ Plotly.restyle = function restyle(gd, astr, val, traces) {
         'outsidetextfont.size', 'outsidetextfont.family', 'outsidetextfont.color',
         'hole', 'scalegroup', 'domain', 'domain.x', 'domain.y',
         'domain.x[0]', 'domain.x[1]', 'domain.y[0]', 'domain.y[1]',
-        'tilt', 'tiltaxis', 'depth', 'direction', 'rotation', 'pull'
+        'tilt', 'tiltaxis', 'depth', 'direction', 'rotation', 'pull',
+        'line.showscale', 'line.cauto', 'line.autocolorscale', 'line.reversescale',
+        'marker.line.showscale', 'marker.line.cauto', 'marker.line.autocolorscale', 'marker.line.reversescale'
     ];
     for(i = 0; i < traces.length; i++) {
         if(Plots.traceIs(gd._fullData[traces[i]], 'box')) {
@@ -1612,6 +1614,8 @@ Plotly.restyle = function restyle(gd, astr, val, traces) {
     var replotAttrs = [
         'zmin', 'zmax', 'zauto',
         'marker.cmin', 'marker.cmax', 'marker.cauto',
+        'line.cmin', 'line.cmax',
+        'marker.line.cmin', 'marker.line.cmax',
         'contours.start', 'contours.end', 'contours.size',
         'contours.showlines',
         'line', 'line.smoothing', 'line.shape',
@@ -1652,7 +1656,7 @@ Plotly.restyle = function restyle(gd, astr, val, traces) {
     // to not go through a full replot
     var doPlotWhiteList = ['cartesian', 'pie', 'ternary'];
     fullLayout._basePlotModules.forEach(function(_module) {
-        if(doPlotWhiteList.indexOf(_module.name) === -1) doplot = true;
+        if(doPlotWhiteList.indexOf(_module.name) === -1) docalc = true;
     });
 
     // make a new empty vals array for undoit
@@ -2290,12 +2294,26 @@ Plotly.relayout = function relayout(gd, astr, val) {
             // as it is we get separate calls for x and y (or ax and ay) on move
             objModule.draw(gd, objNum, p.parts.slice(2).join('.'), aobj[ai]);
             delete aobj[ai];
-        } else if(p.parts[0] === 'images') {
-            var update = Lib.objectFromPath(astr, vi);
+        }
+        else if(p.parts[0] === 'images') {
+            var update = Lib.objectFromPath(ai, vi);
             Lib.extendDeepAll(gd.layout, update);
 
             Images.supplyLayoutDefaults(gd.layout, gd._fullLayout);
             Images.draw(gd);
+        }
+        else if(p.parts[0] === 'mapbox' && p.parts[1] === 'layers') {
+            Lib.extendDeepAll(gd.layout, Lib.objectFromPath(ai, vi));
+
+            // append empty container to mapbox.layers
+            // so that relinkPrivateKeys does not complain
+
+            var fullLayers = (gd._fullLayout.mapbox || {}).layers || [];
+            var diff = (p.parts[2] + 1) - fullLayers.length;
+
+            for(i = 0; i < diff; i++) fullLayers.push({});
+
+            doplot = true;
         }
         // alter gd.layout
         else {
