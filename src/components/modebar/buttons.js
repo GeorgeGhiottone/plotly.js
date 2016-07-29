@@ -11,7 +11,6 @@
 
 var Plotly = require('../../plotly');
 var Lib = require('../../lib');
-var setCursor = require('../../lib/setcursor');
 var downloadImage = require('../../snapshot/download');
 var Icons = require('../../../build/ploticon');
 
@@ -51,19 +50,19 @@ modeBarButtons.toImage = {
     click: function(gd) {
         var format = 'png';
 
-        Lib.notifier('Taking snapshot - this may take a few seconds', 'long');
+        Lib.notifier(gd, 'Taking snapshot - this may take a few seconds', 'long');
 
         if(Lib.isIE()) {
-            Lib.notifier('IE only supports svg.  Changing format to svg.', 'long');
+            Lib.notifier(gd, 'IE only supports svg.  Changing format to svg.', 'long');
             format = 'svg';
         }
 
         downloadImage(gd, {'format': format})
           .then(function(filename) {
-              Lib.notifier('Snapshot succeeded - ' + filename, 'long');
+              Lib.notifier(gd, 'Snapshot succeeded - ' + filename, 'long');
           })
           .catch(function() {
-              Lib.notifier('Sorry there was a problem downloading your snapshot!', 'long');
+              Lib.notifier(gd, 'Sorry there was a problem downloading your snapshot!', 'long');
           });
     }
 };
@@ -171,13 +170,6 @@ modeBarButtons.hoverCompareCartesian = {
     click: handleCartesian
 };
 
-var DRAGCURSORS = {
-    pan: 'move',
-    zoom: 'crosshair',
-    select: 'crosshair',
-    lasso: 'crosshair'
-};
-
 function handleCartesian(gd, ev) {
     var button = ev.currentTarget,
         astr = button.getAttribute('data-attr'),
@@ -227,18 +219,7 @@ function handleCartesian(gd, ev) {
         aobj[astr] = val;
     }
 
-    Plotly.relayout(gd, aobj).then(function() {
-        if(astr === 'dragmode') {
-            if(fullLayout._has('cartesian')) {
-                setCursor(
-                    fullLayout._paper.select('.nsewdrag'),
-                    DRAGCURSORS[val]
-                );
-            }
-            Plotly.Fx.supplyLayoutDefaults(gd.layout, fullLayout, gd._fullData);
-            Plotly.Fx.init(gd);
-        }
-    });
+    Plotly.relayout(gd, aobj);
 }
 
 modeBarButtons.zoom3d = {

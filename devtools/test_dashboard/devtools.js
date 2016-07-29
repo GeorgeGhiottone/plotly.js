@@ -5,6 +5,7 @@
 var Fuse = require('fuse.js');
 var mocks = require('../../build/test_dashboard_mocks.json');
 var credentials = require('../../build/credentials.json');
+var Lib = require('@src/lib');
 
 // put d3 in window scope
 var d3 = window.d3 = Plotly.d3;
@@ -149,6 +150,7 @@ var Tabs = {
 
 // Bind things to the window
 window.Tabs = Tabs;
+window.Lib = Lib;
 setInterval(function() {
     window.gd = Tabs.getGraph() || Tabs.fresh();
     window.fullLayout = window.gd._fullLayout;
@@ -174,6 +176,14 @@ var mocksList = document.getElementById('mocks-list');
 var plotArea = document.getElementById('plots');
 
 searchBar.addEventListener('keyup', debounce(searchMocks, 250));
+
+window.onload = function() {
+    var initialMock = window.location.hash.replace(/^#/, '');
+
+    if(initialMock.length > 0) {
+        Tabs.plotMock(initialMock);
+    }
+};
 
 function debounce(func, wait, immediate) {
     var timeout;
@@ -206,10 +216,12 @@ function searchMocks(e) {
         result.innerText = r.name;
 
         result.addEventListener('click', function() {
+            var mockName = r.file.slice(0, -5);
+            window.location.hash = mockName;
 
             // Clear plots and plot selected.
             Tabs.purge();
-            Tabs.plotMock(r.file.slice(0, -5));
+            Tabs.plotMock(mockName);
         });
 
         mocksList.appendChild(result);

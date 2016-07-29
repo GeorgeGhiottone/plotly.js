@@ -7,11 +7,13 @@ var supplyLayoutDefaults = require('@src/plots/mapbox/layout_defaults');
 var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
+var hasWebGLSupport = require('../assets/has_webgl_support');
 var mouseEvent = require('../assets/mouse_event');
 var customMatchers = require('../assets/custom_matchers');
 
 var MAPBOX_ACCESS_TOKEN = require('@build/credentials.json').MAPBOX_ACCESS_TOKEN;
 var TRANSITION_DELAY = 500;
+var MOUSE_DELAY = 100;
 
 var noop = function() {};
 
@@ -84,42 +86,68 @@ describe('mapbox defaults', function() {
     });
 
     it('should only coerce relevant layer style attributes', function() {
+        var base = {
+            line: { width: 3 },
+            fill: { outlinecolor: '#d3d3d3' },
+            circle: { radius: 20 },
+            symbol: { icon: 'monument' }
+        };
+
         layoutIn = {
             mapbox: {
-                layers: [{
-                    sourcetype: 'vector',
-                    type: 'line',
-                    line: {
-                        color: 'red',
-                        width: 3
-                    },
-                    fillcolor: 'blue'
-                }, {
-                    sourcetype: 'geojson',
-                    type: 'fill',
-                    line: {
-                        color: 'red',
-                        width: 3
-                    },
-                    fillcolor: 'blue'
-                }]
+                layers: [
+                    Lib.extendFlat({}, base, {
+                        type: 'line',
+                        color: 'red'
+                    }),
+                    Lib.extendFlat({}, base, {
+                        type: 'fill',
+                        color: 'blue'
+                    }),
+                    Lib.extendFlat({}, base, {
+                        type: 'circle',
+                        color: 'green'
+                    }),
+                    Lib.extendFlat({}, base, {
+                        type: 'symbol',
+                        color: 'yellow'
+                    })
+                ]
             }
         };
 
         supplyLayoutDefaults(layoutIn, layoutOut, fullData);
 
-        expect(layoutOut.mapbox.layers[0].line.color).toEqual('red');
+        expect(layoutOut.mapbox.layers[0].color).toEqual('red');
         expect(layoutOut.mapbox.layers[0].line.width).toEqual(3);
-        expect(layoutOut.mapbox.layers[0].fillcolor).toBeUndefined();
+        expect(layoutOut.mapbox.layers[0].fill).toBeUndefined();
+        expect(layoutOut.mapbox.layers[0].circle).toBeUndefined();
+        expect(layoutOut.mapbox.layers[0].symbol).toBeUndefined();
 
-        expect(layoutOut.mapbox.layers[1].line.color).toEqual('red');
-        expect(layoutOut.mapbox.layers[1].line.width).toBeUndefined();
-        expect(layoutOut.mapbox.layers[1].fillcolor).toEqual('blue');
+        expect(layoutOut.mapbox.layers[1].color).toEqual('blue');
+        expect(layoutOut.mapbox.layers[1].fill.outlinecolor).toEqual('#d3d3d3');
+        expect(layoutOut.mapbox.layers[1].line).toBeUndefined();
+        expect(layoutOut.mapbox.layers[1].circle).toBeUndefined();
+        expect(layoutOut.mapbox.layers[1].symbol).toBeUndefined();
+
+        expect(layoutOut.mapbox.layers[2].color).toEqual('green');
+        expect(layoutOut.mapbox.layers[2].circle.radius).toEqual(20);
+        expect(layoutOut.mapbox.layers[2].line).toBeUndefined();
+        expect(layoutOut.mapbox.layers[2].fill).toBeUndefined();
+        expect(layoutOut.mapbox.layers[2].symbol).toBeUndefined();
+
+        expect(layoutOut.mapbox.layers[3].color).toEqual('yellow');
+        expect(layoutOut.mapbox.layers[3].symbol.icon).toEqual('monument');
+        expect(layoutOut.mapbox.layers[3].line).toBeUndefined();
+        expect(layoutOut.mapbox.layers[3].fill).toBeUndefined();
+        expect(layoutOut.mapbox.layers[3].circle).toBeUndefined();
     });
 });
 
 describe('mapbox credentials', function() {
     'use strict';
+
+    if(!hasWebGLSupport('mapbox credentials')) return;
 
     var dummyToken = 'asfdsa124331wersdsa1321q3';
     var gd;
@@ -152,6 +180,8 @@ describe('mapbox credentials', function() {
     });
 
     it('should throw error if token is invalid', function(done) {
+        var cnt = 0;
+
         Plotly.plot(gd, [{
             type: 'scattermapbox',
             lon: [10, 20, 30],
@@ -159,7 +189,32 @@ describe('mapbox credentials', function() {
         }], {}, {
             mapboxAccessToken: dummyToken
         }).catch(function(err) {
+            cnt++;
             expect(err).toEqual(new Error(constants.mapOnErrorMsg));
+        }).then(function() {
+            expect(cnt).toEqual(1);
+            done();
+        });
+    });
+
+    it('should use access token in mapbox layout options if present', function(done) {
+        var cnt = 0;
+
+        Plotly.plot(gd, [{
+            type: 'scattermapbox',
+            lon: [10, 20, 30],
+            lat: [10, 20, 30]
+        }], {
+            mapbox: {
+                accesstoken: MAPBOX_ACCESS_TOKEN
+            }
+        }, {
+            mapboxAccessToken: dummyToken
+        }).catch(function() {
+            cnt++;
+        }).then(function() {
+            expect(cnt).toEqual(0);
+            expect(gd._fullLayout.mapbox.accesstoken).toEqual(MAPBOX_ACCESS_TOKEN);
             done();
         });
     });
@@ -167,6 +222,8 @@ describe('mapbox credentials', function() {
 
 describe('mapbox plots', function() {
     'use strict';
+
+    if(!hasWebGLSupport('mapbox plots')) return;
 
     var mock = require('@mocks/mapbox_0.json'),
         gd;
@@ -348,14 +405,14 @@ describe('mapbox plots', function() {
         };
 
         var styleUpdate0 = {
-            'mapbox.layers[0].fillcolor': 'red',
-            'mapbox.layers[0].line.color': 'blue',
+            'mapbox.layers[0].color': 'red',
+            'mapbox.layers[0].fill.outlinecolor': 'blue',
             'mapbox.layers[0].opacity': 0.3
         };
 
         var styleUpdate1 = {
+            'mapbox.layers[1].color': 'blue',
             'mapbox.layers[1].line.width': 3,
-            'mapbox.layers[1].line.color': 'blue',
             'mapbox.layers[1].opacity': 0.6
         };
 
@@ -432,6 +489,30 @@ describe('mapbox plots', function() {
         }).then(function() {
             expect(countVisibleLayers(gd)).toEqual(0);
 
+            return Plotly.relayout(gd, 'mapbox.layers[0]', {});
+        }).then(function() {
+            expect(countVisibleLayers(gd)).toEqual(0);
+
+            // layer with no source are not drawn
+
+            return Plotly.relayout(gd, 'mapbox.layers[0].source', layer0.source);
+        }).then(function() {
+            expect(countVisibleLayers(gd)).toEqual(1);
+
+            done();
+        });
+    });
+
+    it('should be able to update the access token', function(done) {
+        Plotly.relayout(gd, 'mapbox.accesstoken', 'wont-work').catch(function(err) {
+            expect(gd._fullLayout.mapbox.accesstoken).toEqual('wont-work');
+            expect(err).toEqual(new Error(constants.mapOnErrorMsg));
+            expect(gd._promises.length).toEqual(1);
+
+            return Plotly.relayout(gd, 'mapbox.accesstoken', MAPBOX_ACCESS_TOKEN);
+        }).then(function() {
+            expect(gd._fullLayout.mapbox.accesstoken).toEqual(MAPBOX_ACCESS_TOKEN);
+            expect(gd._promises.length).toEqual(0);
             done();
         });
     });
@@ -537,6 +618,59 @@ describe('mapbox plots', function() {
         });
     });
 
+    it('should respond drag / scroll interactions', function(done) {
+        var updateData;
+
+        gd.on('plotly_relayout', function(eventData) {
+            updateData = eventData;
+        });
+
+        function _drag(p0, p1, cb) {
+            var promise = _mouseEvent('mousemove', p0, noop).then(function() {
+                return _mouseEvent('mousedown', p0, noop);
+            }).then(function() {
+                return _mouseEvent('mousemove', p1, noop);
+            }).then(function() {
+                return _mouseEvent('mouseup', p1, noop);
+            }).then(function() {
+                return _mouseEvent('mouseup', p1, noop);
+            }).then(cb);
+
+            return promise;
+        }
+
+        function assertLayout(center, zoom, opts) {
+            var mapInfo = getMapInfo(gd),
+                layout = gd.layout.mapbox;
+
+            expect([mapInfo.center.lng, mapInfo.center.lat]).toBeCloseToArray(center);
+            expect(mapInfo.zoom).toBeCloseTo(zoom);
+
+            expect([layout.center.lon, layout.center.lat]).toBeCloseToArray(center);
+            expect(layout.zoom).toBeCloseTo(zoom);
+
+            if(opts && opts.withUpdateData) {
+                var mapboxUpdate = updateData.mapbox;
+
+                expect([mapboxUpdate.center.lon, mapboxUpdate.center.lat]).toBeCloseToArray(center);
+                expect(mapboxUpdate.zoom).toBeCloseTo(zoom);
+            }
+        }
+
+        assertLayout([-4.710, 19.475], 1.234);
+
+        var p1 = [pointPos[0] + 50, pointPos[1] - 20];
+
+        _drag(pointPos, p1, function() {
+            assertLayout([-19.651, 13.751], 1.234, { withUpdateData: true });
+
+        })
+        .then(done);
+
+        // TODO test scroll
+
+    });
+
     it('should respond to click interactions by', function(done) {
         var ptData;
 
@@ -569,45 +703,6 @@ describe('mapbox plots', function() {
             });
         })
         .then(done);
-    });
-
-    it('should respond drag / scroll interactions', function(done) {
-        function _drag(p0, p1, cb) {
-            var promise = _mouseEvent('mousemove', p0, noop).then(function() {
-                return _mouseEvent('mousedown', p0, noop);
-            }).then(function() {
-                return _mouseEvent('mousemove', p1, noop);
-            }).then(function() {
-                return _mouseEvent('mouseup', p1, cb);
-            });
-
-            return promise;
-        }
-
-        function assertLayout(center, zoom) {
-            var mapInfo = getMapInfo(gd),
-                layout = gd.layout.mapbox;
-
-            expect([mapInfo.center.lng, mapInfo.center.lat])
-                .toBeCloseToArray(center);
-            expect(mapInfo.zoom).toBeCloseTo(zoom);
-
-            expect([layout.center.lon, layout.center.lat])
-                .toBeCloseToArray(center);
-            expect(layout.zoom).toBeCloseTo(zoom);
-        }
-
-        assertLayout([-4.710, 19.475], 1.234);
-
-        var p1 = [pointPos[0] + 50, pointPos[1] - 20];
-
-        _drag(pointPos, p1, function() {
-            assertLayout([-19.651, 13.751], 1.234);
-        })
-        .then(done);
-
-        // TODO test scroll
-
     });
 
     function getMapInfo(gd) {
@@ -710,15 +805,13 @@ describe('mapbox plots', function() {
     }
 
     function _mouseEvent(type, pos, cb) {
-        var DELAY = 100;
-
         return new Promise(function(resolve) {
             mouseEvent(type, pos[0], pos[1]);
 
             setTimeout(function() {
                 cb();
                 resolve();
-            }, DELAY);
+            }, MOUSE_DELAY);
         });
     }
 

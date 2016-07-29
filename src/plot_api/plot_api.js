@@ -54,6 +54,14 @@ Plotly.plot = function(gd, data, layout, config) {
 
     gd = getGraphDiv(gd);
 
+    // Get the document the graph div lives in, so we can make sure things like
+    // drag covers are attached to the correct document
+    gd._document = gd.ownerDocument || window.document;
+
+    // Inject the plot styles into the document where we're plotting, bails if
+    // already styled
+    Lib.injectStyles(gd);
+
     // Events.init is idempotent and bails early if gd has already been init'd
     Events.init(gd);
 
@@ -349,6 +357,12 @@ function getGraphDiv(gd) {
     }
 
     return gd;  // otherwise assume that gd is a DOM element
+}
+
+// clear the promise queue if one of them got rejected
+function clearPromiseQueue(gd) {
+    Lib.log('Clearing previous rejected promises from queue.');
+    gd._promises = [];
 }
 
 function opaqueSetBackground(gd, bgColor) {
@@ -835,6 +849,10 @@ Plotly.redraw = function(gd) {
  */
 Plotly.newPlot = function(gd, data, layout, config) {
     gd = getGraphDiv(gd);
+
+    // remove gl contexts
+    Plots.cleanPlot([], {}, gd._fullData || {}, gd._fullLayout || {});
+
     Plots.purge(gd);
     return Plotly.plot(gd, data, layout, config);
 };
@@ -842,9 +860,8 @@ Plotly.newPlot = function(gd, data, layout, config) {
 function doCalcdata(gd) {
     var axList = Plotly.Axes.list(gd),
         fullData = gd._fullData,
-        fullLayout = gd._fullLayout;
-
-    var i, trace, module, cd;
+        fullLayout = gd._fullLayout,
+        i;
 
     var calcdata = gd.calcdata = new Array(fullData.length);
 
@@ -870,12 +887,12 @@ function doCalcdata(gd) {
     }
 
     for(i = 0; i < fullData.length; i++) {
-        trace = fullData[i];
-        module = trace._module;
-        cd = [];
+        var trace = fullData[i],
+            _module = trace._module,
+            cd = [];
 
-        if(module && trace.visible === true) {
-            if(module.calc) cd = module.calc(gd, trace);
+        if(_module && trace.visible === true) {
+            if(_module.calc) cd = _module.calc(gd, trace);
         }
 
         // make sure there is a first point
@@ -1259,9 +1276,7 @@ Plotly.extendTraces = function extendTraces(gd, update, indices, maxPoints) {
     var promise = Plotly.redraw(gd);
 
     var undoArgs = [gd, undo.update, indices, undo.maxPoints];
-    if(Queue) {
-        Queue.add(gd, Plotly.prependTraces, undoArgs, extendTraces, arguments);
-    }
+    Queue.add(gd, Plotly.prependTraces, undoArgs, extendTraces, arguments);
 
     return promise;
 };
@@ -1288,9 +1303,7 @@ Plotly.prependTraces = function prependTraces(gd, update, indices, maxPoints) {
     var promise = Plotly.redraw(gd);
 
     var undoArgs = [gd, undo.update, indices, undo.maxPoints];
-    if(Queue) {
-        Queue.add(gd, Plotly.extendTraces, undoArgs, prependTraces, arguments);
-    }
+    Queue.add(gd, Plotly.extendTraces, undoArgs, prependTraces, arguments);
 
     return promise;
 };
@@ -1338,7 +1351,7 @@ Plotly.addTraces = function addTraces(gd, traces, newIndices) {
     // i.e., we can simply redraw and be done
     if(typeof newIndices === 'undefined') {
         promise = Plotly.redraw(gd);
-        if(Queue) Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
+        Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
         return promise;
     }
 
@@ -1361,10 +1374,10 @@ Plotly.addTraces = function addTraces(gd, traces, newIndices) {
 
     // if we're here, the user has defined specific places to place the new traces
     // this requires some extra work that moveTraces will do
-    if(Queue) Queue.startSequence(gd);
-    if(Queue) Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
+    Queue.startSequence(gd);
+    Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
     promise = Plotly.moveTraces(gd, currentIndices, newIndices);
-    if(Queue) Queue.stopSequence(gd);
+    Queue.stopSequence(gd);
     return promise;
 };
 
@@ -1405,8 +1418,7 @@ Plotly.deleteTraces = function deleteTraces(gd, indices) {
     }
 
     var promise = Plotly.redraw(gd);
-
-    if(Queue) Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
+    Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
 
     return promise;
 };
@@ -1504,8 +1516,7 @@ Plotly.moveTraces = function moveTraces(gd, currentIndices, newIndices) {
     gd.data = newData;
 
     var promise = Plotly.redraw(gd);
-
-    if(Queue) Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
+    Queue.add(gd, undoFunc, undoArgs, redoFunc, redoArgs);
 
     return promise;
 };
@@ -1535,6 +1546,7 @@ Plotly.moveTraces = function moveTraces(gd, currentIndices, newIndices) {
 // style files that want to specify cyclical default values).
 Plotly.restyle = function restyle(gd, astr, val, traces) {
     gd = getGraphDiv(gd);
+    clearPromiseQueue(gd);
 
     var i, fullLayout = gd._fullLayout,
         aobj = {};
@@ -1553,7 +1565,7 @@ Plotly.restyle = function restyle(gd, astr, val, traces) {
 
     if(isNumeric(traces)) traces = [traces];
     else if(!Array.isArray(traces) || !traces.length) {
-        traces = gd._fullData.map(function(v, i) { return i; });
+        traces = gd.data.map(function(v, i) { return i; });
     }
 
     // recalcAttrs attributes need a full regeneration of calcdata
@@ -1727,6 +1739,9 @@ Plotly.restyle = function restyle(gd, astr, val, traces) {
             docalc = true;
             continue;
         }
+
+        // take no chances on transforms
+        if(ai.substr(0, 10) === 'transforms') docalc = true;
 
         // set attribute in gd.data
         undoit[ai] = a0();
@@ -1951,9 +1966,7 @@ Plotly.restyle = function restyle(gd, astr, val, traces) {
 
     // now all attribute mods are done, as are redo and undo
     // so we can save them
-    if(Queue) {
-        Queue.add(gd, restyle, [gd, undoit, traces], restyle, [gd, redoit, traces]);
-    }
+    Queue.add(gd, restyle, [gd, undoit, traces], restyle, [gd, redoit, traces]);
 
     // do we need to force a recalc?
     var autorangeOn = false;
@@ -2074,6 +2087,7 @@ function swapXYData(trace) {
 //          allows setting multiple attributes simultaneously
 Plotly.relayout = function relayout(gd, astr, val) {
     gd = getGraphDiv(gd);
+    clearPromiseQueue(gd);
 
     if(gd.framework && gd.framework.isPolar) {
         return Promise.resolve(gd);
@@ -2371,9 +2385,7 @@ Plotly.relayout = function relayout(gd, astr, val) {
     }
     // now all attribute mods are done, as are
     // redo and undo so we can save them
-    if(Queue) {
-        Queue.add(gd, relayout, [gd, undoit], relayout, [gd, redoit]);
-    }
+    Queue.add(gd, relayout, [gd, undoit], relayout, [gd, redoit]);
 
     // calculate autosizing - if size hasn't changed,
     // will remove h&w so we don't need to redraw
@@ -2424,6 +2436,9 @@ Plotly.relayout = function relayout(gd, astr, val) {
         if(domodebar) {
             var subplotIds;
             manageModeBar(gd);
+
+            Plotly.Fx.supplyLayoutDefaults(gd.layout, fullLayout, gd._fullData);
+            Plotly.Fx.init(gd);
 
             subplotIds = Plots.getSubplotIds(fullLayout, 'gl3d');
             for(i = 0; i < subplotIds.length; i++) {
@@ -2544,12 +2559,12 @@ function plotAutoSize(gd, aobj) {
     // embedded in an iframe - just take the full iframe size
     // if we get to this point, with no aspect ratio restrictions
     if(gd._context.fillFrame) {
-        newWidth = window.innerWidth;
-        newHeight = window.innerHeight;
+        newWidth = gd._document.defaultView.innerWidth;
+        newHeight = gd._document.defaultView.innerHeight;
 
         // somehow we get a few extra px height sometimes...
         // just hide it
-        document.body.style.overflow = 'hidden';
+        gd._document.body.style.overflow = 'hidden';
     }
     else if(isNumeric(context.frameMargins) && context.frameMargins > 0) {
         var reservedMargins = calculateReservedMargins(gd._boundingBoxMargins),
@@ -2566,7 +2581,7 @@ function plotAutoSize(gd, aobj) {
         // provide height and width for the container div,
         // specify size in layout, or take the defaults,
         // but don't enforce any ratio restrictions
-        computedStyle = window.getComputedStyle(gd);
+        computedStyle = gd._document.defaultView.getComputedStyle(gd);
         newHeight = parseFloat(computedStyle.height) || fullLayout.height;
         newWidth = parseFloat(computedStyle.width) || fullLayout.width;
     }

@@ -10,7 +10,95 @@ https://github.com/plotly/plotly.js/compare/vX.Y.Z...master
 where X.Y.Z is the semver of most recent plotly.js release.
 
 
-## [1.13.0] -- 2016-05-26
+## [1.15.0] -- 2016-07-25
+
+### Added
+- Add `Plotly.validate` method [#697]
+- Add support for transforms plugins modules [#499]
+- Some partial bundles are now distributed  in `dist/` [#740]
+- Mapbox access token can now be set in `layout.mapbox` [#729]
+- Undo/Redo queue length is now configurable via configuration option
+  `queueLength` [#737]
+
+### Changed
+- Improve performance in gl2d request animation frame loop [#731]
+- Improve `Lib.extendDeep` performance for primitive arrays [#732]
+- Improve potential XSS input in `text` fields [#736]
+- Improve scaling on scroll zoom for scatter lines and markers [#761, #762]
+
+### Fixed
+- `toImage` pixel output for gl2d graphs are now scaled properly [#735]
+- `scattermapbox` marker size and color arrays are now correctly converted when
+  they include repeated values [#747]
+- Fix scatter3d marker line color inheritance [#754]
+- `text` fields can now support link with query params `=` and `&` [#736]
+- Fix Chrome 50 bug where tester svg blocked other DOM nodes [#745]
+
+
+## [1.14.2] -- 2016-07-11
+
+### Fixed
+- `Plotly.newPlot` correctly clears all present WebGL contexts [#724]
+- Bar traces with `layout.bargap` 0 and unset `marker.line.width` are functional
+  again (bug introduced in 1.3.0) [#709]
+- Stacked bar traces now correctly set the first bar position when leading gaps
+  are present (bug introduced in 1.11.0) [#716]
+- Bar traces with `layout.barmode` relative now correctly compute the bar sum of
+  the first position when positive and negative values are present [#723]
+- Event `plotly_relayout` is emitted upon pan / zoom on a mapbox subplot [#727]
+- Lasso and select box drag modes now work with fixed ranged axes [#728]
+- gl2d trace objects are purged when their parent scenes are destroyed [#724]
+
+
+## [1.14.1] -- 2016-06-28
+
+### Fixed
+- Fix colorscale restyle calls on heatmap traces (bug introduced in 1.14.0)
+  [#694]
+- Hover after zoom / pan is now functional again in ternary plots (bug
+  introduced in 1.14.0) [#688]
+- Fix mapbox layer relayout starting from invisible layer [#693]
+- Hover labels when `hoveron: 'fills'` are now constrained to the viewports
+  [#688]
+- Fix `surface` countours description [#696]
+- Fix `mapbox.layers.line` description [#690]
+
+
+## [1.14.0] -- 2016-06-22
+
+### Added
+- Attribute `line.color` in `scatter3d` traces now support color scales [#617]
+- Annotations tail positions can now be set in data coordinates via the new
+  `axref` and `ayref` attributes [#610]
+- Attribute `hoveron` is added for `scatter` and `scatterternary` traces which
+  adds the option to show hover labels about fill regions (instead of simply of
+  about data points) [#673]
+- Layout shapes can now be moved and resized (except for 'path' shapes) in
+  editable contexts [#660]
+
+### Changed
+- Numerous additions and changes where made to the mapbox layout layers
+  attributes (introduced in 1.13.0). Namely, `circle` and `symbol` layer type
+  where added. Note that some style attributes have been renamed to match the
+  mapbox-gl API more closely. [#681]
+
+### Fixed
+- Off-screen heatmap traces are properly deleted (bug introduced in 1.5.1)
+  [#655]
+- Hover labels for multi-heatmap subplot is functional again (bug introduced in
+  1.4.0) [#655]
+- Heatmap x/y brick generation is now functional for 0 and 1 item columns [#651]
+- Multiple layout images can now shared the same image source [#672]
+- Updating legend border and bgcolor attribute now works via `Plotly.relayout`
+  [#652]
+- Dragmode 'select' and 'lasso' no longer throw exception when selecting
+  `legendonly` traces [#644]
+- Ternary plots now respect the `staticPlot` config option [#645]
+- Descriptions for axes `nticks` and contour traces `ncountours`now properly
+  describe their behavior [#662]
+
+
+## [1.13.0] -- 2016-06-13
 
 ### Added
 - Beta version of the `scattermapbox` trace type - which allows users to create

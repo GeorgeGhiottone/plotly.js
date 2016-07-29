@@ -2,7 +2,7 @@ var d3 = require('d3');
 
 var Plotly = require('@lib/index');
 var Lib = require('@src/lib');
-var DBLCLICKDELAY = require('@src/plots/cartesian/constants').DBLCLICKDELAY;
+var doubleClick = require('../assets/double_click');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
@@ -12,6 +12,9 @@ var customMatchers = require('../assets/custom_matchers');
 
 describe('select box and lasso', function() {
     var mock = require('@mocks/14.json');
+
+    var selectPath = [[93, 193], [143, 193]];
+    var lassoPath = [[316, 171], [318, 239], [335, 243], [328, 169]];
 
     beforeEach(function() {
         jasmine.addMatchers(customMatchers);
@@ -30,23 +33,6 @@ describe('select box and lasso', function() {
         });
 
         mouseEvent('mouseup', path[len - 1][0], path[len - 1][1]);
-    }
-
-    // cartesian click events events use the hover data
-    // from the mousemove events and then simulate
-    // a click event on mouseup
-    function click(x, y) {
-        mouseEvent('mousemove', x, y);
-        mouseEvent('mousedown', x, y);
-        mouseEvent('mouseup', x, y);
-    }
-
-    function doubleClick(x, y, cb) {
-        click(x, y);
-        setTimeout(function() {
-            click(x, y);
-            cb();
-        }, DBLCLICKDELAY / 2);
     }
 
     function assertRange(actual, expected) {
@@ -101,7 +87,7 @@ describe('select box and lasso', function() {
 
             drag([[x0, y0], [x1, y1]]);
 
-            doubleClick(x2, y2, done);
+            doubleClick(x2, y2).then(done);
         });
     });
 
@@ -150,7 +136,7 @@ describe('select box and lasso', function() {
 
             drag([[x0, y0], [x1, y1]]);
 
-            doubleClick(x2, y2, done);
+            doubleClick(x2, y2).then(done);
         });
     });
 
@@ -186,7 +172,7 @@ describe('select box and lasso', function() {
                 doubleClickData = data;
             });
 
-            drag([[100, 200], [150, 200]]);
+            drag(selectPath);
 
             expect(selectingCnt).toEqual(1, 'with the correct selecting count');
             expect(selectingData.points).toEqual([{
@@ -201,7 +187,7 @@ describe('select box and lasso', function() {
                 y: 12.5
             }], 'with the correct selecting points');
             assertRange(selectingData.range, {
-                x: [0.0019667582669138295, 0.004546754982054625],
+                x: [0.002000, 0.0046236],
                 y: [0.10209191961595454, 24.512223978291406]
             }, 'with the correct selecting range');
 
@@ -218,11 +204,11 @@ describe('select box and lasso', function() {
                 y: 12.5
             }], 'with the correct selected points');
             assertRange(selectedData.range, {
-                x: [0.0019667582669138295, 0.004546754982054625],
+                x: [0.002000, 0.0046236],
                 y: [0.10209191961595454, 24.512223978291406]
             }, 'with the correct selected range');
 
-            doubleClick(250, 200, function() {
+            doubleClick(250, 200).then(function() {
                 expect(doubleClickData).toBe(null, 'with the correct deselect data');
                 done();
             });
@@ -262,7 +248,7 @@ describe('select box and lasso', function() {
                 doubleClickData = data;
             });
 
-            drag([[331, 178], [333, 246], [350, 250], [343, 176]]);
+            drag(lassoPath);
 
             expect(selectingCnt).toEqual(3, 'with the correct selecting count');
             expect(selectingData.points).toEqual([{
@@ -280,7 +266,7 @@ describe('select box and lasso', function() {
                 y: 2.75
             }], 'with the correct selected points');
 
-            doubleClick(250, 200, function() {
+            doubleClick(250, 200).then(function() {
                 expect(doubleClickData).toBe(null, 'with the correct deselect data');
                 done();
             });
@@ -290,9 +276,6 @@ describe('select box and lasso', function() {
     it('should skip over non-visible traces', function(done) {
         var mockCopy = Lib.extendDeep({}, mock);
         mockCopy.layout.dragmode = 'select';
-
-        var selectPath = [[100, 200], [150, 200]];
-        var lassoPath = [[331, 178], [333, 246], [350, 250], [343, 176]];
 
         var gd = createGraphDiv();
         var selectedPtLength;

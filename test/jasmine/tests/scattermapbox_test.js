@@ -7,6 +7,7 @@ var convert = require('@src/traces/scattermapbox/convert');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
+var hasWebGLSupport = require('../assets/has_webgl_support');
 var customMatchers = require('../assets/custom_matchers');
 
 // until it is part of the main plotly.js bundle
@@ -242,6 +243,10 @@ describe('scattermapbox calc', function() {
 describe('scattermapbox convert', function() {
     'use strict';
 
+    beforeAll(function() {
+        jasmine.addMatchers(customMatchers);
+    });
+
     function _convert(trace) {
         var gd = { data: [trace] };
 
@@ -396,6 +401,23 @@ describe('scattermapbox convert', function() {
         });
     });
 
+    it('for markers + circle bubbles traces with repeated values, should', function() {
+        var opts = _convert(Lib.extendFlat({}, base, {
+            lon: ['-96.796988', '-81.379236', '-85.311819', ''],
+            lat: ['32.776664', '28.538335', '35.047157', '' ],
+            marker: { size: ['5', '49', '5', ''] }
+        }));
+
+        expect(opts.circle.paint['circle-radius'].stops)
+            .toBeCloseTo2DArray([[0, 2.5], [1, 24.5]], 'not replicate stops');
+
+        var radii = opts.circle.geojson.features.map(function(f) {
+            return f.properties['circle-radius'];
+        });
+
+        expect(radii).toBeCloseToArray([0, 1, 0], 'link features to correct stops');
+    });
+
     function assertVisibility(opts, expectations) {
         var actual = ['fill', 'line', 'circle', 'symbol'].map(function(l) {
             return opts[l].layout.visibility;
@@ -409,6 +431,8 @@ describe('scattermapbox convert', function() {
 
 describe('scattermapbox hover', function() {
     'use strict';
+
+    if(!hasWebGLSupport('scattermapbox hover')) return;
 
     var hoverPoints = ScatterMapbox.hoverPoints;
 
@@ -456,7 +480,7 @@ describe('scattermapbox hover', function() {
 
         expect(out.index).toEqual(0);
         expect([out.x0, out.x1, out.y0, out.y1]).toBeCloseToArray([
-            444.444, 446.444, 105.410, 107.410
+            297.444, 299.444, 105.410, 107.410
         ]);
         expect(out.extraText).toEqual('(10°, 10°)<br>A');
         expect(out.color).toEqual('#1f77b4');
@@ -470,7 +494,7 @@ describe('scattermapbox hover', function() {
 
         expect(out.index).toEqual(0);
         expect([out.x0, out.x1, out.y0, out.y1]).toBeCloseToArray([
-            2492.444, 2494.444, 105.410, 107.410
+            2345.444, 2347.444, 105.410, 107.410
         ]);
         expect(out.extraText).toEqual('(10°, 10°)<br>A');
         expect(out.color).toEqual('#1f77b4');
@@ -484,7 +508,7 @@ describe('scattermapbox hover', function() {
 
         expect(out.index).toEqual(0);
         expect([out.x0, out.x1, out.y0, out.y1]).toBeCloseToArray([
-            -2627.555, -2625.555, 105.410, 107.410
+            -2774.555, -2772.555, 105.410, 107.410
         ]);
         expect(out.extraText).toEqual('(10°, 10°)<br>A');
         expect(out.color).toEqual('#1f77b4');
