@@ -11,9 +11,9 @@
 
 var isNumeric = require('fast-isnumeric');
 
+var Registry = require('../../registry');
 var Lib = require('../../lib');
 var Axes = require('../../plots/cartesian/axes');
-var Plots = require('../../plots/plots');
 
 var histogram2dCalc = require('../histogram2d/calc');
 var colorscaleCalc = require('../../components/colorscale/calc');
@@ -27,8 +27,9 @@ module.exports = function calc(gd, trace) {
     // run makeCalcdata on x and y even for heatmaps, in case of category mappings
     var xa = Axes.getFromId(gd, trace.xaxis || 'x'),
         ya = Axes.getFromId(gd, trace.yaxis || 'y'),
-        isContour = Plots.traceIs(trace, 'contour'),
-        isHist = Plots.traceIs(trace, 'histogram'),
+        isContour = Registry.traceIs(trace, 'contour'),
+        isHist = Registry.traceIs(trace, 'histogram'),
+        isGL2D = Registry.traceIs(trace, 'gl2d'),
         zsmooth = isContour ? 'best' : trace.zsmooth,
         x,
         x0,
@@ -73,7 +74,7 @@ module.exports = function calc(gd, trace) {
 
     function noZsmooth(msg) {
         zsmooth = trace._input.zsmooth = trace.zsmooth = false;
-        Lib.notifier(gd, 'cannot fast-zsmooth: ' + msg);
+        Lib.notifier('cannot fast-zsmooth: ' + msg);
     }
 
     // check whether we really can smooth (ie all boxes are about the same size)
@@ -112,8 +113,11 @@ module.exports = function calc(gd, trace) {
         yIn = trace.ytype === 'scaled' ? '' : trace.y,
         yArray = makeBoundArray(trace, yIn, y0, dy, z.length, ya);
 
-    Axes.expand(xa, xArray);
-    Axes.expand(ya, yArray);
+    // handled in gl2d convert step
+    if(!isGL2D) {
+        Axes.expand(xa, xArray);
+        Axes.expand(ya, yArray);
+    }
 
     var cd0 = {x: xArray, y: yArray, z: z};
 
@@ -166,9 +170,9 @@ function cleanZ(trace) {
 
 function makeBoundArray(trace, arrayIn, v0In, dvIn, numbricks, ax) {
     var arrayOut = [],
-        isContour = Plots.traceIs(trace, 'contour'),
-        isHist = Plots.traceIs(trace, 'histogram'),
-        isGL2D = Plots.traceIs(trace, 'gl2d'),
+        isContour = Registry.traceIs(trace, 'contour'),
+        isHist = Registry.traceIs(trace, 'histogram'),
+        isGL2D = Registry.traceIs(trace, 'gl2d'),
         v0,
         dv,
         i;
@@ -219,9 +223,9 @@ function makeBoundArray(trace, arrayIn, v0In, dvIn, numbricks, ax) {
     else {
         dv = dvIn || 1;
 
-        if(Array.isArray(arrayIn) && arrayIn.length === 1) v0 = arrayIn[0];
+        if(isHist || ax.type === 'category') v0 = v0In || 0;
+        else if(Array.isArray(arrayIn) && arrayIn.length === 1) v0 = arrayIn[0];
         else if(v0In === undefined) v0 = 0;
-        else if(isHist || ax.type === 'category') v0 = v0In;
         else v0 = ax.d2c(v0In);
 
         for(i = (isContour || isGL2D) ? 0 : -0.5; i < numbricks; i++) {

@@ -4,8 +4,11 @@ var path = require('path');
 var browserify = require('browserify');
 var UglifyJS = require('uglify-js');
 
-var compressAttributes = require('./util/compress_attributes');
 var constants = require('./util/constants');
+var common = require('./util/common');
+var compressAttributes = require('./util/compress_attributes');
+var patchMinified = require('./util/patch_minified');
+var doesFileExist = common.doesFileExist;
 
 /*
  * This script takes one argument
@@ -23,17 +26,12 @@ var DEV = (arg === 'dev') || (arg === '--dev');
 
 
 // Check if style and font build files are there
-try {
-    fs.statSync(constants.pathToCSSBuild).isFile();
-    fs.statSync(constants.pathToFontSVGBuild).isFile();
-}
-catch(e) {
+if(!doesFileExist(constants.pathToCSSBuild) || !doesFileExist(constants.pathToFontSVG)) {
     throw new Error([
         'build/ is missing one or more files',
         'Please run `npm run preprocess` first'
     ].join('\n'));
 }
-
 
 // Browserify plotly.js
 _bundle(constants.pathToPlotlyIndex, constants.pathToPlotlyDist, {
@@ -86,6 +84,7 @@ function _bundle(pathToIndex, pathToBundle, opts) {
 
         if(outputMinified) {
             var minifiedCode = UglifyJS.minify(buf.toString(), constants.uglifyOptions).code;
+            minifiedCode = patchMinified(minifiedCode);
 
             fs.writeFile(pathToMinBundle, minifiedCode, function(err) {
                 if(err) throw err;

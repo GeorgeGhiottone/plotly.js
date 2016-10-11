@@ -10,11 +10,6 @@ var destroyGraphDiv = require('../assets/destroy_graph_div');
 var hasWebGLSupport = require('../assets/has_webgl_support');
 var customMatchers = require('../assets/custom_matchers');
 
-// until it is part of the main plotly.js bundle
-Plotly.register(
-    require('@lib/scattermapbox')
-);
-
 Plotly.setPlotConfig({
     mapboxAccessToken: require('@build/credentials.json').MAPBOX_ACCESS_TOKEN
 });
@@ -249,13 +244,12 @@ describe('scattermapbox convert', function() {
 
     function _convert(trace) {
         var gd = { data: [trace] };
-
         Plots.supplyDefaults(gd);
 
         var fullTrace = gd._fullData[0];
-        var calcTrace = ScatterMapbox.calc(gd, fullTrace);
-        calcTrace[0].trace = fullTrace;
+        Plots.doCalcdata(gd, fullTrace);
 
+        var calcTrace = gd.calcdata[0];
         return convert(calcTrace);
     }
 
@@ -312,14 +306,14 @@ describe('scattermapbox convert', function() {
 
         assertVisibility(opts, ['visible', 'visible', 'visible', 'none']);
 
-        var lineCoords = [[
-            [10, 20], [20, 20], [30, 10]
-        ], [
-            [20, 10], [10, 20]
-        ]];
+        var segment1 = [[10, 20], [20, 20], [30, 10]],
+            segment2 = [[20, 10], [10, 20]];
 
-        expect(opts.fill.geojson.coordinates).toEqual(lineCoords, 'have correct fill coords');
+        var lineCoords = [segment1, segment2],
+            fillCoords = [[segment1], [segment2]];
+
         expect(opts.line.geojson.coordinates).toEqual(lineCoords, 'have correct line coords');
+        expect(opts.fill.geojson.coordinates).toEqual(fillCoords, 'have correct fill coords');
 
         var circleCoords = opts.circle.geojson.features.map(function(f) {
             return f.geometry.coordinates;
@@ -358,9 +352,9 @@ describe('scattermapbox convert', function() {
 
         assertVisibility(opts, ['none', 'visible', 'none', 'visible']);
 
-        var lineCoords = [[
+        var lineCoords = [
             [10, 20], [20, 20], [30, 10], [20, 10], [10, 20]
-        ]];
+        ];
 
         expect(opts.line.geojson.coordinates).toEqual(lineCoords, 'have correct line coords');
 
@@ -416,6 +410,20 @@ describe('scattermapbox convert', function() {
         });
 
         expect(radii).toBeCloseToArray([0, 1, 0], 'link features to correct stops');
+    });
+
+    it('for input only blank pts', function() {
+        var opts = _convert(Lib.extendFlat({}, base, {
+            mode: 'lines',
+            lon: ['', null],
+            lat: [null, ''],
+            fill: 'toself'
+        }));
+
+        assertVisibility(opts, ['none', 'none', 'none', 'none']);
+
+        expect(opts.line.geojson.coordinates).toEqual([], 'have correct line coords');
+        expect(opts.fill.geojson.coordinates).toEqual([], 'have correct fill coords');
     });
 
     function assertVisibility(opts, expectations) {

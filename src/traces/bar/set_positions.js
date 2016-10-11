@@ -11,7 +11,7 @@
 
 var isNumeric = require('fast-isnumeric');
 
-var Plots = require('../../plots/plots');
+var Registry = require('../../registry');
 var Axes = require('../../plots/cartesian/axes');
 var Lib = require('../../lib');
 
@@ -24,20 +24,20 @@ var Lib = require('../../lib');
 
 module.exports = function setPositions(gd, plotinfo) {
     var fullLayout = gd._fullLayout,
-        xa = plotinfo.x(),
-        ya = plotinfo.y(),
+        xa = plotinfo.xaxis,
+        ya = plotinfo.yaxis,
         i, j;
 
     ['v', 'h'].forEach(function(dir) {
         var bl = [],
             pLetter = {v: 'x', h: 'y'}[dir],
             sLetter = {v: 'y', h: 'x'}[dir],
-            pa = plotinfo[pLetter](),
-            sa = plotinfo[sLetter]();
+            pa = plotinfo[pLetter + 'axis'],
+            sa = plotinfo[sLetter + 'axis'];
 
         gd._fullData.forEach(function(trace, i) {
             if(trace.visible === true &&
-                    Plots.traceIs(trace, 'bar') &&
+                    Registry.traceIs(trace, 'bar') &&
                     trace.orientation === dir &&
                     trace.xaxis === xa._id &&
                     trace.yaxis === ya._id) {

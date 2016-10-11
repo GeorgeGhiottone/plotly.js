@@ -476,6 +476,69 @@ describe('Test lib.js:', function() {
         });
     });
 
+    describe('expandObjectPaths', function() {
+        it('returns the original object', function() {
+            var x = {};
+            expect(Lib.expandObjectPaths(x)).toBe(x);
+        });
+
+        it('unpacks top-level paths', function() {
+            var input = {'marker.color': 'red', 'marker.size': [1, 2, 3]};
+            var expected = {marker: {color: 'red', size: [1, 2, 3]}};
+            expect(Lib.expandObjectPaths(input)).toEqual(expected);
+        });
+
+        it('unpacks recursively', function() {
+            var input = {'marker.color': {'red.certainty': 'definitely'}};
+            var expected = {marker: {color: {red: {certainty: 'definitely'}}}};
+            expect(Lib.expandObjectPaths(input)).toEqual(expected);
+        });
+
+        it('unpacks deep paths', function() {
+            var input = {'foo.bar.baz': 'red'};
+            var expected = {foo: {bar: {baz: 'red'}}};
+            expect(Lib.expandObjectPaths(input)).toEqual(expected);
+        });
+
+        it('unpacks non-top-level deep paths', function() {
+            var input = {color: {'foo.bar.baz': 'red'}};
+            var expected = {color: {foo: {bar: {baz: 'red'}}}};
+            expect(Lib.expandObjectPaths(input)).toEqual(expected);
+        });
+
+        it('merges dotted properties into objects', function() {
+            var input = {marker: {color: 'red'}, 'marker.size': 8};
+            var expected = {marker: {color: 'red', size: 8}};
+            expect(Lib.expandObjectPaths(input)).toEqual(expected);
+        });
+
+        it('merges objects into dotted properties', function() {
+            var input = {'marker.size': 8, marker: {color: 'red'}};
+            var expected = {marker: {color: 'red', size: 8}};
+            expect(Lib.expandObjectPaths(input)).toEqual(expected);
+        });
+
+        it('retains the identity of nested objects', function() {
+            var input = {marker: {size: 8}};
+            var origNested = input.marker;
+            var expanded = Lib.expandObjectPaths(input);
+            var newNested = expanded.marker;
+
+            expect(input).toBe(expanded);
+            expect(origNested).toBe(newNested);
+        });
+
+        it('retains the identity of nested arrays', function() {
+            var input = {'marker.size': [1, 2, 3]};
+            var origArray = input['marker.size'];
+            var expanded = Lib.expandObjectPaths(input);
+            var newArray = expanded.marker.size;
+
+            expect(input).toBe(expanded);
+            expect(origArray).toBe(newArray);
+        });
+    });
+
     describe('coerce', function() {
         var coerce = Lib.coerce,
             out;
@@ -985,6 +1048,29 @@ describe('Test lib.js:', function() {
                 }]
             });
         });
+
+        it('should work for valType \'info_array\' (freeLength case)', function() {
+            var shouldPass = [
+                ['marker.color', 'red'],
+                [{ 'marker.color': 'red' }, [1, 2]]
+            ];
+            var shouldFail = [
+                ['marker.color', 'red', 'red'],
+                [{ 'marker.color': 'red' }, [1, 2], 'blue']
+            ];
+
+            assert(shouldPass, shouldFail, {
+                valType: 'info_array',
+                freeLength: true,
+                items: [{
+                    valType: 'any'
+                }, {
+                    valType: 'any'
+                }, {
+                    valType: 'number'
+                }]
+            });
+        });
     });
 
     describe('setCursor', function() {
@@ -1290,6 +1376,10 @@ describe('Test lib.js:', function() {
 
         it('should ignore years', function() {
             expect(Lib.numSeparate(2016, '.,')).toBe('2016');
+        });
+
+        it('should work even for 4-digit integer if third argument is true', function() {
+            expect(Lib.numSeparate(3000, '.,', true)).toBe('3,000');
         });
 
         it('should work for multiple thousands', function() {

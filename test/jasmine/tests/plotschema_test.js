@@ -1,14 +1,6 @@
 var Plotly = require('@lib/index');
 var Lib = require('@src/lib');
 
-Plotly.register([
-    // until it is part of the main plotly.js bundle
-    require('@lib/scattermapbox'),
-
-    // until they become official
-    require('../assets/transforms/filter')
-]);
-
 describe('plot schema', function() {
     'use strict';
 
@@ -86,10 +78,7 @@ describe('plot schema', function() {
                             .concat(['valType', 'description', 'role']);
 
                     Object.keys(attr).forEach(function(key) {
-                        // handle the histogram marker.color case
-                        if(opts.indexOf(key) === -1 && opts[key] === undefined) return;
-
-                        expect(opts.indexOf(key) !== -1).toBe(true);
+                        expect(opts.indexOf(key) !== -1).toBe(true, key, attr);
                     });
                 }
             }
@@ -187,6 +176,8 @@ describe('plot schema', function() {
         var valObjects = plotSchema.transforms.filter.attributes,
             attrNames = Object.keys(valObjects);
 
-        expect(attrNames).toEqual(['operation', 'value', 'filtersrc']);
+        ['operation', 'value', 'filtersrc'].forEach(function(k) {
+            expect(attrNames).toContain(k);
+        });
     });
 });

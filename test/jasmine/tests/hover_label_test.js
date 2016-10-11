@@ -300,6 +300,23 @@ describe('hover info', function() {
         });
     });
 
+    describe('hover info skip', function() {
+        var mockCopy = Lib.extendDeep({}, mock);
+
+        mockCopy.data[0].hoverinfo = 'skip';
+
+        beforeEach(function(done) {
+            Plotly.plot(createGraphDiv(), mockCopy.data, mockCopy.layout).then(done);
+        });
+
+        it('does not hover if hover info is set to skip', function() {
+            var gd = document.getElementById('graph');
+            Fx.hover('graph', evt, 'xy');
+
+            expect(gd._hoverdata, undefined);
+        });
+    });
+
     describe('hover info none', function() {
         var mockCopy = Lib.extendDeep({}, mock);
 
@@ -507,11 +524,11 @@ describe('hover info on stacked subplots', function() {
                     y: 1000
                 }));
 
-            //There should be a single label on the x-axis with the shared x value, 3.
+            // There should be a single label on the x-axis with the shared x value, 3.
             expect(d3.selectAll('g.axistext').size()).toEqual(1);
             expect(d3.selectAll('g.axistext').select('text').html()).toEqual('3');
 
-            //There should be two points being hovered over, in two different traces, one in each plot.
+            // There should be two points being hovered over, in two different traces, one in each plot.
             expect(d3.selectAll('g.hovertext').size()).toEqual(2);
             var textNodes = d3.selectAll('g.hovertext').selectAll('text');
 
@@ -559,11 +576,11 @@ describe('hover info on stacked subplots', function() {
                     y: 0
                 }));
 
-            //There should be a single label on the y-axis with the shared y value, 0.
+            // There should be a single label on the y-axis with the shared y value, 0.
             expect(d3.selectAll('g.axistext').size()).toEqual(1);
             expect(d3.selectAll('g.axistext').select('text').html()).toEqual('0');
 
-            //There should be three points being hovered over, in three different traces, one in each plot.
+            // There should be three points being hovered over, in three different traces, one in each plot.
             expect(d3.selectAll('g.hovertext').size()).toEqual(3);
             var textNodes = d3.selectAll('g.hovertext').selectAll('text');
 

@@ -17,7 +17,7 @@ We use the following [labels](https://github.com/plotly/plotly.js/labels) to tra
 | `type: bug` | bug report confirmed by a plotly team member |
 | `type: feature` | planned feature additions |
 | `type: performance` | performance related tasks |
-| `type: maintenace` | source code cleanup resulting in no enhancement for users |
+| `type: maintenance` | source code cleanup resulting in no enhancement for users |
 | `type: documentation` | API doc or attribute description improvements |
 | `type: community` | issue left open for community input and pull requests |
 | `type: duplicate` | *self-explanatory* |
@@ -38,26 +38,21 @@ We use the following [labels](https://github.com/plotly/plotly.js/labels) to tra
 
 #### Step 1: Clone the plotly.js repo and install its dependencies
 
-```
+```bash
 git clone https://github.com/plotly/plotly.js.git
 cd plotly.js
 npm install
 ```
 
-#### Step 2: Setup Mapbox access token
-
-As of `v1.13.0`, plotly.js includes a [`mapbox-gl`](https://github.com/mapbox/mapbox-gl-js) integration. Creating `mapbox-gl` graphs requires an
-[`accessToken`](https://www.mapbox.com/help/define-access-token/). To make sure
-that the plotly.js test suites and devtools work properly, locate your Mapbox access
-token and run:
+#### Step 2: Setup test environment
 
 ```bash
-export MAPBOX_ACCESS_TOKEN="<your access token>" && npm run pretest
+npm run pretest
 ```
 
 #### Step 3: Start the test dashboard
 
-```
+```bash
 npm start
 ```
 
@@ -122,7 +117,13 @@ To run a specific suite, use:
 npm run test-jasmine -- tests/<suite>.js
 ```
 
-where the `<suite>` corresponds to the suite's file name as found in [`test/jasmine/tests/`](https://github.com/plotly/plotly.js/tree/master/test/jasmine/tests).
+where the `<suite>` corresponds to the suite's file name as found in [`test/jasmine/tests/`](https://github.com/plotly/plotly.js/tree/master/test/jasmine/tests). In certain situations, you may find that the default reporting is not verbose enough to pin down the source of the failing test. In this situation, you may wish to use [karma-verbose-reporter](https://www.npmjs.com/package/karma-verbose-reporter). You can use it without adding as a dev dependency by running:
+
+```
+npm install karma-verbose-reporter
+```
+
+and adding `reporters: ['verbose']` to the corresponding karma configuration file. (You should disable the `progress` reporter when using `verbose`.)
 
 
 Image pixel comparison tests are run in a docker container. For more

@@ -131,11 +131,8 @@ proto.dispose = function dispose() {
 function isVisible(opts) {
     var source = opts.source;
 
-    // For some weird reason Lib.isPlainObject fails
-    // to detect `source` as a plain object in nw.js 0.12.
-
     return (
-        typeof source === 'object' ||
+        Lib.isPlainObject(source) ||
         (typeof source === 'string' && source.length > 0)
     );
 }
@@ -186,7 +183,7 @@ function convertOpts(opts) {
                 'text-offset': textOpts.offset
 
                 // TODO font family
-                //'text-font': symbol.textfont.family.split(', '),
+                // 'text-font': symbol.textfont.family.split(', '),
             });
 
             Lib.extendFlat(paint, {
