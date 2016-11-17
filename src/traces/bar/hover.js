@@ -21,7 +21,8 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode) {
         xa = pointData.xa,
         ya = pointData.ya,
         barDelta = (hovermode === 'closest') ?
-            t.barwidth / 2 : t.dbar * (1 - xa._gd._fullLayout.bargap) / 2,
+            t.barwidth / 2 :
+            t.bargroupwidth / 2,
         barPos;
 
     if(hovermode !== 'closest') barPos = function(di) { return di.p; };
@@ -66,7 +67,7 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode) {
 
     if(trace.orientation === 'h') {
         pointData.x0 = pointData.x1 = xa.c2p(di.x, true);
-        pointData.xLabelVal = di.s;
+        pointData.xLabelVal = di.b + di.s;
 
         pointData.y0 = ya.c2p(barPos(di) - barDelta, true);
         pointData.y1 = ya.c2p(barPos(di) + barDelta, true);
@@ -74,7 +75,7 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode) {
     }
     else {
         pointData.y0 = pointData.y1 = ya.c2p(di.y, true);
-        pointData.yLabelVal = di.s;
+        pointData.yLabelVal = di.b + di.s;
 
         pointData.x0 = xa.c2p(barPos(di) - barDelta, true);
         pointData.x1 = xa.c2p(barPos(di) + barDelta, true);

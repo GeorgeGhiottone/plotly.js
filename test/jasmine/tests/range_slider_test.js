@@ -1,10 +1,12 @@
 var Plotly = require('@lib/index');
 var Lib = require('@src/lib');
+var setConvert = require('@src/plots/cartesian/set_convert');
 
 var RangeSlider = require('@src/components/rangeslider');
 var constants = require('@src/components/rangeslider/constants');
 var mock = require('../../image/mocks/range_slider.json');
 
+var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var mouseEvent = require('../assets/mouse_event');
@@ -24,6 +26,12 @@ describe('the range slider', function() {
     function getRangeSlider() {
         var className = constants.containerClassName;
         return document.getElementsByClassName(className)[0];
+    }
+
+    function countRangeSliderClipPaths() {
+        return d3.selectAll('defs').selectAll('*').filter(function() {
+            return this.id.indexOf('rangeslider') !== -1;
+        }).size();
     }
 
     function testTranslate1D(node, val) {
@@ -308,6 +316,7 @@ describe('the range slider', function() {
                 .then(function() {
                     var rangeSlider = getRangeSlider();
                     expect(rangeSlider).toBeDefined();
+                    expect(countRangeSliderClipPaths()).toEqual(1);
                 })
                 .then(done);
         });
@@ -318,6 +327,7 @@ describe('the range slider', function() {
                 .then(function() {
                     var rangeSlider = getRangeSlider();
                     expect(rangeSlider).not.toBeDefined();
+                    expect(countRangeSliderClipPaths()).toEqual(0);
                 })
                 .then(done);
         });
@@ -464,7 +474,7 @@ describe('the range slider', function() {
 
         it('should expand the rangeslider range to axis range', function() {
             var layoutIn = { xaxis: { rangeslider: { range: [5, 6] } }, yaxis: {}},
-                layoutOut = { xaxis: { range: [1, 10]}, yaxis: {}},
+                layoutOut = { xaxis: { range: [1, 10], type: 'linear'}, yaxis: {}},
                 axName = 'xaxis',
                 counterAxes = ['yaxis'],
                 expected = {
@@ -482,10 +492,14 @@ describe('the range slider', function() {
                     },
                     yaxis: { fixedrange: true }
                 };
+            setConvert(layoutOut.xaxis);
 
             RangeSlider.handleDefaults(layoutIn, layoutOut, axName, counterAxes);
 
-            expect(layoutOut).toEqual(expected);
+            // don't compare the whole layout, because we had to run setConvert which
+            // attaches all sorts of other stuff to xaxis
+            expect(layoutOut.xaxis.rangeslider).toEqual(expected.xaxis.rangeslider);
+            expect(layoutOut.yaxis).toEqual(expected.yaxis);
         });
 
         it('should set _needsExpand when an axis range is set', function() {

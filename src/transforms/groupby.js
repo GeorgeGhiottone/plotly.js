@@ -9,6 +9,7 @@
 'use strict';
 
 var Lib = require('../lib');
+var PlotSchema = require('../plot_api/plot_schema');
 
 exports.moduleType = 'transform';
 
@@ -117,18 +118,15 @@ function transformOne(trace, state) {
     var opts = state.transform;
     var groups = trace.transforms[state.transformIndex].groups;
 
-    var groupNames = groups.filter(function(g, i, self) {
-        return self.indexOf(g) === i;
-    });
-
     if(!(Array.isArray(groups)) || groups.length === 0) {
         return trace;
     }
 
-    var newData = new Array(groupNames.length);
-    var len = groups.length;
+    var groupNames = Lib.filterUnique(groups),
+        newData = new Array(groupNames.length),
+        len = groups.length;
 
-    var arrayAttrs = Lib.findArrayAttributes(trace);
+    var arrayAttrs = PlotSchema.findArrayAttributes(trace);
 
     var style = opts.style || {};
 

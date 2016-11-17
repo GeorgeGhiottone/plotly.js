@@ -15,6 +15,7 @@ var Fx = require('../../plots/cartesian/graph_interact');
 var createPlot2D = require('gl-plot2d');
 var createSpikes = require('gl-spikes2d');
 var createSelectBox = require('gl-select-box');
+var getContext = require('webgl-context');
 
 var createOptions = require('./convert');
 var createCamera = require('./camera');
@@ -87,16 +88,15 @@ proto.makeFramework = function() {
         if(!STATIC_CONTEXT) {
             STATIC_CANVAS = document.createElement('canvas');
 
-            try {
-                STATIC_CONTEXT = STATIC_CANVAS.getContext('webgl', {
-                    preserveDrawingBuffer: false,
-                    premultipliedAlpha: true,
-                    antialias: true
-                });
-            } catch(e) {
-                throw new Error([
-                    'Error creating static canvas/context for image server'
-                ].join(' '));
+            STATIC_CONTEXT = getContext({
+                canvas: STATIC_CANVAS,
+                preserveDrawingBuffer: false,
+                premultipliedAlpha: true,
+                antialias: true
+            });
+
+            if(!STATIC_CONTEXT) {
+                throw new Error('Error creating static canvas/context for image server');
             }
         }
 
@@ -104,23 +104,12 @@ proto.makeFramework = function() {
         this.gl = STATIC_CONTEXT;
     }
     else {
-        var liveCanvas = document.createElement('canvas'),
-            glOpts = { premultipliedAlpha: true };
-        var gl;
+        var liveCanvas = document.createElement('canvas');
 
-        try {
-            gl = liveCanvas.getContext('webgl', glOpts);
-        } catch(e) {
-            //
-        }
-
-        if(!gl) {
-            try {
-                gl = liveCanvas.getContext('experimental-webgl', glOpts);
-            } catch(e) {
-                //
-            }
-        }
+        var gl = getContext({
+            canvas: liveCanvas,
+            premultipliedAlpha: true
+        });
 
         if(!gl) showNoWebGlMsg(this);
 
@@ -129,18 +118,16 @@ proto.makeFramework = function() {
     }
 
     // position the canvas
-    var canvas = this.canvas,
-        pixelRatio = this.pixelRatio,
-        fullLayout = this.fullLayout;
+    var canvas = this.canvas;
 
-    canvas.width = Math.ceil(pixelRatio * fullLayout.width) |0;
-    canvas.height = Math.ceil(pixelRatio * fullLayout.height) |0;
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.style.position = 'absolute';
     canvas.style.top = '0px';
     canvas.style.left = '0px';
     canvas.style['pointer-events'] = 'none';
+
+    this.updateSize(canvas);
 
     // disabling user select on the canvas
     // sanitizes double-clicks interactions
@@ -173,6 +160,9 @@ proto.toImage = function(format) {
 
     this.stopped = true;
     if(this.staticPlot) this.container.appendChild(STATIC_CANVAS);
+
+    // update canvas size
+    this.updateSize(this.canvas);
 
     // force redraw
     this.glplot.setDirty();
@@ -226,6 +216,26 @@ proto.toImage = function(format) {
     return dataURL;
 };
 
+proto.updateSize = function(canvas) {
+    if(!canvas) canvas = this.canvas;
+
+    var pixelRatio = this.pixelRatio,
+        fullLayout = this.fullLayout;
+
+    var width = fullLayout.width,
+        height = fullLayout.height,
+        pixelWidth = Math.ceil(pixelRatio * width) |0,
+        pixelHeight = Math.ceil(pixelRatio * height) |0;
+
+    // check for resize
+    if(canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
+    }
+
+    return canvas;
+};
+
 proto.computeTickMarks = function() {
     this.xaxis._length =
         this.glplot.viewBox[2] - this.glplot.viewBox[0];
@@ -239,9 +249,8 @@ proto.computeTickMarks = function() {
 
     for(var j = 0; j < 2; ++j) {
         for(var i = 0; i < nextTicks[j].length; ++i) {
-            // TODO add support for '\n' in gl-plot2d,
-            // For now, replace '\n' with ' '
-            nextTicks[j][i].text = convertHTMLToUnicode(nextTicks[j][i].text + '').replace(/\n/g, ' ');
+            // coercing tick value (may not be a string) to a string
+            nextTicks[j][i].text = convertHTMLToUnicode(nextTicks[j][i].text + '');
         }
     }
 
@@ -301,14 +310,9 @@ var relayoutCallback = function(scene) {
 };
 
 proto.cameraChanged = function() {
-    var camera = this.camera,
-        xrange = this.xaxis.range,
-        yrange = this.yaxis.range;
+    var camera = this.camera;
 
-    this.glplot.setDataBox([
-        xrange[0], yrange[0],
-        xrange[1], yrange[1]
-    ]);
+    this.glplot.setDataBox(this.calcDataBox());
 
     var nextTicks = this.computeTickMarks();
     var curTicks = this.glplotOptions.ticks;
@@ -344,24 +348,16 @@ proto.destroy = function() {
 };
 
 proto.plot = function(fullData, calcData, fullLayout) {
-    var glplot = this.glplot,
-        pixelRatio = this.pixelRatio;
+    var glplot = this.glplot;
 
     this.fullLayout = fullLayout;
     this.updateAxes(fullLayout);
     this.updateTraces(fullData, calcData);
 
     var width = fullLayout.width,
-        height = fullLayout.height,
-        pixelWidth = Math.ceil(pixelRatio * width) |0,
-        pixelHeight = Math.ceil(pixelRatio * height) |0;
+        height = fullLayout.height;
 
-    // check for resize
-    var canvas = this.canvas;
-    if(canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-        canvas.width = pixelWidth;
-        canvas.height = pixelHeight;
-    }
+    this.updateSize(this.canvas);
 
     var options = this.glplotOptions;
     options.merge(fullLayout);
@@ -414,15 +410,34 @@ proto.plot = function(fullData, calcData, fullLayout) {
 
     options.ticks = this.computeTickMarks();
 
-    var xrange = this.xaxis.range;
-    var yrange = this.yaxis.range;
-    options.dataBox = [xrange[0], yrange[0], xrange[1], yrange[1]];
+    options.dataBox = this.calcDataBox();
 
     options.merge(fullLayout);
     glplot.update(options);
 
     // force redraw so that promise is returned when rendering is completed
     this.glplot.draw();
+};
+
+proto.calcDataBox = function() {
+    var xaxis = this.xaxis,
+        yaxis = this.yaxis,
+        xrange = xaxis.range,
+        yrange = yaxis.range,
+        xr2l = xaxis.r2l,
+        yr2l = yaxis.r2l;
+
+    return [xr2l(xrange[0]), yr2l(yrange[0]), xr2l(xrange[1]), yr2l(yrange[1])];
+};
+
+proto.setRanges = function(dataBox) {
+    var xaxis = this.xaxis,
+        yaxis = this.yaxis,
+        xl2r = xaxis.l2r,
+        yl2r = yaxis.l2r;
+
+    xaxis.range = [xl2r(dataBox[0]), xl2r(dataBox[2])];
+    yaxis.range = [yl2r(dataBox[1]), yl2r(dataBox[3])];
 };
 
 proto.updateTraces = function(fullData, calcData) {

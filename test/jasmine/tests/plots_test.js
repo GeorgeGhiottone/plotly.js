@@ -9,7 +9,21 @@ describe('Test Plots', function() {
 
     describe('Plots.supplyDefaults', function() {
 
-        var gd;
+        it('should not throw an error when gd is a plain object', function() {
+            var height = 100,
+                gd = {
+                    layout: {
+                        height: height
+                    }
+                };
+
+            Plots.supplyDefaults(gd);
+            expect(gd.layout.height).toBe(height);
+            expect(gd._fullLayout).toBeDefined();
+            expect(gd._fullLayout.height).toBe(height);
+            expect(gd._fullLayout.width).toBe(Plots.layoutAttributes.width.dflt);
+            expect(gd._fullData).toBeDefined();
+        });
 
         it('should relink private keys', function() {
             var oldFullData = [{
@@ -41,7 +55,7 @@ describe('Test Plots', function() {
                 annotations: [{}, {}, {}]
             };
 
-            gd = {
+            var gd = {
                 _fullData: oldFullData,
                 _fullLayout: oldFullLayout,
                 data: newData,
@@ -63,6 +77,72 @@ describe('Test Plots', function() {
                 .not.toBe(oldFullLayout.xaxis.c2p, '(set during ax.setScale');
             expect(gd._fullLayout.yaxis._m)
                 .not.toBe(oldFullLayout.yaxis._m, '(set during ax.setScale');
+        });
+
+        it('should include the correct reference to user data', function() {
+            var trace0 = { y: [1, 2, 3] };
+            var trace1 = { y: [5, 2, 3] };
+
+            var data = [trace0, trace1];
+            var gd = { data: data };
+
+            Plots.supplyDefaults(gd);
+
+            expect(gd.data).toBe(data);
+
+            expect(gd._fullData[0].index).toEqual(0);
+            expect(gd._fullData[1].index).toEqual(1);
+
+            expect(gd._fullData[0]._expandedIndex).toEqual(0);
+            expect(gd._fullData[1]._expandedIndex).toEqual(1);
+
+            expect(gd._fullData[0]._input).toBe(trace0);
+            expect(gd._fullData[1]._input).toBe(trace1);
+
+            expect(gd._fullData[0]._fullInput).toBe(gd._fullData[0]);
+            expect(gd._fullData[1]._fullInput).toBe(gd._fullData[1]);
+
+            expect(gd._fullData[0]._expandedInput).toBe(gd._fullData[0]);
+            expect(gd._fullData[1]._expandedInput).toBe(gd._fullData[1]);
+        });
+
+        function testSanitizeMarginsHasBeenCalledOnlyOnce(gd) {
+            spyOn(Plots, 'sanitizeMargins').and.callThrough();
+            Plots.supplyDefaults(gd);
+            expect(Plots.sanitizeMargins).toHaveBeenCalledTimes(1);
+        }
+
+        it('should call sanitizeMargins only once when both width and height are defined', function() {
+            var gd = {
+                layout: {
+                    width: 100,
+                    height: 100
+                }
+            };
+
+            testSanitizeMarginsHasBeenCalledOnlyOnce(gd);
+        });
+
+        it('should call sanitizeMargins only once when autosize is false', function() {
+            var gd = {
+                layout: {
+                    autosize: false,
+                    height: 100
+                }
+            };
+
+            testSanitizeMarginsHasBeenCalledOnlyOnce(gd);
+        });
+
+        it('should call sanitizeMargins only once when autosize is true', function() {
+            var gd = {
+                layout: {
+                    autosize: true,
+                    height: 100
+                }
+            };
+
+            testSanitizeMarginsHasBeenCalledOnlyOnce(gd);
         });
     });
 
@@ -248,10 +328,10 @@ describe('Test Plots', function() {
     describe('Plots.resize', function() {
         var gd;
 
-        beforeEach(function(done) {
+        beforeAll(function(done) {
             gd = createGraphDiv();
 
-            Plotly.plot(gd, [{ x: [1, 2, 3], y: [2, 3, 4] }], {})
+            Plotly.plot(gd, [{ x: [1, 2, 3], y: [2, 3, 4] }])
                 .then(function() {
                     gd.style.width = '400px';
                     gd.style.height = '400px';
@@ -286,6 +366,17 @@ describe('Test Plots', function() {
                 expect(svgWidth).toBe(400);
                 expect(svgHeight).toBe(400);
             }
+        });
+
+        it('should update the axis scales', function() {
+            var fullLayout = gd._fullLayout,
+                plotinfo = fullLayout._plots.xy;
+
+            expect(fullLayout.xaxis._length).toEqual(240);
+            expect(fullLayout.yaxis._length).toEqual(220);
+
+            expect(plotinfo.xaxis._length).toEqual(240);
+            expect(plotinfo.yaxis._length).toEqual(220);
         });
     });
 
@@ -334,6 +425,73 @@ describe('Test Plots', function() {
             expect(gd._lastHoverTime).toBeUndefined();
             expect(gd._transitionData).toBeUndefined();
             expect(gd._transitioning).toBeUndefined();
+        });
+    });
+
+    describe('extendObjectWithContainers', function() {
+
+        function assert(dest, src, expected) {
+            Plots.extendObjectWithContainers(dest, src, ['container']);
+            expect(dest).toEqual(expected);
+        }
+
+        it('extend each container items', function() {
+            var dest = {
+                container: [
+                    { text: '1', x: 1, y: 1 },
+                    { text: '2', x: 2, y: 2 }
+                ]
+            };
+
+            var src = {
+                container: [
+                    { text: '1-new' },
+                    { text: '2-new' }
+                ]
+            };
+
+            var expected = {
+                container: [
+                    { text: '1-new', x: 1, y: 1 },
+                    { text: '2-new', x: 2, y: 2 }
+                ]
+            };
+
+            assert(dest, src, expected);
+        });
+
+        it('clears container items when applying null src items', function() {
+            var dest = {
+                container: [
+                    { text: '1', x: 1, y: 1 },
+                    { text: '2', x: 2, y: 2 }
+                ]
+            };
+
+            var src = {
+                container: [null, null]
+            };
+
+            var expected = {
+                container: [null, null]
+            };
+
+            assert(dest, src, expected);
+        });
+
+        it('clears container applying null src', function() {
+            var dest = {
+                container: [
+                    { text: '1', x: 1, y: 1 },
+                    { text: '2', x: 2, y: 2 }
+                ]
+            };
+
+            var src = { container: null };
+
+            var expected = { container: null };
+
+            assert(dest, src, expected);
         });
     });
 });

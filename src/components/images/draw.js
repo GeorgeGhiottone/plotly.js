@@ -14,25 +14,23 @@ var Axes = require('../../plots/cartesian/axes');
 var xmlnsNamespaces = require('../../constants/xmlns_namespaces');
 
 module.exports = function draw(gd) {
-
     var fullLayout = gd._fullLayout,
         imageDataAbove = [],
         imageDataSubplot = [],
         imageDataBelow = [];
 
-    if(!fullLayout.images) return;
-
-
     // Sort into top, subplot, and bottom layers
     for(var i = 0; i < fullLayout.images.length; i++) {
         var img = fullLayout.images[i];
 
-        if(img.layer === 'below' && img.xref !== 'paper' && img.yref !== 'paper') {
-            imageDataSubplot.push(img);
-        } else if(img.layer === 'above') {
-            imageDataAbove.push(img);
-        } else {
-            imageDataBelow.push(img);
+        if(img.visible) {
+            if(img.layer === 'below' && img.xref !== 'paper' && img.yref !== 'paper') {
+                imageDataSubplot.push(img);
+            } else if(img.layer === 'above') {
+                imageDataAbove.push(img);
+            } else {
+                imageDataBelow.push(img);
+            }
         }
     }
 
@@ -55,17 +53,21 @@ module.exports = function draw(gd) {
     function setImage(d) {
         var thisImage = d3.select(this);
 
+        if(this.img && this.img.src === d.source) {
+            return;
+        }
+
         thisImage.attr('xmlns', xmlnsNamespaces.svg);
 
         var imagePromise = new Promise(function(resolve) {
 
             var img = new Image();
+            this.img = img;
 
             // If not set, a `tainted canvas` error is thrown
             img.setAttribute('crossOrigin', 'anonymous');
             img.onerror = errorHandler;
             img.onload = function() {
-
                 var canvas = document.createElement('canvas');
                 canvas.width = this.width;
                 canvas.height = this.height;
@@ -88,7 +90,7 @@ module.exports = function draw(gd) {
                 thisImage.remove();
                 resolve();
             }
-        });
+        }.bind(this));
 
         gd._promises.push(imagePromise);
     }
@@ -97,12 +99,12 @@ module.exports = function draw(gd) {
         var thisImage = d3.select(this);
 
         // Axes if specified
-        var xref = Axes.getFromId(gd, d.xref),
-            yref = Axes.getFromId(gd, d.yref);
+        var xa = Axes.getFromId(gd, d.xref),
+            ya = Axes.getFromId(gd, d.yref);
 
         var size = fullLayout._size,
-            width = xref ? Math.abs(xref.l2p(d.sizex) - xref.l2p(0)) : d.sizex * size.w,
-            height = yref ? Math.abs(yref.l2p(d.sizey) - yref.l2p(0)) : d.sizey * size.h;
+            width = xa ? Math.abs(xa.l2p(d.sizex) - xa.l2p(0)) : d.sizex * size.w,
+            height = ya ? Math.abs(ya.l2p(d.sizey) - ya.l2p(0)) : d.sizey * size.h;
 
         // Offsets for anchor positioning
         var xOffset = width * anchors.x[d.xanchor].offset,
@@ -111,8 +113,8 @@ module.exports = function draw(gd) {
         var sizing = anchors.x[d.xanchor].sizing + anchors.y[d.yanchor].sizing;
 
         // Final positions
-        var xPos = (xref ? xref.l2p(d.x) + xref._offset : d.x * size.w + size.l) + xOffset,
-            yPos = (yref ? yref.l2p(d.y) + yref._offset : size.h - d.y * size.h + size.t) + yOffset;
+        var xPos = (xa ? xa.r2p(d.x) + xa._offset : d.x * size.w + size.l) + xOffset,
+            yPos = (ya ? ya.r2p(d.y) + ya._offset : size.h - d.y * size.h + size.t) + yOffset;
 
 
         // Construct the proper aspectRatio attribute
@@ -137,8 +139,8 @@ module.exports = function draw(gd) {
 
 
         // Set proper clipping on images
-        var xId = xref ? xref._id : '',
-            yId = yref ? yref._id : '',
+        var xId = xa ? xa._id : '',
+            yId = ya ? ya._id : '',
             clipAxes = xId + yId;
 
         if(clipAxes) {
@@ -146,29 +148,31 @@ module.exports = function draw(gd) {
         }
     }
 
-
-    // Required for updating images
-    function keyFunction(d, i) {
-        return d.source + i;
-    }
-
-
     var imagesBelow = fullLayout._imageLowerLayer.selectAll('image')
-            .data(imageDataBelow, keyFunction),
+            .data(imageDataBelow),
         imagesSubplot = fullLayout._imageSubplotLayer.selectAll('image')
-            .data(imageDataSubplot, keyFunction),
+            .data(imageDataSubplot),
         imagesAbove = fullLayout._imageUpperLayer.selectAll('image')
-            .data(imageDataAbove, keyFunction);
+            .data(imageDataAbove);
 
-    imagesBelow.enter().append('image').each(setImage);
-    imagesSubplot.enter().append('image').each(setImage);
-    imagesAbove.enter().append('image').each(setImage);
+    imagesBelow.enter().append('image');
+    imagesSubplot.enter().append('image');
+    imagesAbove.enter().append('image');
 
     imagesBelow.exit().remove();
     imagesSubplot.exit().remove();
     imagesAbove.exit().remove();
 
-    imagesBelow.each(applyAttributes);
-    imagesSubplot.each(applyAttributes);
-    imagesAbove.each(applyAttributes);
+    imagesBelow.each(function(d) {
+        setImage.bind(this)(d);
+        applyAttributes.bind(this)(d);
+    });
+    imagesSubplot.each(function(d) {
+        setImage.bind(this)(d);
+        applyAttributes.bind(this)(d);
+    });
+    imagesAbove.each(function(d) {
+        setImage.bind(this)(d);
+        applyAttributes.bind(this)(d);
+    });
 };

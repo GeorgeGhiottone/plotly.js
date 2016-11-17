@@ -10,6 +10,135 @@ https://github.com/plotly/plotly.js/compare/vX.Y.Z...master
 where X.Y.Z is the semver of most recent plotly.js release.
 
 
+## [1.20.1] -- 2016-11-16
+
+### Fixed
+- Fix annotation positioning on categorical axes [#1155]
+
+
+## [1.20.0] -- 2016-11-15
+
+### Added
+- Allow date string inputs for axis ranges, `tick0`, `dtick`, annotation / image
+  positions, histogram bins [#1078, #1150]
+- Add special `dtick` values for log axes [#1078]
+- Add `visible` attribute to annotations, shapes and images items [#1110]
+- Expose events on slider start/change/end [#1126]
+- Expose event on updatemenu button click [#1128]
+- Allow custom transform module to have supply layout default handler [#1122]
+
+### Changed
+- Increase `scattergl` precision [#1114]
+- Use `topojson-client` to convert topojson to geojson [#1147]
+
+### Fixed
+- Fix hover labels for multi-trace `scattergl` graphs (bug introduced in
+  `1.18.0`) [#1148]
+- Fix date format on hover on full hour [#1078]
+- Fix bar labels for non-zero `base` values [#1142]
+- Scatter colorscale now yield correct colors when cmin and cmax ashow re equal
+  [#1112]
+- Fix `filter` transform for categorical `target` arrays with range operations
+  [#1120]
+- Make sure frames with `null` values clear array containers [#1118]
+- Fix animations involving trace `opacity` [#1146]
+- Fix fallback for non-animatable trace modules (bug introduced in `1.18.1`)
+  [#1141]
+- Fix race condition in animation resolution when coupled with `relayout`
+  [#1108]
+- Enforce casting requested frame names to strings [#1124]
+- `Plotly.animte` no longer breaks when passing `null` frames [#1121]
+- `Plotly.PlotSchema.get` now correctly list rangeslider and rangeselector under
+  `xaxis` only [#1144]
+- `Plotly.relayout` correctly updates arbitrary layout attributes [#1133]
+
+
+## [1.19.2] -- 2016-11-02
+
+### Fixed
+- Fix hover label positioning on bar traces [#1107]
+
+
+## [1.19.1] -- 2016-10-27
+
+### Fixed
+- Fix dist bundles [#1094]
+
+
+## [1.19.0] -- 2016-10-27
+
+**Unpublished on npm and CDN** due to broken dist bundles.
+
+### Added
+- Add two-argument `Plotly.plot` call signature [#1014]
+- Add two-way binding functionality to updatemenus and sliders [#1016]
+- Add `width`, `base` and `offset` attribute to bar trace [#1075]
+- Add `fromcurrent` and `direction` animation options [#1087]
+- Add ability to filter by arbitrary array [#1062]
+
+### Changed
+- Rename `filtersrc` filter transform attribute `target` (with
+  backward-compatible map) [#1062]
+- Bump `sane-topojson` requirement to 2.0.0. New topojson dist files fix
+  the Michigan state border [#1077]
+- scattergl now handles higher resolution dates [#1033]
+- Improve error messages in `Plotly.animate` [#1088]
+
+### Fixed
+- `Plotly.newPlot` now respect user-defined layout `height` and `width` [#537]
+- Fix dendrogram cartesian axis layers [#1063]
+- Fix RGBA colorscale handler for contour [#1090]
+- Fix gl2d axis title positioning [#1067]
+- Fix gl2d multi-line axis tick labels display [#1087]
+- Fix performance deficit of scattergl trace type with date coordinates [#1021]
+- Fix ohlc trace offset computation [#1066]
+- Fix ohlc and candlestick default trace names [#1073]
+- Make `Plotly.animate` work with frames container array containers (e.g
+  annotations) [#1081]
+- Make `restyle` and `relayout` consistently remove items in array containers
+  when called with value argument `null` [#1086]
+
+
+## [1.18.1] -- 2016-10-18
+
+### Fixed
+- Fix cartesian subplot resize [#1049]
+- Fix cartesian interactivity after click [#1049]
+- Fix `scattergeo` traces with not-found country names [#1046]
+- Honor `'name'` hoverinfo flag in `ohlc` traces [#1050]
+- Fix animation merging for frames including array containers [#1041. #1048]
+- Fix `requestAnimationFrame` polyfill for script-tag imports [#1039]
+
+
+## [1.18.0] -- 2016-10-13
+
+### Added
+- Add `ohlc` and `candlestick` trace types [#1020]
+- Add slider layout component [#986, #1029]
+- Add filter and groupby transforms [#936, #978]
+- Add support for all cartesian trace types and subplot configuration in
+  range slider range plots [#946, #1017]
+- Add update menus `'buttons'` type, `direction` and `showactive` options [#974]
+- Add `pad` attributes to update menus for more intuitive positioning [#989]
+- Add `plotly_hover`, `plotly_click` and `plotly_unhover` event emitters
+  on gl2d subplot [#994]
+- Make `'text'` mode  scatter traces animatable [#1011]
+- Add picking for `'line'` mode scattergeo traces [#1004]
+- Add support for `fill: 'toself'` in scattergeo traces [#1004]
+
+### Changed
+- Allow null / undefined frames in `Plotly.addFrames`[#1013]
+
+### Fixed
+- Allow range sliders to properly relayout [#962]
+- Fix handling of `NaN` gaps in range slider range plots [#946, #1017]
+- Properly skip over `NaN`s in scattergeo data arrays [#1004]
+- Fix handling graph div with style `visibility: inherit` [#990]
+- Fix `Plotly.update` for updates that require a full data + layout replot [#971]
+- Let update menus use `Plotly.update` method value [#972]
+- Fix tickfont relayout call on 3D subplot [#982]
+
+
 ## [1.17.3] -- 2016-09-21
 
 ### Fixed

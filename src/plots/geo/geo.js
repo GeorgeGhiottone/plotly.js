@@ -26,7 +26,7 @@ var constants = require('./constants');
 
 var xmlnsNamespaces = require('../../constants/xmlns_namespaces');
 var topojsonUtils = require('../../lib/topojson_utils');
-var topojsonFeature = require('topojson').feature;
+var topojsonFeature = require('topojson-client').feature;
 
 // add a few projection types to d3.geo
 addProjectionsToD3(d3);
@@ -109,6 +109,10 @@ proto.plot = function(geoCalcData, fullLayout, promises) {
         _this.yaxis.p2c = function() { return lonlat[1]; };
 
         Fx.hover(_this.graphDiv, evt, _this.id);
+    });
+
+    _this.framework.on('mouseout', function() {
+        Fx.loneUnhover(fullLayout._toppaper);
     });
 
     _this.framework.on('click', function() {
