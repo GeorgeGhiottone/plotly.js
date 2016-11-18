@@ -40218,21 +40218,14 @@ Feature.prototype = {
 module.exports={
   "_args": [
     [
-      {
-        "raw": "mapbox-gl@^0.22.0",
-        "scope": null,
-        "escapedName": "mapbox-gl",
-        "name": "mapbox-gl",
-        "rawSpec": "^0.22.0",
-        "spec": ">=0.22.0 <0.23.0",
-        "type": "range"
-      },
-      "/home/etienne/Documents/plotly/plotly.js"
+      "mapbox-gl@^0.22.0",
+      "/home/stefano/NetBeansProjects/plotly.js"
     ]
   ],
   "_from": "mapbox-gl@>=0.22.0 <0.23.0",
   "_id": "mapbox-gl@0.22.1",
   "_inCache": true,
+  "_installable": true,
   "_location": "/mapbox-gl",
   "_nodeVersion": "4.4.5",
   "_npmOperationalInternal": {
@@ -40240,17 +40233,16 @@ module.exports={
     "tmp": "tmp/mapbox-gl-0.22.1.tgz_1471549891670_0.8762630566488951"
   },
   "_npmUser": {
-    "name": "lucaswoj",
-    "email": "lucas@lucaswoj.com"
+    "email": "lucas@lucaswoj.com",
+    "name": "lucaswoj"
   },
   "_npmVersion": "2.15.5",
   "_phantomChildren": {},
   "_requested": {
-    "raw": "mapbox-gl@^0.22.0",
-    "scope": null,
-    "escapedName": "mapbox-gl",
     "name": "mapbox-gl",
+    "raw": "mapbox-gl@^0.22.0",
     "rawSpec": "^0.22.0",
+    "scope": null,
     "spec": ">=0.22.0 <0.23.0",
     "type": "range"
   },
@@ -40261,7 +40253,7 @@ module.exports={
   "_shasum": "92a965547d4c2f24c22cbc487eeda48694cb627a",
   "_shrinkwrap": null,
   "_spec": "mapbox-gl@^0.22.0",
-  "_where": "/home/etienne/Documents/plotly/plotly.js",
+  "_where": "/home/stefano/NetBeansProjects/plotly.js",
   "browser": {
     "./js/util/ajax.js": "./js/util/browser/ajax.js",
     "./js/util/browser.js": "./js/util/browser/browser.js",
@@ -40354,12 +40346,12 @@ module.exports={
   "main": "js/mapbox-gl.js",
   "maintainers": [
     {
-      "name": "aaronlidman",
-      "email": "aaronlidman@gmail.com"
+      "name": "lucaswoj",
+      "email": "lucas@lucaswoj.com"
     },
     {
-      "name": "ajashton",
-      "email": "aj.ashton@gmail.com"
+      "name": "aaronlidman",
+      "email": "aaronlidman@gmail.com"
     },
     {
       "name": "ansis",
@@ -40438,8 +40430,8 @@ module.exports={
       "email": "lauren@mapbox.com"
     },
     {
-      "name": "lucaswoj",
-      "email": "lucas@lucaswoj.com"
+      "name": "ajashton",
+      "email": "aj.ashton@gmail.com"
     },
     {
       "name": "lxbarth",
