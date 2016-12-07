@@ -1,26 +1,6 @@
 {
   "name": "plotly.js",
-  "version": "1.20.1",
-  "problems": [
-    "missing: through2@^0.6.3, required by glslify@4.0.0",
-    "missing: through2@^0.6.3, required by glsl-tokenizer@2.1.2",
-    "missing: falafel@^1.0.0, required by static-module@1.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1",
-    "missing: through2@^0.6.3, required by glslify@2.3.1"
-  ],
+  "version": "1.20.5",
   "dependencies": {
     "3d-view": {
       "version": "2.0.0",
@@ -214,11 +194,6 @@
                           "from": "define-properties@>=1.1.2 <2.0.0",
                           "resolved": "https://registry.npmjs.org/define-properties/-/define-properties-1.1.2.tgz",
                           "dependencies": {
-                            "foreach": {
-                              "version": "2.0.5",
-                              "from": "foreach@>=2.0.5 <3.0.0",
-                              "resolved": "https://registry.npmjs.org/foreach/-/foreach-2.0.5.tgz"
-                            },
                             "object-keys": {
                               "version": "1.0.11",
                               "from": "object-keys@>=1.0.8 <2.0.0",
@@ -357,11 +332,6 @@
       "version": "1.1.3",
       "from": "gl-contour2d@>=1.1.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-contour2d/-/gl-contour2d-1.1.3.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@4.0.0",
-        "missing: through2@^0.6.3, required by glsl-tokenizer@2.1.2",
-        "missing: falafel@^1.0.0, required by static-module@1.3.1"
-      ],
       "dependencies": {
         "cdt2d": {
           "version": "1.0.0",
@@ -448,11 +418,6 @@
           "version": "4.0.0",
           "from": "glslify@>=4.0.0 <5.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-4.0.0.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@4.0.0",
-            "missing: through2@^0.6.3, required by glsl-tokenizer@2.1.2",
-            "missing: falafel@^1.0.0, required by static-module@1.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "1.1.2",
@@ -514,9 +479,6 @@
               "version": "4.0.1",
               "from": "glslify-bundle@>=4.0.0 <5.0.0",
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-4.0.1.tgz",
-              "problems": [
-                "missing: through2@^0.6.3, required by glsl-tokenizer@2.1.2"
-              ],
               "dependencies": {
                 "glsl-inject-defines": {
                   "version": "1.0.3",
@@ -576,13 +538,11 @@
                   "version": "2.1.2",
                   "from": "glsl-tokenizer@>=2.0.2 <3.0.0",
                   "resolved": "https://registry.npmjs.org/glsl-tokenizer/-/glsl-tokenizer-2.1.2.tgz",
-                  "problems": [
-                    "missing: through2@^0.6.3, required by glsl-tokenizer@2.1.2"
-                  ],
                   "dependencies": {
                     "through2": {
-                      "required": "^0.6.3",
-                      "missing": true
+                      "version": "0.6.5",
+                      "from": "through2@>=0.6.3 <0.7.0",
+                      "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
                     }
                   }
                 },
@@ -651,6 +611,25 @@
                 }
               }
             },
+            "through2": {
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz",
+              "dependencies": {
+                "readable-stream": {
+                  "version": "1.0.34",
+                  "from": "readable-stream@>=1.0.33-1 <1.1.0-0",
+                  "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
+                  "dependencies": {
+                    "isarray": {
+                      "version": "0.0.1",
+                      "from": "isarray@0.0.1",
+                      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+                    }
+                  }
+                }
+              }
+            },
             "minimist": {
               "version": "1.2.0",
               "from": "minimist@>=1.2.0 <1.3.0",
@@ -665,9 +644,6 @@
               "version": "1.3.1",
               "from": "static-module@>=1.1.2 <2.0.0",
               "resolved": "https://registry.npmjs.org/static-module/-/static-module-1.3.1.tgz",
-              "problems": [
-                "missing: falafel@^1.0.0, required by static-module@1.3.1"
-              ],
               "dependencies": {
                 "concat-stream": {
                   "version": "1.4.10",
@@ -751,18 +727,6 @@
                     }
                   }
                 },
-                "readable-stream": {
-                  "version": "1.0.34",
-                  "from": "readable-stream@>=1.0.33-1 <1.1.0-0",
-                  "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
-                  "dependencies": {
-                    "isarray": {
-                      "version": "0.0.1",
-                      "from": "isarray@0.0.1",
-                      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
-                    }
-                  }
-                },
                 "static-eval": {
                   "version": "0.2.4",
                   "from": "static-eval@>=0.2.0 <0.3.0",
@@ -784,6 +748,28 @@
                           "resolved": "https://registry.npmjs.org/estraverse/-/estraverse-1.3.2.tgz"
                         }
                       }
+                    }
+                  }
+                },
+                "falafel": {
+                  "version": "1.2.0",
+                  "from": "falafel@>=1.0.0 <2.0.0",
+                  "resolved": "https://registry.npmjs.org/falafel/-/falafel-1.2.0.tgz",
+                  "dependencies": {
+                    "acorn": {
+                      "version": "1.2.2",
+                      "from": "acorn@^1.0.3",
+                      "resolved": "https://registry.npmjs.org/acorn/-/acorn-1.2.2.tgz"
+                    },
+                    "foreach": {
+                      "version": "2.0.5",
+                      "from": "foreach@>=2.0.5 <3.0.0",
+                      "resolved": "https://registry.npmjs.org/foreach/-/foreach-2.0.5.tgz"
+                    },
+                    "object-keys": {
+                      "version": "1.0.11",
+                      "from": "object-keys@>=1.0.6 <2.0.0",
+                      "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-1.0.11.tgz"
                     }
                   }
                 },
@@ -810,10 +796,6 @@
                       }
                     }
                   }
-                },
-                "falafel": {
-                  "required": "^1.0.0",
-                  "missing": true
                 }
               }
             },
@@ -821,10 +803,6 @@
               "version": "4.0.1",
               "from": "xtend@>=4.0.0 <4.1.0-0",
               "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz"
-            },
-            "through2": {
-              "required": "^0.6.3",
-              "missing": true
             }
           }
         },
@@ -885,17 +863,11 @@
       "version": "1.2.1",
       "from": "gl-error2d@>=1.2.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-error2d/-/gl-error2d-1.2.1.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "glslify": {
           "version": "2.3.1",
           "from": "glslify@>=2.3.1 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -908,8 +880,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -924,17 +897,11 @@
       "version": "1.0.4",
       "from": "gl-error3d@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-error3d/-/gl-error3d-1.0.4.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "glslify": {
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -947,8 +914,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -975,17 +943,11 @@
       "version": "1.4.1",
       "from": "gl-line2d@>=1.4.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-line2d/-/gl-line2d-1.4.1.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "glslify": {
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -998,8 +960,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1019,9 +982,6 @@
       "version": "1.1.0",
       "from": "gl-line3d@>=1.1.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-line3d/-/gl-line3d-1.1.0.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "binary-search-bounds": {
           "version": "1.0.0",
@@ -1032,9 +992,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1047,8 +1004,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1068,9 +1026,6 @@
       "version": "1.2.0",
       "from": "gl-mesh3d@>=1.2.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-mesh3d/-/gl-mesh3d-1.2.0.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "barycentric": {
           "version": "1.0.1",
@@ -1114,9 +1069,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1129,8 +1081,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1179,9 +1132,6 @@
       "version": "1.2.0",
       "from": "gl-plot2d@>=1.2.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-plot2d/-/gl-plot2d-1.2.0.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "binary-search-bounds": {
           "version": "2.0.3",
@@ -1197,9 +1147,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.2.1 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1212,8 +1159,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1238,11 +1186,6 @@
       "version": "1.5.1",
       "from": "gl-plot3d@>=1.5.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-plot3d/-/gl-plot3d-1.5.1.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1",
-        "missing: through2@^0.6.3, required by glslify@2.3.1",
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "3d-view-controls": {
           "version": "2.1.1",
@@ -1265,9 +1208,6 @@
           "version": "1.2.5",
           "from": "gl-axes3d@>=1.2.5 <2.0.0",
           "resolved": "https://registry.npmjs.org/gl-axes3d/-/gl-axes3d-1.2.5.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "extract-frustum-planes": {
               "version": "1.0.0",
@@ -1278,9 +1218,6 @@
               "version": "2.3.1",
               "from": "glslify@>=2.1.2 <3.0.0",
               "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-              "problems": [
-                "missing: through2@^0.6.3, required by glslify@2.3.1"
-              ],
               "dependencies": {
                 "bl": {
                   "version": "0.9.5",
@@ -1293,8 +1230,9 @@
                   "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
                 },
                 "through2": {
-                  "required": "^0.6.3",
-                  "missing": true
+                  "version": "0.6.5",
+                  "from": "through2@^0.6.3",
+                  "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
                 }
               }
             },
@@ -1331,9 +1269,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1346,8 +1281,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1355,17 +1291,11 @@
           "version": "1.0.5",
           "from": "gl-spikes3d@>=1.0.3 <2.0.0",
           "resolved": "https://registry.npmjs.org/gl-spikes3d/-/gl-spikes3d-1.0.5.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "glslify": {
               "version": "2.3.1",
               "from": "glslify@>=2.1.2 <3.0.0",
               "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-              "problems": [
-                "missing: through2@^0.6.3, required by glslify@2.3.1"
-              ],
               "dependencies": {
                 "bl": {
                   "version": "0.9.5",
@@ -1378,8 +1308,9 @@
                   "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
                 },
                 "through2": {
-                  "required": "^0.6.3",
-                  "missing": true
+                  "version": "0.6.5",
+                  "from": "through2@^0.6.3",
+                  "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
                 }
               }
             }
@@ -1391,9 +1322,6 @@
       "version": "1.0.0",
       "from": "gl-pointcloud2d@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-pointcloud2d/-/gl-pointcloud2d-1.0.0.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "gl-shader": {
           "version": "4.2.1",
@@ -1404,9 +1332,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1419,8 +1344,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         }
@@ -1430,9 +1356,6 @@
       "version": "1.2.2",
       "from": "gl-scatter2d@>=1.2.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-scatter2d/-/gl-scatter2d-1.2.2.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "binary-search-bounds": {
           "version": "2.0.3",
@@ -1443,9 +1366,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1458,8 +1378,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1474,9 +1395,6 @@
       "version": "1.2.1",
       "from": "gl-scatter2d-fancy@>=1.2.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-scatter2d-fancy/-/gl-scatter2d-fancy-1.2.1.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "gl-shader": {
           "version": "4.2.1",
@@ -1487,9 +1405,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.3.1 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1502,8 +1417,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },
@@ -1609,17 +1525,11 @@
       "version": "1.0.10",
       "from": "gl-scatter3d@>=1.0.4 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-scatter3d/-/gl-scatter3d-1.0.10.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "glslify": {
           "version": "2.3.1",
           "from": "glslify@>=2.2.1 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1632,8 +1542,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         }
@@ -1643,17 +1554,11 @@
       "version": "1.0.1",
       "from": "gl-select-box@>=1.0.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-select-box/-/gl-select-box-1.0.1.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "glslify": {
           "version": "2.3.1",
           "from": "glslify@>=2.2.1 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1666,8 +1571,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         }
@@ -1742,9 +1648,6 @@
       "version": "1.3.0",
       "from": "gl-surface3d@>=1.3.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/gl-surface3d/-/gl-surface3d-1.3.0.tgz",
-      "problems": [
-        "missing: through2@^0.6.3, required by glslify@2.3.1"
-      ],
       "dependencies": {
         "bit-twiddle": {
           "version": "1.0.2",
@@ -1760,9 +1663,6 @@
           "version": "2.3.1",
           "from": "glslify@>=2.1.2 <3.0.0",
           "resolved": "https://registry.npmjs.org/glslify/-/glslify-2.3.1.tgz",
-          "problems": [
-            "missing: through2@^0.6.3, required by glslify@2.3.1"
-          ],
           "dependencies": {
             "bl": {
               "version": "0.9.5",
@@ -1775,8 +1675,9 @@
               "resolved": "https://registry.npmjs.org/glslify-bundle/-/glslify-bundle-2.0.4.tgz"
             },
             "through2": {
-              "required": "^0.6.3",
-              "missing": true
+              "version": "0.6.5",
+              "from": "through2@^0.6.3",
+              "resolved": "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz"
             }
           }
         },

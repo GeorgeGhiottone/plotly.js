@@ -10,6 +10,35 @@ https://github.com/plotly/plotly.js/compare/vX.Y.Z...master
 where X.Y.Z is the semver of most recent plotly.js release.
 
 
+## [1.20.5] -- 2016-11-23
+
+### Fixed
+- Fix 1.20.0 regression in handling numerical strings including commas and spaces
+  [#1185]
+- Fix 1.20.0 regression involving date histograms [#1186]
+- Fix numerous  tickvals` and `ticktext` edge cases [#1191]
+
+
+## [1.20.4] -- 2016-11-21
+
+### Fixed
+- Fix metaKeys field `PlotSchema.get()` output
+
+## [1.20.3] -- 2016-11-21
+
+### Fixed
+- Remove infinite loop when plotting 1-pt `scattergl` traces [#1168]
+- Fix updatemenu bug where the wrong button was set to active [#1176]
+- Fix `addTraces` when called with existing traces as input [#1175]
+
+
+## [1.20.2] -- 2016-11-17
+
+### Fixed
+- Fix hover labels in stacked bar charts [#1163]
+- Fix mode bar zoom buttons on date axes [#1162]
+
+
 ## [1.20.1] -- 2016-11-16
 
 ### Fixed
