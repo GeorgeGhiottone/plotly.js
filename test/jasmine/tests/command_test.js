@@ -444,6 +444,12 @@ describe('Plots.computeAPICommandBindings', function() {
             expect(result).toEqual([{type: 'layout', prop: '_currentFrame', value: 'framename'}]);
         });
 
+        it('treats numeric frame names as strings', function() {
+            var result = Plots.computeAPICommandBindings(gd, 'animate', [[8]]);
+
+            expect(result).toEqual([{type: 'layout', prop: '_currentFrame', value: '8'}]);
+        });
+
         it('binds to nothing for a multi-frame animate command', function() {
             var result = Plots.computeAPICommandBindings(gd, 'animate', [['frame1', 'frame2']]);
 
@@ -588,7 +594,8 @@ describe('attaching component bindings', function() {
             expect(gd.layout.sliders[0].active).toBe(0);
 
             // Check that it still has one attached listener:
-            expect(typeof gd._internalEv._events.plotly_animatingframe).toBe('function');
+            expect(typeof gd._internalEv._events.plotly_animatingframe).toBe('function',
+                gd._internalEv._events.plotly_animatingframe);
 
             // Change this to a non-simple binding:
             return Plotly.relayout(gd, {'sliders[0].steps[0].args[0]': 'line.color'});

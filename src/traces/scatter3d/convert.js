@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2016, Plotly, Inc.
+* Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -177,14 +177,17 @@ function convertPlotlyOptions(scene, data) {
         yc, y = data.y || [],
         zc, z = data.z || [],
         len = x.length,
+        xcalendar = data.xcalendar,
+        ycalendar = data.ycalendar,
+        zcalendar = data.zcalendar,
         text;
 
     // Convert points
     for(i = 0; i < len; i++) {
         // sanitize numbers and apply transforms based on axes.type
-        xc = xaxis.d2l(x[i]) * scaleFactor[0];
-        yc = yaxis.d2l(y[i]) * scaleFactor[1];
-        zc = zaxis.d2l(z[i]) * scaleFactor[2];
+        xc = xaxis.d2l(x[i], 0, xcalendar) * scaleFactor[0];
+        yc = yaxis.d2l(y[i], 0, ycalendar) * scaleFactor[1];
+        zc = zaxis.d2l(z[i], 0, zcalendar) * scaleFactor[2];
 
         points[i] = [xc, yc, zc];
     }
@@ -311,6 +314,7 @@ proto.update = function(data) {
         if(this.linePlot) this.linePlot.update(lineOptions);
         else {
             this.linePlot = createLinePlot(lineOptions);
+            this.linePlot._trace = this;
             this.scene.glplot.add(this.linePlot);
         }
     } else if(this.linePlot) {
@@ -342,6 +346,7 @@ proto.update = function(data) {
         if(this.scatterPlot) this.scatterPlot.update(scatterOptions);
         else {
             this.scatterPlot = createScatterPlot(scatterOptions);
+            this.scatterPlot._trace = this;
             this.scatterPlot.highlightScale = 1;
             this.scene.glplot.add(this.scatterPlot);
         }
@@ -372,6 +377,7 @@ proto.update = function(data) {
         if(this.textMarkers) this.textMarkers.update(textOptions);
         else {
             this.textMarkers = createScatterPlot(textOptions);
+            this.textMarkers._trace = this;
             this.textMarkers.highlightScale = 1;
             this.scene.glplot.add(this.textMarkers);
         }
@@ -400,6 +406,7 @@ proto.update = function(data) {
         }
     } else if(options.errorBounds) {
         this.errorBars = createErrorBars(errorOptions);
+        this.errorBars._trace = this;
         this.scene.glplot.add(this.errorBars);
     }
 
@@ -416,6 +423,7 @@ proto.update = function(data) {
         } else {
             delaunayOptions.gl = gl;
             this.delaunayMesh = createMesh(delaunayOptions);
+            this.delaunayMesh._trace = this;
             this.scene.glplot.add(this.delaunayMesh);
         }
     } else if(this.delaunayMesh) {

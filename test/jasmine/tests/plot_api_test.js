@@ -7,6 +7,7 @@ var Bar = require('@src/traces/bar');
 var Legend = require('@src/components/legend');
 var pkg = require('../../../package.json');
 var subroutines = require('@src/plot_api/subroutines');
+var helpers = require('@src/plot_api/helpers');
 
 var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
@@ -84,6 +85,21 @@ describe('Test plot api', function() {
                 expect(gd._transitionData._frames[2].name).toEqual('frame3');
             }).catch(fail).then(done);
         });
+
+        it('should emit afterplot event after plotting is done', function(done) {
+            var afterPlot = false;
+
+            var promise = Plotly.plot(gd, [{ y: [2, 1, 2]}]);
+
+            gd.on('plotly_afterplot', function() {
+                afterPlot = true;
+            });
+
+            promise.then(function() {
+                expect(afterPlot).toBe(true);
+            })
+            .then(done);
+        });
     });
 
     describe('Plotly.relayout', function() {
@@ -160,6 +176,64 @@ describe('Test plot api', function() {
                 })
                 .then(function() {
                     expect(gd.layout.rando).toEqual([1, 45, 3]);
+                })
+                .then(done);
+        });
+
+        it('errors if child and parent are edited together', function(done) {
+            var edit1 = {rando: [{a: 1}, {b: 2}]};
+            var edit2 = {'rando[1]': {c: 3}};
+            var edit3 = {'rando[1].d': 4};
+
+            Plotly.plot(gd, [{ x: [1, 2, 3], y: [1, 2, 3] }])
+                .then(function() {
+                    return Plotly.relayout(gd, edit1);
+                })
+                .then(function() {
+                    expect(gd.layout.rando).toEqual([{a: 1}, {b: 2}]);
+                    return Plotly.relayout(gd, edit2);
+                })
+                .then(function() {
+                    expect(gd.layout.rando).toEqual([{a: 1}, {c: 3}]);
+                    return Plotly.relayout(gd, edit3);
+                })
+                .then(function() {
+                    expect(gd.layout.rando).toEqual([{a: 1}, {c: 3, d: 4}]);
+
+                    // OK, setup is done - test the failing combinations
+                    [[edit1, edit2], [edit1, edit3], [edit2, edit3]].forEach(function(v) {
+                        // combine properties in both orders - which results in the same object
+                        // but the properties are iterated in opposite orders
+                        expect(function() {
+                            return Plotly.relayout(gd, Lib.extendFlat({}, v[0], v[1]));
+                        }).toThrow();
+                        expect(function() {
+                            return Plotly.relayout(gd, Lib.extendFlat({}, v[1], v[0]));
+                        }).toThrow();
+                    });
+                })
+                .catch(fail)
+                .then(done);
+        });
+
+        it('can set empty text nodes', function(done) {
+            var data = [{
+                x: [1, 2, 3],
+                y: [0, 0, 0],
+                text: ['', 'Text', ''],
+                mode: 'lines+text'
+            }];
+            var scatter = null;
+            var oldHeight = 0;
+            Plotly.plot(gd, data)
+                .then(function() {
+                    scatter = document.getElementsByClassName('scatter')[0];
+                    oldHeight = scatter.getBoundingClientRect().height;
+                    return Plotly.relayout(gd, 'yaxis.range', [0.5, 0.5, 0.5]);
+                })
+                .then(function() {
+                    var newHeight = scatter.getBoundingClientRect().height;
+                    expect(newHeight).toEqual(oldHeight);
                 })
                 .then(done);
         });
@@ -282,7 +356,74 @@ describe('Test plot api', function() {
             expect(gd._fullData[0].marker.color).toBe(colorDflt[0]);
             expect(gd._fullData[1].marker.color).toBe(colorDflt[1]);
         });
+    });
 
+    describe('Plotly.restyle unmocked', function() {
+        var gd;
+
+        beforeEach(function() {
+            gd = createGraphDiv();
+        });
+
+        afterEach(function() {
+            destroyGraphDiv();
+        });
+
+        it('should redo auto z/contour when editing z array', function(done) {
+            Plotly.plot(gd, [{type: 'contour', z: [[1, 2], [3, 4]]}]).then(function() {
+                expect(gd.data[0].zauto).toBe(true, gd.data[0]);
+                expect(gd.data[0].zmin).toBe(1);
+                expect(gd.data[0].zmax).toBe(4);
+
+                expect(gd.data[0].autocontour).toBe(true);
+                expect(gd.data[0].contours).toEqual({start: 1.5, end: 3.5, size: 0.5});
+
+                return Plotly.restyle(gd, {'z[0][0]': 10});
+            }).then(function() {
+                expect(gd.data[0].zmin).toBe(2);
+                expect(gd.data[0].zmax).toBe(10);
+
+                expect(gd.data[0].contours).toEqual({start: 3, end: 9, size: 1});
+            })
+            .catch(fail)
+            .then(done);
+        });
+
+        it('errors if child and parent are edited together', function(done) {
+            var edit1 = {rando: [[{a: 1}, {b: 2}]]};
+            var edit2 = {'rando[1]': {c: 3}};
+            var edit3 = {'rando[1].d': 4};
+
+            Plotly.plot(gd, [{x: [1, 2, 3], y: [1, 2, 3], type: 'scatter'}])
+                .then(function() {
+                    return Plotly.restyle(gd, edit1);
+                })
+                .then(function() {
+                    expect(gd.data[0].rando).toEqual([{a: 1}, {b: 2}]);
+                    return Plotly.restyle(gd, edit2);
+                })
+                .then(function() {
+                    expect(gd.data[0].rando).toEqual([{a: 1}, {c: 3}]);
+                    return Plotly.restyle(gd, edit3);
+                })
+                .then(function() {
+                    expect(gd.data[0].rando).toEqual([{a: 1}, {c: 3, d: 4}]);
+
+                    // OK, setup is done - test the failing combinations
+                    [[edit1, edit2], [edit1, edit3], [edit2, edit3]].forEach(function(v) {
+                        // combine properties in both orders - which results in the same object
+                        // but the properties are iterated in opposite orders
+                        expect(function() {
+                            return Plotly.restyle(gd, Lib.extendFlat({}, v[0], v[1]));
+                        }).toThrow();
+                        expect(function() {
+                            return Plotly.restyle(gd, Lib.extendFlat({}, v[1], v[0]));
+                        }).toThrow();
+                    });
+                })
+                .catch(fail)
+                .then(done);
+        });
     });
 
     describe('Plotly.deleteTraces', function() {
@@ -1051,6 +1192,36 @@ describe('Test plot api', function() {
             expect(trace1.transforms[0].target).toEqual('y');
         });
 
+        it('should rename *calendar* to *valuecalendar* in filter transforms', function() {
+            var data = [{
+                transforms: [{
+                    type: 'filter',
+                    target: 'y',
+                    calendar: 'hebrew'
+                }, {
+                    type: 'filter',
+                    operation: '<'
+                }]
+            }, {
+                transforms: [{
+                    type: 'filter',
+                    valuecalendar: 'jalali'
+                }]
+            }];
+
+            Plotly.plot(gd, data);
+
+            var trace0 = gd.data[0],
+                trace1 = gd.data[1];
+
+            expect(trace0.transforms.length).toEqual(2);
+            expect(trace0.transforms[0].calendar).toBeUndefined();
+            expect(trace0.transforms[0].valuecalendar).toEqual('hebrew');
+
+            expect(trace1.transforms.length).toEqual(1);
+            expect(trace1.transforms[0].valuecalendar).toEqual('jalali');
+        });
+
         it('should cleanup annotations / shapes refs', function() {
             var data = [{}];
 
@@ -1210,6 +1381,55 @@ describe('Test plot api', function() {
                 expect(calcdata).toBe(gd.calcdata);
                 done();
             });
+        });
+    });
+});
+
+describe('plot_api helpers', function() {
+    describe('hasParent', function() {
+        var attr = 'annotations[2].xref';
+        var attr2 = 'marker.line.width';
+
+        it('does not match the attribute itself or other related non-parent attributes', function() {
+            var aobj = {
+                // '' wouldn't be valid as an attribute in our framework, but tested
+                // just in case this would count as a parent.
+                '': true,
+                'annotations[1]': {}, // parent structure, just a different array element
+                'xref': 1, // another substring
+                'annotations[2].x': 0.5, // substring of the attribute, but not a parent
+                'annotations[2].xref': 'x2' // the attribute we're testing - not its own parent
+            };
+
+            expect(helpers.hasParent(aobj, attr)).toBe(false);
+
+            var aobj2 = {
+                'marker.line.color': 'red',
+                'marker.line.width': 2,
+                'marker.color': 'blue',
+                'line': {}
+            };
+
+            expect(helpers.hasParent(aobj2, attr2)).toBe(false);
+        });
+
+        it('is false when called on a top-level attribute', function() {
+            var aobj = {
+                '': true,
+                'width': 100
+            };
+
+            expect(helpers.hasParent(aobj, 'width')).toBe(false);
+        });
+
+        it('matches any kind of parent', function() {
+            expect(helpers.hasParent({'annotations': []}, attr)).toBe(true);
+            expect(helpers.hasParent({'annotations[2]': {}}, attr)).toBe(true);
+
+            expect(helpers.hasParent({'marker': {}}, attr2)).toBe(true);
+            // this one wouldn't actually make sense: marker.line needs to be an object...
+            // but hasParent doesn't look at the values in aobj, just its keys.
+            expect(helpers.hasParent({'marker.line': 1}, attr2)).toBe(true);
         });
     });
 });

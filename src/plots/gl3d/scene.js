@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2016, Plotly, Inc.
+* Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -22,7 +22,6 @@ var showNoWebGlMsg = require('../../lib/show_no_webgl_msg');
 
 var createCamera = require('./camera');
 var project = require('./project');
-var setConvert = require('./set_convert');
 var createAxesOptions = require('./layout/convert');
 var createSpikeOptions = require('./layout/spikes');
 var computeTickMarks = require('./layout/tick_marks');
@@ -58,10 +57,9 @@ function render(scene) {
     }
 
     function formatter(axisName, val) {
-        if(typeof val === 'string') return val;
-
         var axis = scene.fullSceneLayout[axisName];
-        return Axes.tickText(axis, axis.c2l(val), 'hover').text;
+
+        return Axes.tickText(axis, axis.d2l(val), 'hover').text;
     }
 
     var oldEventData;
@@ -173,6 +171,8 @@ function initializeGLPlot(scene, fullLayout, canvas, gl) {
     }
 
     var relayoutCallback = function(scene) {
+        if(scene.fullSceneLayout.dragmode === false) return;
+
         var update = {};
         update[scene.id] = getLayoutCamera(scene.camera);
         scene.saveCamera(scene.graphDiv.layout);
@@ -201,7 +201,6 @@ function initializeGLPlot(scene, fullLayout, canvas, gl) {
         });
     }
 
-    scene.glplot.mouseListener.enabled = false;
     scene.glplot.camera = scene.camera;
 
     scene.glplot.oncontextloss = function() {
@@ -292,12 +291,12 @@ proto.recoverContext = function() {
 
 var axisProperties = [ 'xaxis', 'yaxis', 'zaxis' ];
 
-function coordinateBound(axis, coord, d, bounds) {
+function coordinateBound(axis, coord, d, bounds, calendar) {
     var x;
     for(var i = 0; i < coord.length; ++i) {
         if(Array.isArray(coord[i])) {
             for(var j = 0; j < coord[i].length; ++j) {
-                x = axis.d2l(coord[i][j]);
+                x = axis.d2l(coord[i][j], 0, calendar);
                 if(!isNaN(x) && isFinite(x)) {
                     bounds[0][d] = Math.min(bounds[0][d], x);
                     bounds[1][d] = Math.max(bounds[1][d], x);
@@ -305,7 +304,7 @@ function coordinateBound(axis, coord, d, bounds) {
             }
         }
         else {
-            x = axis.d2l(coord[i]);
+            x = axis.d2l(coord[i], 0, calendar);
             if(!isNaN(x) && isFinite(x)) {
                 bounds[0][d] = Math.min(bounds[0][d], x);
                 bounds[1][d] = Math.max(bounds[1][d], x);
@@ -316,12 +315,13 @@ function coordinateBound(axis, coord, d, bounds) {
 
 function computeTraceBounds(scene, trace, bounds) {
     var sceneLayout = scene.fullSceneLayout;
-    coordinateBound(sceneLayout.xaxis, trace.x, 0, bounds);
-    coordinateBound(sceneLayout.yaxis, trace.y, 1, bounds);
-    coordinateBound(sceneLayout.zaxis, trace.z, 2, bounds);
+    coordinateBound(sceneLayout.xaxis, trace.x, 0, bounds, trace.xcalendar);
+    coordinateBound(sceneLayout.yaxis, trace.y, 1, bounds, trace.ycalendar);
+    coordinateBound(sceneLayout.zaxis, trace.z, 2, bounds, trace.zcalendar);
 }
 
 proto.plot = function(sceneData, fullLayout, layout) {
+
     // Save parameters
     this.plotArgs = [sceneData, fullLayout, layout];
 
@@ -338,23 +338,22 @@ proto.plot = function(sceneData, fullLayout, layout) {
     this.glplot.snapToData = true;
 
     // Update layout
+    this.fullLayout = fullLayout;
     this.fullSceneLayout = fullSceneLayout;
 
     this.glplotLayout = fullSceneLayout;
     this.axesOptions.merge(fullSceneLayout);
     this.spikeOptions.merge(fullSceneLayout);
 
-    // Update camera mode
+    // Update camera and camera mode
+    this.setCamera(fullSceneLayout.camera);
     this.updateFx(fullSceneLayout.dragmode, fullSceneLayout.hovermode);
 
     // Update scene
     this.glplot.update({});
 
     // Update axes functions BEFORE updating traces
-    for(i = 0; i < 3; ++i) {
-        axis = fullSceneLayout[axisProperties[i]];
-        setConvert(axis);
-    }
+    this.setConvert(axis);
 
     // Convert scene data
     if(!sceneData) sceneData = [];
@@ -419,6 +418,11 @@ proto.plot = function(sceneData, fullLayout, layout) {
         trace.dispose();
         delete this.traces[traceIds[i]];
     }
+
+    // order object per trace index
+    this.glplot.objects.sort(function(a, b) {
+        return a._trace.data.index - b._trace.data.index;
+    });
 
     // Update ranges (needs to be called *after* objects are added due to updates)
     var sceneBounds = [[0, 0, 0], [0, 0, 0]],
@@ -565,18 +569,6 @@ proto.destroy = function() {
     this.glplot = null;
 };
 
-
-// for reset camera button in mode bar
-proto.setCameraToDefault = function setCameraToDefault() {
-    // as in Gl3d.layoutAttributes
-
-    this.setCamera({
-        eye: { x: 1.25, y: 1.25, z: 1.25 },
-        center: { x: 0, y: 0, z: 0 },
-        up: { x: 0, y: 0, z: 1 }
-    });
-};
-
 // getOrbitCamera :: plotly_coords -> orbit_camera_coords
 // inverse of getLayoutCamera
 function getOrbitCamera(camera) {
@@ -605,13 +597,7 @@ proto.getCamera = function getCamera() {
 
 // set camera position with a set of plotly coords
 proto.setCamera = function setCamera(cameraData) {
-
-    var update = {};
-
-    update[this.id] = cameraData;
-
     this.glplot.camera.lookAt.apply(this, getOrbitCamera(cameraData));
-    this.graphDiv.emit('plotly_relayout', update);
 };
 
 // save camera to user layout (i.e. gd.layout)
@@ -722,6 +708,13 @@ proto.toImage = function(format) {
     if(this.staticMode) this.container.removeChild(STATIC_CANVAS);
 
     return dataURL;
+};
+
+proto.setConvert = function() {
+    for(var i = 0; i < 3; ++i) {
+        var ax = this.fullSceneLayout[axisProperties[i]];
+        Axes.setConvert(ax, this.fullLayout);
+    }
 };
 
 module.exports = Scene;

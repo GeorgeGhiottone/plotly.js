@@ -27,14 +27,14 @@ describe('Bar.supplyDefaults', function() {
 
     it('should set visible to false when x and y are empty', function() {
         traceIn = {};
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.visible).toBe(false);
 
         traceIn = {
             x: [],
             y: []
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.visible).toBe(false);
     });
 
@@ -42,27 +42,27 @@ describe('Bar.supplyDefaults', function() {
         traceIn = {
             x: []
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.visible).toBe(false);
 
         traceIn = {
             x: [],
             y: [1, 2, 3]
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.visible).toBe(false);
 
         traceIn = {
             y: []
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.visible).toBe(false);
 
         traceIn = {
             x: [1, 2, 3],
             y: []
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.visible).toBe(false);
     });
 
@@ -70,7 +70,7 @@ describe('Bar.supplyDefaults', function() {
         traceIn = {
             y: [1, 2, 3]
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.base).toBeUndefined();
         expect(traceOut.offset).toBeUndefined();
         expect(traceOut.width).toBeUndefined();
@@ -81,7 +81,7 @@ describe('Bar.supplyDefaults', function() {
             width: -1,
             y: [1, 2, 3]
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.width).toBeUndefined();
     });
 
@@ -89,7 +89,7 @@ describe('Bar.supplyDefaults', function() {
         traceIn = {
             y: [1, 2, 3]
         };
-        supplyDefaults(traceIn, traceOut, defaultColor);
+        supplyDefaults(traceIn, traceOut, defaultColor, {});
         expect(traceOut.textposition).toBe('none');
         expect(traceOut.texfont).toBeUndefined();
         expect(traceOut.insidetexfont).toBeUndefined();
@@ -116,9 +116,35 @@ describe('Bar.supplyDefaults', function() {
         expect(traceOut.insidetextfont).not.toBe(traceOut.textfont);
         expect(traceOut.outsidetexfont).toBeUndefined();
     });
+
+    it('should inherit layout.calendar', function() {
+        traceIn = {
+            x: [1, 2, 3],
+            y: [1, 2, 3]
+        };
+        supplyDefaults(traceIn, traceOut, defaultColor, {calendar: 'islamic'});
+
+        // we always fill calendar attributes, because it's hard to tell if
+        // we're on a date axis at this point.
+        expect(traceOut.xcalendar).toBe('islamic');
+        expect(traceOut.ycalendar).toBe('islamic');
+    });
+
+    it('should take its own calendars', function() {
+        traceIn = {
+            x: [1, 2, 3],
+            y: [1, 2, 3],
+            xcalendar: 'coptic',
+            ycalendar: 'ethiopian'
+        };
+        supplyDefaults(traceIn, traceOut, defaultColor, {calendar: 'islamic'});
+
+        expect(traceOut.xcalendar).toBe('coptic');
+        expect(traceOut.ycalendar).toBe('ethiopian');
+    });
 });
 
-describe('heatmap calc / setPositions', function() {
+describe('bar calc / setPositions', function() {
     'use strict';
 
     beforeAll(function() {
@@ -653,6 +679,64 @@ describe('Bar.setPositions', function() {
             ya = gd._fullLayout.yaxis;
         expect(Axes.getAutoRange(xa)).toBeCloseToArray([-0.5, 2.5], undefined, '(xa.range)');
         expect(Axes.getAutoRange(ya)).toBeCloseToArray([-1.11, 1.11], undefined, '(ya.range)');
+    });
+
+    it('should skip placeholder trace in position computations', function() {
+        var gd = mockBarPlot([{
+            x: [1, 2, 3],
+            y: [2, 1, 2]
+        }, {
+            x: [null],
+            y: [null]
+        }]);
+
+        expect(gd.calcdata[0][0].t.barwidth).toEqual(0.8);
+
+        expect(gd.calcdata[1][0].x).toBe(false);
+        expect(gd.calcdata[1][0].y).toBe(false);
+        expect(gd.calcdata[1][0].placeholder).toBe(true);
+        expect(gd.calcdata[1][0].t.barwidth).toBeUndefined();
+    });
+
+    it('works with log axes (grouped bars)', function() {
+        var gd = mockBarPlot([
+            {y: [1, 10, 1e10, -1]},
+            {y: [2, 20, 2e10, -2]}
+        ], {
+            yaxis: {type: 'log'},
+            barmode: 'group'
+        });
+
+        var ya = gd._fullLayout.yaxis;
+        expect(Axes.getAutoRange(ya)).toBeCloseToArray([-0.572, 10.873], undefined, '(ya.range)');
+    });
+
+    it('works with log axes (stacked bars)', function() {
+        var gd = mockBarPlot([
+            {y: [1, 10, 1e10, -1]},
+            {y: [2, 20, 2e10, -2]}
+        ], {
+            yaxis: {type: 'log'},
+            barmode: 'stack'
+        });
+
+        var ya = gd._fullLayout.yaxis;
+        expect(Axes.getAutoRange(ya)).toBeCloseToArray([-0.582, 11.059], undefined, '(ya.range)');
+    });
+
+    it('works with log axes (normalized bars)', function() {
+        // strange case... but it should work!
+        var gd = mockBarPlot([
+            {y: [1, 10, 1e10, -1]},
+            {y: [2, 20, 2e10, -2]}
+        ], {
+            yaxis: {type: 'log'},
+            barmode: 'stack',
+            barnorm: 'percent'
+        });
+
+        var ya = gd._fullLayout.yaxis;
+        expect(Axes.getAutoRange(ya)).toBeCloseToArray([1.496, 2.027], undefined, '(ya.range)');
     });
 });
 
@@ -1205,18 +1289,8 @@ function mockBarPlot(dataWithoutTraceType, layout) {
         calcdata: []
     };
 
-    // call Bar.supplyDefaults
     Plots.supplyDefaults(gd);
-
-    // call Bar.calc
-    gd._fullData.forEach(function(fullTrace) {
-        var cd = Bar.calc(gd, fullTrace);
-
-        cd[0].t = {};
-        cd[0].trace = fullTrace;
-
-        gd.calcdata.push(cd);
-    });
+    Plots.doCalcdata(gd);
 
     var plotinfo = {
         xaxis: gd._fullLayout.xaxis,
