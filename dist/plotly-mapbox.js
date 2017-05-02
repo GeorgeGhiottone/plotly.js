@@ -40387,7 +40387,6 @@ module.exports={
     "type": "range"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.22.1.tgz",
@@ -42922,16 +42921,7 @@ SuperCluster.prototype = {
         radius: 40,   // cluster radius in pixels
         extent: 512,  // tile extent (radius is calculated relative to it)
         nodeSize: 64, // size of the KD-tree leaf node, affects performance
-        log: false,   // whether to log timing info
-
-        // a reduce function for calculating custom cluster properties
-        reduce: null, // function (accumulated, props) { accumulated.sum += props.sum; }
-
-        // initial properties of a cluster (before running the reducer)
-        initial: function () { return {}; }, // function () { return {sum: 0}; },
-
-        // properties to use for individual points when running the reducer
-        map: function (props) { return props; } // function (props) { return {sum: props.my_value}; },
+        log: false    // whether to log timing info
     },
 
     load: function (points) {
@@ -42975,33 +42965,9 @@ SuperCluster.prototype = {
         var clusters = [];
         for (var i = 0; i < ids.length; i++) {
             var c = tree.points[ids[i]];
-            clusters.push(c.numPoints ? getClusterJSON(c) : this.points[c.id]);
+            clusters.push(c.id !== -1 ? this.points[c.id] : getClusterJSON(c));
         }
         return clusters;
-    },
-
-    getChildren: function (clusterId, clusterZoom) {
-        var origin = this.trees[clusterZoom + 1].points[clusterId];
-        var r = this.options.radius / (this.options.extent * Math.pow(2, clusterZoom));
-        var points = this.trees[clusterZoom + 1].within(origin.x, origin.y, r);
-        var children = [];
-        for (var i = 0; i < points.length; i++) {
-            var c = this.trees[clusterZoom + 1].points[points[i]];
-            if (c.parentId === clusterId) {
-                children.push(c.numPoints ? getClusterJSON(c) : this.points[c.id]);
-            }
-        }
-        return children;
-    },
-
-    getLeaves: function (clusterId, clusterZoom, limit, offset) {
-        limit = limit || 10;
-        offset = offset || 0;
-
-        var leaves = [];
-        this._appendLeaves(leaves, clusterId, clusterZoom, limit, offset, 0);
-
-        return leaves;
     },
 
     getTile: function (z, x, y) {
@@ -43035,45 +43001,6 @@ SuperCluster.prototype = {
         return tile.features.length ? tile : null;
     },
 
-    getClusterExpansionZoom: function (clusterId, clusterZoom) {
-        while (clusterZoom < this.options.maxZoom) {
-            var children = this.getChildren(clusterId, clusterZoom);
-            clusterZoom++;
-            if (children.length !== 1) break;
-            clusterId = children[0].properties.cluster_id;
-        }
-        return clusterZoom;
-    },
-
-    _appendLeaves: function (result, clusterId, clusterZoom, limit, offset, skipped) {
-        var children = this.getChildren(clusterId, clusterZoom);
-
-        for (var i = 0; i < children.length; i++) {
-            var props = children[i].properties;
-
-            if (props.cluster) {
-                if (skipped + props.point_count <= offset) {
-                    // skip the whole cluster
-                    skipped += props.point_count;
-                } else {
-                    // enter the cluster
-                    skipped = this._appendLeaves(
-                        result, props.cluster_id, clusterZoom + 1, limit, offset, skipped);
-                    // exit the cluster
-                }
-            } else if (skipped < offset) {
-                // skip a single point
-                skipped++;
-            } else {
-                // add a single point
-                result.push(children[i]);
-            }
-            if (result.length === limit) break;
-        }
-
-        return skipped;
-    },
-
     _addTileFeatures: function (ids, points, x, y, z2, tile) {
         for (var i = 0; i < ids.length; i++) {
             var c = points[ids[i]];
@@ -43083,7 +43010,7 @@ SuperCluster.prototype = {
                     Math.round(this.options.extent * (c.x * z2 - x)),
                     Math.round(this.options.extent * (c.y * z2 - y))
                 ]],
-                tags: c.numPoints ? getClusterProperties(c) : this.points[c.id].properties
+                tags: c.id !== -1 ? this.points[c.id].properties : getClusterProperties(c)
             });
         }
     },
@@ -43107,75 +43034,43 @@ SuperCluster.prototype = {
             var tree = this.trees[zoom + 1];
             var neighborIds = tree.within(p.x, p.y, r);
 
-            var numPoints = p.numPoints || 1;
+            var foundNeighbors = false;
+            var numPoints = p.numPoints;
             var wx = p.x * numPoints;
             var wy = p.y * numPoints;
-
-            var clusterProperties = null;
-
-            if (this.options.reduce) {
-                clusterProperties = this.options.initial();
-                this._accumulate(clusterProperties, p);
-            }
 
             for (var j = 0; j < neighborIds.length; j++) {
                 var b = tree.points[neighborIds[j]];
                 // filter out neighbors that are too far or already processed
                 if (zoom < b.zoom) {
-                    var numPoints2 = b.numPoints || 1;
+                    foundNeighbors = true;
                     b.zoom = zoom; // save the zoom (so it doesn't get processed twice)
-                    wx += b.x * numPoints2; // accumulate coordinates for calculating weighted center
-                    wy += b.y * numPoints2;
-                    numPoints += numPoints2;
-                    b.parentId = i;
-
-                    if (this.options.reduce) {
-                        this._accumulate(clusterProperties, b);
-                    }
+                    wx += b.x * b.numPoints; // accumulate coordinates for calculating weighted center
+                    wy += b.y * b.numPoints;
+                    numPoints += b.numPoints;
                 }
             }
 
-            if (numPoints === 1) {
-                clusters.push(p);
-            } else {
-                p.parentId = i;
-                clusters.push(createCluster(wx / numPoints, wy / numPoints, numPoints, i, clusterProperties));
-            }
+            clusters.push(foundNeighbors ? createCluster(wx / numPoints, wy / numPoints, numPoints, -1) : p);
         }
 
         return clusters;
-    },
-
-    _accumulate: function (clusterProperties, point) {
-        var properties = point.numPoints ?
-            point.properties :
-            this.options.map(this.points[point.id].properties);
-
-        this.options.reduce(clusterProperties, properties);
     }
 };
 
-function createCluster(x, y, numPoints, id, properties) {
+function createCluster(x, y, numPoints, id) {
     return {
         x: x, // weighted cluster center
         y: y,
         zoom: Infinity, // the last zoom the cluster was processed at
-        id: id, // index of the first child of the cluster in the zoom level tree
-        properties: properties,
-        parentId: -1, // parent cluster id
+        id: id, // index of the source feature in the original input array
         numPoints: numPoints
     };
 }
 
-function createPointCluster(p, id) {
+function createPointCluster(p, i) {
     var coords = p.geometry.coordinates;
-    return {
-        x: lngX(coords[0]), // projected point coordinates
-        y: latY(coords[1]),
-        zoom: Infinity, // the last zoom the point was processed at
-        id: id, // index of the source feature in the original input array
-        parentId: -1 // parent cluster id
-    };
+    return createCluster(lngX(coords[0]), latY(coords[1]), 1, i);
 }
 
 function getClusterJSON(cluster) {
@@ -43193,12 +43088,11 @@ function getClusterProperties(cluster) {
     var count = cluster.numPoints;
     var abbrev = count >= 10000 ? Math.round(count / 1000) + 'k' :
                  count >= 1000 ? (Math.round(count / 100) / 10) + 'k' : count;
-    return extend(extend({}, cluster.properties), {
+    return {
         cluster: true,
-        cluster_id: cluster.id,
         point_count: count,
         point_count_abbreviated: abbrev
-    });
+    };
 }
 
 // longitude/latitude to spherical mercator in [0..1] range
@@ -51064,6 +50958,7 @@ drawing.makeTester = function(gd) {
 // always returns a copy of the bbox, so the caller can modify it safely
 var savedBBoxes = [],
     maxSavedBBoxes = 10000;
+
 drawing.bBox = function(node) {
     // cache elements we've already measured so we don't have to
     // remeasure the same thing many times
@@ -51072,12 +50967,14 @@ drawing.bBox = function(node) {
         return Lib.extendFlat({}, savedBBoxes[saveNum.value]);
     }
 
-    var test3 = d3.select('#js-plotly-tester'),
-        tester = test3.node();
+    if(!drawing.test3) {
+        drawing.test3 = d3.select('#js-plotly-tester');
+        drawing.tester = drawing.test3.node();
+    }
 
     // copy the node to test into the tester
     var testNode = node.cloneNode(true);
-    tester.appendChild(testNode);
+    drawing.tester.appendChild(testNode);
     // standardize its position... do we really want to do this?
     d3.select(testNode).attr({
         x: 0,
@@ -51085,19 +50982,21 @@ drawing.bBox = function(node) {
         transform: ''
     });
 
-    var testRect = testNode.getBoundingClientRect(),
-        refRect = test3.select('.js-reference-point')
+    var testRect = testNode.getBoundingClientRect();
+    if(!drawing.refRect) {
+        drawing.refRect = drawing.test3.select('.js-reference-point')
             .node().getBoundingClientRect();
+    }
 
-    tester.removeChild(testNode);
+    drawing.tester.removeChild(testNode);
 
     var bb = {
         height: testRect.height,
         width: testRect.width,
-        left: testRect.left - refRect.left,
-        top: testRect.top - refRect.top,
-        right: testRect.right - refRect.left,
-        bottom: testRect.bottom - refRect.top
+        left: testRect.left - drawing.refRect.left,
+        top: testRect.top - drawing.refRect.top,
+        right: testRect.right - drawing.refRect.left,
+        bottom: testRect.bottom - drawing.refRect.top
     };
 
     // make sure we don't have too many saved boxes,
@@ -53594,7 +53493,9 @@ function handleClick(g, gd, numClicks) {
             allTraces.push(i);
             // Allow the legendonly state through for *all* trace types (including
             // carpet for which it's overridden with true/false in supplyDefaults)
-            traceVisibility.push('legendonly');
+            traceVisibility.push(
+                Registry.traceIs(fullData[i], 'notLegendIsolatable') ? true : 'legendonly'
+            );
         }
 
         if(legendgroup === '') {
@@ -64343,6 +64244,8 @@ var stringMappings = require('../constants/string_mappings');
 
 // Append SVG
 
+var parser = new DOMParser();
+
 d3.selection.prototype.appendSVG = function(_svgString) {
     var skeleton = [
         '<svg xmlns="', xmlnsNamespaces.svg, '" ',
@@ -64351,7 +64254,7 @@ d3.selection.prototype.appendSVG = function(_svgString) {
         '</svg>'
     ].join('');
 
-    var dom = new DOMParser().parseFromString(skeleton, 'application/xml'),
+    var dom = parser.parseFromString(skeleton, 'application/xml'),
         childNode = dom.documentElement.firstChild;
 
     while(childNode) {
@@ -65485,6 +65388,7 @@ var nestedProperty = require('../lib/nested_property');
 var isPlainObject = require('../lib/is_plain_object');
 var noop = require('../lib/noop');
 var Loggers = require('../lib/loggers');
+var sorterAsc = require('../lib/search').sorterAsc;
 var Registry = require('../registry');
 
 
@@ -65573,7 +65477,7 @@ exports.applyContainerArrayChanges = function applyContainerArrayChanges(gd, np,
         return true;
     }
 
-    var componentNums = Object.keys(edits).map(Number).sort(),
+    var componentNums = Object.keys(edits).map(Number).sort(sorterAsc),
         componentArrayIn = np.get(),
         componentArray = componentArrayIn || [],
         // componentArrayFull is used just to keep splices in line between
@@ -65682,7 +65586,7 @@ exports.applyContainerArrayChanges = function applyContainerArrayChanges(gd, np,
     return true;
 };
 
-},{"../lib/is_plain_object":327,"../lib/loggers":328,"../lib/nested_property":331,"../lib/noop":332,"../registry":403,"./container_array_match":344}],347:[function(require,module,exports){
+},{"../lib/is_plain_object":327,"../lib/loggers":328,"../lib/nested_property":331,"../lib/noop":332,"../lib/search":339,"../registry":403,"./container_array_match":344}],347:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -65970,7 +65874,8 @@ Plotly.plot = function(gd, data, layout, config) {
     // Now plot the data
     function drawData() {
         var calcdata = gd.calcdata,
-            i;
+            i,
+            rangesliderContainers = fullLayout._infolayer.selectAll('g.rangeslider-container');
 
         // in case of traces that were heatmaps or contour maps
         // previously, remove them and their colorbars explicitly
@@ -65990,7 +65895,7 @@ Plotly.plot = function(gd, data, layout, config) {
                     .selectAll(query)
                     .remove();
 
-                fullLayout._infolayer.selectAll('g.rangeslider-container')
+                rangesliderContainers
                     .selectAll(query)
                     .remove();
             }
@@ -87167,6 +87072,7 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         });
 
         join.selectAll('text')
+            .classed('textpoint', true)
             .call(Drawing.textPointStyle, trace)
             .each(function(d) {
 
