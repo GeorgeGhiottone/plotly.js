@@ -5,6 +5,8 @@ var Plots = require('@src/plots/plots');
 var Lib = require('@src/lib');
 var Loggers = require('@src/lib/loggers');
 var Axes = require('@src/plots/cartesian/axes');
+var HOVERMINTIME = require('@src/plots/cartesian/constants').HOVERMINTIME;
+var DBLCLICKDELAY = require('@src/constants/interactions').DBLCLICKDELAY;
 
 var d3 = require('d3');
 var customMatchers = require('../assets/custom_matchers');
@@ -12,6 +14,8 @@ var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var failTest = require('../assets/fail_test');
 var drag = require('../assets/drag');
+var mouseEvent = require('../assets/mouse_event');
+var click = require('../assets/click');
 
 
 describe('Test annotations', function() {
@@ -214,6 +218,33 @@ describe('annotations relayout', function() {
         .then(function() {
             expect(countAnnotations()).toEqual(0);
             expect(Loggers.warn).not.toHaveBeenCalled();
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should sort correctly when index>10', function(done) {
+        var addall = {};
+        var delall = {};
+
+        // leave the first one alone, but delete and re-add all the others
+        for(var i = 1; i < gd.layout.annotations.length; i++) {
+            addall['annotations[' + i + ']'] = {text: i, x: i / 10, y: 0};
+            delall['annotations[' + i + ']'] = null;
+        }
+
+        Plotly.relayout(gd, delall)
+        .then(function() {
+            expect(gd.layout.annotations).toEqual([mock.layout.annotations[0]]);
+
+            return Plotly.relayout(gd, addall);
+        })
+        .then(function() {
+            var annotations = gd.layout.annotations;
+            expect(annotations.length).toBe(mock.layout.annotations.length);
+            for(var i = 1; i < annotations.length; i++) {
+                expect(annotations[i].text).toBe(i);
+            }
         })
         .catch(failTest)
         .then(done);
@@ -551,9 +582,9 @@ describe('annotations autorange', function() {
     it('should adapt to relayout calls', function(done) {
         Plotly.plot(gd, mock).then(function() {
             assertRanges(
-                [0.97, 2.03], [0.97, 2.03],
-                ['2000-10-01 08:23:18.0583', '2001-06-05 19:20:23.301'], [-0.245, 4.245],
-                [0.9, 2.1], [0.86, 2.14]
+                [0.91, 2.09], [0.91, 2.09],
+                ['2000-11-13', '2001-04-21'], [-0.069, 3.917],
+                [0.88, 2.05], [0.92, 2.08]
             );
 
             return Plotly.relayout(gd, {
@@ -564,9 +595,9 @@ describe('annotations autorange', function() {
         })
         .then(function() {
             assertRanges(
-                [1.44, 2.02], [0.97, 2.03],
-                ['2001-01-18 15:06:04.0449', '2001-03-27 14:01:20.8989'], [-0.245, 4.245],
-                [1.44, 2.1], [0.86, 2.14]
+                [1.44, 2.02], [0.91, 2.09],
+                ['2001-01-18', '2001-03-27'], [-0.069, 3.917],
+                [1.44, 2.1], [0.92, 2.08]
             );
 
             return Plotly.relayout(gd, {
@@ -578,8 +609,8 @@ describe('annotations autorange', function() {
         .then(function() {
             assertRanges(
                 [1.44, 2.02], [0.99, 1.52],
-                ['2001-01-31 23:59:59.999', '2001-02-01 00:00:00.001'], [-0.245, 4.245],
-                [0.5, 2.5], [0.86, 2.14]
+                ['2001-01-31 23:59:59.999', '2001-02-01 00:00:00.001'], [-0.069, 3.917],
+                [0.5, 2.5], [0.92, 2.08]
             );
 
             return Plotly.relayout(gd, {
@@ -593,9 +624,9 @@ describe('annotations autorange', function() {
         })
         .then(function() {
             assertRanges(
-                [0.97, 2.03], [0.97, 2.03],
-                ['2000-10-01 08:23:18.0583', '2001-06-05 19:20:23.301'], [-0.245, 4.245],
-                [0.9, 2.1], [0.86, 2.14]
+                [0.91, 2.09], [0.91, 2.09],
+                ['2000-11-13', '2001-04-21'], [-0.069, 3.917],
+                [0.88, 2.05], [0.92, 2.08]
             );
         })
         .catch(failTest)
@@ -616,10 +647,10 @@ describe('annotations autorange', function() {
         })
         .then(function() {
             assertRanges(
-                [-1.09, 2.09], [0.94, 3.06],
+                [-1.09, 2.25], [0.84, 3.06],
                 // the other axes shouldn't change
-                ['2000-10-01 08:23:18.0583', '2001-06-05 19:20:23.301'], [-0.245, 4.245],
-                [0.9, 2.1], [0.86, 2.14]
+                ['2000-11-13', '2001-04-21'], [-0.069, 3.917],
+                [0.88, 2.05], [0.92, 2.08]
             );
         })
         .catch(failTest)
@@ -629,6 +660,8 @@ describe('annotations autorange', function() {
 
 describe('annotation clicktoshow', function() {
     var gd;
+
+    beforeEach(function() { gd = createGraphDiv(); });
 
     afterEach(destroyGraphDiv);
 
@@ -716,8 +749,6 @@ describe('annotation clicktoshow', function() {
     var allIndices = layout().annotations.map(function(v, i) { return i; });
 
     it('should select only clicktoshow annotations matching x, y, and axes of any point', function(done) {
-        gd = createGraphDiv();
-
         // first try to select without adding clicktoshow, both visible and invisible
         Plotly.plot(gd, data, layout())
         // clicktoshow is off initially, so it doesn't *expect* clicking will
@@ -754,9 +785,65 @@ describe('annotation clicktoshow', function() {
         .catch(failTest)
         .then(done);
     });
+
+    it('works on date and log axes', function(done) {
+        Plotly.plot(gd, [{
+            x: ['2016-01-01', '2016-01-02', '2016-01-03'],
+            y: [1, 1, 3]
+        }], {
+            yaxis: {type: 'log'},
+            annotations: [{
+                x: '2016-01-02',
+                y: 0,
+                text: 'boo',
+                showarrow: true,
+                clicktoshow: 'onoff',
+                visible: false
+            }]
+        })
+        .then(function() {
+            expect(gd._fullLayout.xaxis.type).toBe('date');
+            expect(gd._fullLayout.yaxis.type).toBe('log');
+        })
+        .then(clickAndCheck({newPts: [['2016-01-02', 1]], newCTS: true, on: [0]}))
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('works on category axes', function(done) {
+        Plotly.plot(gd, [{
+            x: ['a', 'b', 'c'],
+            y: [1, 2, 3]
+        }], {
+            annotations: [{
+                x: 'b',
+                y: 2,
+                text: 'boo',
+                showarrow: true,
+                clicktoshow: 'onout',
+                visible: false
+            }, {
+                // you can also use category serial numbers
+                x: 2,
+                y: 3,
+                text: 'hoo',
+                showarrow: true,
+                clicktoshow: 'onout',
+                visible: false
+            }]
+        })
+        .then(function() {
+            expect(gd._fullLayout.xaxis.type).toBe('category');
+            expect(gd._fullLayout.yaxis.type).toBe('linear');
+        })
+        .then(clickAndCheck({newPts: [['b', 2]], newCTS: true, on: [0], step: 1}))
+        .then(clickAndCheck({newPts: [['c', 3]], newCTS: true, on: [1], step: 2}))
+        .catch(failTest)
+        .then(done);
+    });
 });
 
-describe('annotation dragging', function() {
+describe('annotation effects', function() {
     var gd;
 
     function textDrag() { return gd.querySelector('.annotation-text-g>g'); }
@@ -767,34 +854,29 @@ describe('annotation dragging', function() {
         jasmine.addMatchers(customMatchers);
     });
 
-    beforeEach(function(done) {
+    function makePlot(annotations, config) {
         gd = createGraphDiv();
+
+        if(!config) config = {editable: true};
 
         // we've already tested autorange with relayout, so fix the geometry
         // completely so we know exactly what we're dealing with
         // plot area is 300x300, and covers data range 100x100
-        Plotly.plot(gd,
+        return Plotly.plot(gd,
             [{x: [0, 100], y: [0, 100], mode: 'markers'}],
             {
                 xaxis: {range: [0, 100]},
                 yaxis: {range: [0, 100]},
                 width: 500,
                 height: 500,
-                margin: {l: 100, r: 100, t: 100, b: 100, pad: 0}
+                margin: {l: 100, r: 100, t: 100, b: 100, pad: 0},
+                annotations: annotations
             },
-            {editable: true}
-        )
-        .then(done);
-    });
+            config
+        );
+    }
 
     afterEach(destroyGraphDiv);
-
-    function initAnnotation(annotation) {
-        return Plotly.relayout(gd, {annotations: [annotation]})
-        .then(function() {
-            return Plots.previousPromises(gd);
-        });
-    }
 
     function dragAndReplot(node, dx, dy, edge) {
         return drag(node, dx, dy, edge).then(function() {
@@ -901,14 +983,15 @@ describe('annotation dragging', function() {
     }
 
     it('respects anchor: auto when paper-referenced without arrow', function(done) {
-        initAnnotation({
+        makePlot([{
             x: 0,
             y: 0,
             showarrow: false,
             text: 'blah<br>blah blah',
             xref: 'paper',
-            yref: 'paper'
-        })
+            yref: 'paper',
+            xshift: 5, yshift: 5
+        }])
         .then(function() {
             var bbox = textBox().getBoundingClientRect();
 
@@ -919,7 +1002,7 @@ describe('annotation dragging', function() {
     });
 
     it('also works paper-referenced with explicit anchors and no arrow', function(done) {
-        initAnnotation({
+        makePlot([{
             x: 0,
             y: 0,
             showarrow: false,
@@ -927,8 +1010,9 @@ describe('annotation dragging', function() {
             xref: 'paper',
             yref: 'paper',
             xanchor: 'left',
-            yanchor: 'top'
-        })
+            yanchor: 'top',
+            xshift: 5, yshift: 5
+        }])
         .then(function() {
             // with offsets 0, 0 because the anchor doesn't change now
             return checkDragging(textDrag, 0, 0, 1);
@@ -938,15 +1022,16 @@ describe('annotation dragging', function() {
     });
 
     it('works paper-referenced with arrows', function(done) {
-        initAnnotation({
+        makePlot([{
             x: 0,
             y: 0,
             text: 'blah<br>blah blah',
             xref: 'paper',
             yref: 'paper',
             ax: 30,
-            ay: 30
-        })
+            ay: 30,
+            xshift: 5, yshift: 5
+        }])
         .then(function() {
             return checkDragging(arrowDrag, 0, 0, 1);
         })
@@ -956,12 +1041,13 @@ describe('annotation dragging', function() {
     });
 
     it('works data-referenced with no arrow', function(done) {
-        initAnnotation({
+        makePlot([{
             x: 0,
             y: 0,
             showarrow: false,
-            text: 'blah<br>blah blah'
-        })
+            text: 'blah<br>blah blah',
+            xshift: 5, yshift: 5
+        }])
         .then(function() {
             return checkDragging(textDrag, 0, 0, 100);
         })
@@ -970,17 +1056,194 @@ describe('annotation dragging', function() {
     });
 
     it('works data-referenced with arrow', function(done) {
-        initAnnotation({
+        makePlot([{
             x: 0,
             y: 0,
             text: 'blah<br>blah blah',
             ax: 30,
-            ay: -30
-        })
+            ay: -30,
+            xshift: 5, yshift: 5
+        }])
         .then(function() {
             return checkDragging(arrowDrag, 0, 0, 100);
         })
         .then(checkTextDrag)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should only make the clippaths it needs and delete others', function(done) {
+        makePlot([
+            {x: 50, y: 50, text: 'hi', width: 50, ax: 0, ay: -20},
+            {x: 20, y: 20, text: 'bye', height: 40, showarrow: false},
+            {x: 80, y: 80, text: 'why?', ax: 0, ay: -20}
+        ]).then(function() {
+            expect(d3.select(gd).selectAll('.annclip').size()).toBe(2);
+
+            return Plotly.relayout(gd, {'annotations[0].visible': false});
+        })
+        .then(function() {
+            expect(d3.select(gd).selectAll('.annclip').size()).toBe(1);
+
+            return Plotly.relayout(gd, {'annotations[2].width': 20});
+        })
+        .then(function() {
+            expect(d3.select(gd).selectAll('.annclip').size()).toBe(2);
+
+            return Plotly.relayout(gd, {'annotations[1].height': null});
+        })
+        .then(function() {
+            expect(d3.select(gd).selectAll('.annclip').size()).toBe(1);
+
+            return Plotly.relayout(gd, {'annotations[2]': null});
+        })
+        .then(function() {
+            expect(d3.select(gd).selectAll('.annclip').size()).toBe(0);
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should register clicks and show hover effects on the text box only', function(done) {
+        var gdBB, pos0Head, pos0, pos1, pos2Head, pos2, clickData;
+
+        function assertHoverLabel(pos, text, msg) {
+            return new Promise(function(resolve) {
+                mouseEvent('mousemove', pos[0], pos[1]);
+                mouseEvent('mouseover', pos[0], pos[1]);
+
+                setTimeout(function() {
+                    var hoverText = d3.selectAll('g.hovertext');
+                    expect(hoverText.size()).toEqual(text ? 1 : 0, msg);
+
+                    if(text && hoverText.size()) {
+                        expect(hoverText.text()).toEqual(text, msg);
+                    }
+
+                    mouseEvent('mouseout', pos[0], pos[1]);
+                    mouseEvent('mousemove', 0, 0);
+
+                    setTimeout(resolve, HOVERMINTIME * 1.1);
+                }, HOVERMINTIME * 1.1);
+            });
+        }
+
+        function assertHoverLabels(spec, msg) {
+            // spec is an array of [pos, text]
+            // always check that the heads don't have hover effects
+            // so we only have to explicitly include pos0-2
+            spec.push([pos0Head, '']);
+            spec.push([pos2Head, '']);
+            var p = new Promise(function(resolve) {
+                setTimeout(resolve, HOVERMINTIME);
+            });
+            spec.forEach(function(speci) {
+                p = p.then(function() {
+                    return assertHoverLabel(speci[0], speci[1],
+                        msg ? msg + ' (' + speci + ')' : speci);
+                });
+            });
+            return p;
+        }
+
+        function _click(pos) {
+            return new Promise(function(resolve) {
+                click(pos[0], pos[1]);
+
+                setTimeout(function() {
+                    resolve();
+                }, DBLCLICKDELAY * 1.1);
+            });
+        }
+
+        function assertClickData(data) {
+            expect(clickData).toEqual(data);
+            clickData.splice(0, clickData.length);
+        }
+
+        makePlot([
+            {x: 50, y: 50, text: 'hi', width: 50, height: 40, ax: 0, ay: -40, xshift: -50, yshift: 50},
+            {x: 20, y: 20, text: 'bye', height: 40, showarrow: false},
+            {x: 80, y: 80, text: 'why?', ax: 0, ay: -40}
+        ], {}) // turn off the default editable: true
+        .then(function() {
+            clickData = [];
+            gd.on('plotly_clickannotation', function(evt) { clickData.push(evt); });
+
+            gdBB = gd.getBoundingClientRect();
+            pos0Head = [gdBB.left + 200, gdBB.top + 200];
+            pos0 = [pos0Head[0], pos0Head[1] - 40];
+            pos1 = [gdBB.left + 160, gdBB.top + 340];
+            pos2Head = [gdBB.left + 340, gdBB.top + 160];
+            pos2 = [pos2Head[0], pos2Head[1] - 40];
+
+            return assertHoverLabels([[pos0, ''], [pos1, ''], [pos2, '']]);
+        })
+        // not going to register either of these because captureevents is off
+        .then(function() { return _click(pos1); })
+        .then(function() { return _click(pos2Head); })
+        .then(function() {
+            assertClickData([]);
+
+            return Plotly.relayout(gd, {
+                'annotations[1].captureevents': true,
+                'annotations[2].captureevents': true
+            });
+        })
+        // now we'll register the click on #1, but still not on #2
+        // because we're clicking the head, not the text box
+        .then(function() { return _click(pos1); })
+        .then(function() { return _click(pos2Head); })
+        .then(function() {
+            assertClickData([{
+                index: 1,
+                annotation: gd.layout.annotations[1],
+                fullAnnotation: gd._fullLayout.annotations[1]
+            }]);
+
+            expect(gd._fullLayout.annotations[0].hoverlabel).toBeUndefined();
+
+            return Plotly.relayout(gd, {'annotations[0].hovertext': 'bananas'});
+        })
+        .then(function() {
+            expect(gd._fullLayout.annotations[0].hoverlabel).toEqual({
+                bgcolor: '#444',
+                bordercolor: '#fff',
+                font: {family: 'Arial, sans-serif', size: 13, color: '#fff'}
+            });
+
+            return assertHoverLabels([[pos0, 'bananas'], [pos1, ''], [pos2, '']],
+                '0 only');
+        })
+        // click and hover work together?
+        // this also tests that hover turns on annotation.captureevents
+        .then(function() { return _click(pos0); })
+        .then(function() {
+            assertClickData([{
+                index: 0,
+                annotation: gd.layout.annotations[0],
+                fullAnnotation: gd._fullLayout.annotations[0]
+            }]);
+
+            return Plotly.relayout(gd, {
+                'annotations[0].hoverlabel': {
+                    bgcolor: '#800',
+                    bordercolor: '#008',
+                    font: {family: 'courier', size: 50, color: '#080'}
+                },
+                'annotations[1].hovertext': 'chicken'
+            });
+        })
+        .then(function() {
+            expect(gd._fullLayout.annotations[0].hoverlabel).toEqual({
+                bgcolor: '#800',
+                bordercolor: '#008',
+                font: {family: 'courier', size: 50, color: '#080'}
+            });
+
+            return assertHoverLabels([[pos0, 'bananas'], [pos1, 'chicken'], [pos2, '']],
+                '0 and 1');
+        })
         .catch(failTest)
         .then(done);
     });
