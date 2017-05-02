@@ -47,24 +47,24 @@ var modeBarButtons = module.exports = {};
 
 modeBarButtons.toImage = {
     name: 'toImage',
-    title: 'Download plot as a png',
+    title: _lang.print_png,
     icon: Icons.camera,
     click: function(gd) {
         var format = 'png';
 
-        Lib.notifier('Taking snapshot - this may take a few seconds', 'long');
+        Lib.notifier(_lang.taking_snapshot, 'long');
 
         if(Lib.isIE()) {
-            Lib.notifier('IE only supports svg.  Changing format to svg.', 'long');
+            Lib.notifier(_lang.png_impossible, 'long');
             format = 'svg';
         }
 
         downloadImage(gd, {'format': format})
           .then(function(filename) {
-              Lib.notifier('Snapshot succeeded - ' + filename, 'long');
+                    Lib.notifier(_lang.snapshot);
           })
           .catch(function() {
-              Lib.notifier('Sorry there was a problem downloading your snapshot!', 'long');
+                    Lib.notifier(_lang.snapshot_error, 'long');
           });
     }
 };
@@ -74,13 +74,13 @@ modeBarButtons.sendDataToCloud = {
     title: 'Save and edit plot in cloud',
     icon: Icons.disk,
     click: function(gd) {
-        Plots.sendDataToCloud(gd);
+        //Plotly.Plots.sendDataToCloud(gd);
     }
 };
 
 modeBarButtons.zoom2d = {
     name: 'zoom2d',
-    title: 'Zoom',
+    title: _lang.zoom,
     attr: 'dragmode',
     val: 'zoom',
     icon: Icons.zoombox,
@@ -89,7 +89,7 @@ modeBarButtons.zoom2d = {
 
 modeBarButtons.pan2d = {
     name: 'pan2d',
-    title: 'Pan',
+    title: _lang.pan,
     attr: 'dragmode',
     val: 'pan',
     icon: Icons.pan,
@@ -98,7 +98,7 @@ modeBarButtons.pan2d = {
 
 modeBarButtons.select2d = {
     name: 'select2d',
-    title: 'Box Select',
+    title: _lang.box_selected,
     attr: 'dragmode',
     val: 'select',
     icon: Icons.selectbox,
@@ -107,7 +107,7 @@ modeBarButtons.select2d = {
 
 modeBarButtons.lasso2d = {
     name: 'lasso2d',
-    title: 'Lasso Select',
+    title: _lang.lasso_select,
     attr: 'dragmode',
     val: 'lasso',
     icon: Icons.lasso,
@@ -116,7 +116,7 @@ modeBarButtons.lasso2d = {
 
 modeBarButtons.zoomIn2d = {
     name: 'zoomIn2d',
-    title: 'Zoom in',
+    title: _lang.zoom_in,
     attr: 'zoom',
     val: 'in',
     icon: Icons.zoom_plus,
@@ -125,7 +125,7 @@ modeBarButtons.zoomIn2d = {
 
 modeBarButtons.zoomOut2d = {
     name: 'zoomOut2d',
-    title: 'Zoom out',
+    title: _lang.zoom_out,
     attr: 'zoom',
     val: 'out',
     icon: Icons.zoom_minus,
@@ -134,7 +134,7 @@ modeBarButtons.zoomOut2d = {
 
 modeBarButtons.autoScale2d = {
     name: 'autoScale2d',
-    title: 'Autoscale',
+    title: _lang.autoscale,
     attr: 'zoom',
     val: 'auto',
     icon: Icons.autoscale,
@@ -143,7 +143,7 @@ modeBarButtons.autoScale2d = {
 
 modeBarButtons.resetScale2d = {
     name: 'resetScale2d',
-    title: 'Reset axes',
+    title: _lang.reset_axes,
     attr: 'zoom',
     val: 'reset',
     icon: Icons.home,
@@ -152,7 +152,7 @@ modeBarButtons.resetScale2d = {
 
 modeBarButtons.hoverClosestCartesian = {
     name: 'hoverClosestCartesian',
-    title: 'Show closest data on hover',
+    title: _lang.show_closest_data_on_hover,
     attr: 'hovermode',
     val: 'closest',
     icon: Icons.tooltip_basic,
@@ -162,7 +162,7 @@ modeBarButtons.hoverClosestCartesian = {
 
 modeBarButtons.hoverCompareCartesian = {
     name: 'hoverCompareCartesian',
-    title: 'Compare data on hover',
+    title: _lang.compare_data_on_hover,
     attr: 'hovermode',
     val: function(gd) {
         return gd._fullLayout._isHoriz ? 'y' : 'x';

@@ -2005,13 +2005,13 @@ axes.doTicks = function(gd, axid, skipTitle) {
                 {_offset: gs.l + (ax.position || 0) * gs.w, _length: 0} :
                 axisIds.getFromId(gd, ax.anchor);
 
-            y = ax._offset + ax._length / 2;
+            y = ax._offset + ax._length / 2 + 10; //added +10 for shift the label downside
             x = counterAxis._offset + ((ax.side === 'right') ?
                 counterAxis._length + 10 +
                     fontSize * (offsetBase + (ax.showticklabels ? 1 : 0.5)) :
                 -10 - fontSize * (offsetBase + (ax.showticklabels ? 0.5 : 0)));
 
-            transform = {rotate: '-90', offset: 0};
+            transform = {rotate: '0', offset: 0}; //rotate changed from -90 to 0
             if(!avoid.side) avoid.side = 'left';
         }
 
