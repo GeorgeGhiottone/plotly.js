@@ -69,7 +69,7 @@ for(var selector in rules) {
     Lib.addStyleRule(fullSelector, rules[selector]);
 }
 
-},{"../src/lib":382}],2:[function(require,module,exports){
+},{"../src/lib":381}],2:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -192,6 +192,42 @@ module.exports = {
         'path': 'M512 409c0-57-46-104-103-104-57 0-104 47-104 104 0 57 47 103 104 103 57 0 103-46 103-103z m-327-39l92 0 0 92-92 0z m-185 0l92 0 0 92-92 0z m370-186l92 0 0 93-92 0z m0-184l92 0 0 92-92 0z',
         'ascent': 850,
         'descent': -150
+    },
+    'toPDF': {
+        'width': 1078,
+        'path': 'M136.054 836h793.946q59.5508 0 99.833 -63.8574q40.2793 -63.8574 40.2793 -158.266v-518.276q0 -94.4014 -40.2793 -158.258q-40.2822 -63.8574 -99.833 -63.8574h-793.946q-59.5508 0 -99.8281 63.8574q-40.2822 63.8564 -40.2822 158.258v518.276\nq0 46.4629 10.8086 87.6934q10.8018 41.2217 29.3936 70.6982q18.5977 29.4727 44.5967 46.5986q26.0068 17.1318 55.3115 17.1328zM136.054 613.879v-148.081v-370.196h46.7012v222.124h93.4102q25.1504 -0.0517578 46.792 19.8838q21.3584 20.0645 34.0693 54.0156\nq12.2891 34.0488 12.541 74.1729q-0.251953 60.876 -27.8633 99.4834q-33.5303 48.5977 -65.5391 48.5977h-140.111zM416.27 613.879v-518.277h140.113q38.5283 0 65.9688 43.502q27.4346 43.5039 27.4346 104.583v222.111q0 61.0898 -27.4346 104.587\nq-27.4404 43.4932 -65.9688 43.4932zM696.492 613.879v-518.277h46.7002v222.124h140.11v74.04h-140.11v148.078h186.81v74.0352h-233.51zM182.755 539.844h93.4102q13.8672 0 24.4805 -9.19922q10.6182 -9.19824 16.4199 -26.0244q5.80078 -16.833 5.80078 -38.8223\nq0 -21.9814 -5.80078 -38.8086q-5.80273 -16.8281 -16.4199 -26.0234q-10.6113 -9.2002 -24.4805 -9.2002h-93.4102v148.078zM462.975 539.844h93.4082q13.8652 0 24.4795 -9.19922q10.6172 -9.19824 16.4189 -26.0244q5.80371 -16.833 5.80371 -38.8223v-222.111\nq0 -21.9902 -5.80371 -38.8203q-5.80176 -16.8213 -16.4189 -26.0244q-10.6143 -9.19336 -24.4795 -9.19336h-93.4082v370.195z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'forward': {
+        'width': 944,
+        'path': 'M471.001 -82.8945v833.781l463.091 -416.887zM8.01953 -82.8945v833.781l462.98 -416.887z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'backward': {
+        'width': 966,
+        'path': 'M487.999 760.895v-833.781l-463.091 416.887zM950.979 760.895v-833.781l-462.979 416.887z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'forwardWin': {
+        'width': 1000,
+        'path': 'M957.229 795.323h-118.493v-882.751h118.493v882.751zM424 -87.4277v882.751l414.735 -441.323zM9.29199 -87.4277v882.751l414.708 -441.323z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'backwardWin': {
+        'width': 1000,
+        'path': 'M11.5732 -116.555l118.493 0.204102l-1.52637 882.751l-118.492 -0.205078zM543.275 767.117l1.52539 -882.75l-415.497 440.605zM957.982 767.833l1.52637 -882.749l-415.47 440.605z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'toHelp': {
+        'width': 1000,
+        'path': 'M 500,990 C 229.8,990 10,770.2 10,500 10,229.8 229.8,10 500,10 770.2,10 990,229.8 990,500 990,770.2 770.2,990 500,990 Z m 0,-78.69922 C 726.8,911.30078 911.30078,726.8 911.30078,500 911.30078,273.2 726.8,88.69922 500,88.69922 273.2,88.69922 88.699219,273.2 88.699219,500 88.699219,726.8 273.1,911.30078 500,911.30078 Z m 2,-134 c -35.2,0 -65.79922,-4.20156 -91.69922,-13.10156 -25.1,-8.6 -47.50156,-19.6 -67.10156,-33 L 334,724.90039 382.30078,632.09961 394,640.19922 c 5.9,4 12.60078,8 20.30078,12 7.5,4 15.49883,7.40039 23.79883,10.40039 8.1,3 16.3,5.30039 24.5,6.90039 8.1,1.6 15.6,2.30078 22.5,2.30078 22.9,0.1 36.30078,-5.10078 41.80078,-11.30078 7.1,-7.7 10.9,-17.6 11,-32.5 0,-11.3 -2.60039,-19.89922 -7.40039,-27.19922 -5.7,-8.6 -13.00039,-17.00117 -21.90039,-25.20117 -9.5,-8.7 -19.6,-17.69922 -30.5,-27.19922 -11.9,-10.3 -22.49961,-22.50078 -31.59961,-36.30078 -9.4,-14.3 -16.70078,-30.89883 -21.80078,-49.79883 -3.6,-13.2 -5.29883,-27.9 -5.29883,-44 0,-8 0.49883,-16.50078 1.29883,-25.30078 l 1.10156,-11.30078 11.39844,0 93.80078,0 0,12.5 c 0,19.2 3.30039,34.10078 8.90039,44.80078 6.3,12.1 13.89883,22.70039 22.79883,31.90039 9.3,9.4 19.50078,18.50039 30.80078,26.90039 12.5,9.3 23.90078,20.09883 34.30078,32.29883 10.8,12.6 19.59922,27.80117 26.69922,45.20117 7.4,18.4 10.79961,40.49883 10.59961,66.29883 0.2,40.4 -14.49922,74.90078 -43.19922,99.30078 -28.8,24.7 -68.10039,36.40039 -115.90039,36.40039 z M 477.19922,348.90039 c -19.9,0.1 -37.89961,-6.00039 -51.09961,-18.40039 C 412.59961,318.1 405.8,300.39922 406,280.69922 c -0.1,-19.7 6.6,-37.39961 20,-50.09961 13.1,-12.7 30.99922,-18.90039 50.69922,-18.90039 l 0.5,0 c 20.8,0 39.20156,6.00039 52.60156,18.90039 13.5,12.6 20.2,30.39961 20,50.09961 0.1,19.6 -6.60156,37.40078 -20.10156,49.80078 -13.4,12.6 -31.8,18.50039 -52.5,18.40039 z',
+        'ascent': 850,
+        'descent': -150
     }
 };
 
@@ -208,7 +244,7 @@ module.exports = {
 
 module.exports = require('../src/core');
 
-},{"../src/core":369}],4:[function(require,module,exports){
+},{"../src/core":368}],4:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -242,7 +278,7 @@ module.exports = Plotly;
 
 module.exports = require('../src/traces/mesh3d');
 
-},{"../src/traces/mesh3d":480}],6:[function(require,module,exports){
+},{"../src/traces/mesh3d":479}],6:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -255,7 +291,7 @@ module.exports = require('../src/traces/mesh3d');
 
 module.exports = require('../src/traces/scatter3d');
 
-},{"../src/traces/scatter3d":511}],7:[function(require,module,exports){
+},{"../src/traces/scatter3d":510}],7:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -268,7 +304,7 @@ module.exports = require('../src/traces/scatter3d');
 
 module.exports = require('../src/traces/surface');
 
-},{"../src/traces/surface":517}],8:[function(require,module,exports){
+},{"../src/traces/surface":516}],8:[function(require,module,exports){
 'use strict'
 
 module.exports = createCamera
@@ -497,7 +533,7 @@ function createCamera(element, options) {
   return camera
 }
 
-},{"3d-view":9,"mouse-change":185,"mouse-event-offset":186,"mouse-wheel":188,"right-now":223}],9:[function(require,module,exports){
+},{"3d-view":9,"mouse-change":185,"mouse-event-offset":186,"mouse-wheel":188,"right-now":222}],9:[function(require,module,exports){
 'use strict'
 
 module.exports = createViewController
@@ -620,7 +656,7 @@ function createViewController(options) {
     matrix: matrix
   }, mode)
 }
-},{"matrix-camera-controller":183,"orbit-camera-controller":205,"turntable-camera-controller":253}],10:[function(require,module,exports){
+},{"matrix-camera-controller":183,"orbit-camera-controller":204,"turntable-camera-controller":252}],10:[function(require,module,exports){
 'use strict'
 
 var weakMap      = typeof WeakMap === 'undefined' ? require('weak-map') : WeakMap
@@ -651,7 +687,7 @@ function createABigTriangle(gl) {
 
 module.exports = createABigTriangle
 
-},{"gl-buffer":100,"gl-vao":154,"weak-map":261}],11:[function(require,module,exports){
+},{"gl-buffer":100,"gl-vao":154,"weak-map":260}],11:[function(require,module,exports){
 var padLeft = require('pad-left')
 
 module.exports = addLineNumbers
@@ -669,7 +705,7 @@ function addLineNumbers (string, start, delim) {
   }).join('\n')
 }
 
-},{"pad-left":206}],12:[function(require,module,exports){
+},{"pad-left":205}],12:[function(require,module,exports){
 'use strict'
 
 module.exports = affineHull
@@ -721,7 +757,7 @@ function affineHull(points) {
   }
   return index
 }
-},{"robust-orientation":229}],13:[function(require,module,exports){
+},{"robust-orientation":228}],13:[function(require,module,exports){
 'use strict'
 
 module.exports = alphaComplex
@@ -747,7 +783,7 @@ var bnd = require('simplicial-complex-boundary')
 function alphaShape(alpha, points) {
   return bnd(ac(alpha, points))
 }
-},{"alpha-complex":13,"simplicial-complex-boundary":236}],15:[function(require,module,exports){
+},{"alpha-complex":13,"simplicial-complex-boundary":235}],15:[function(require,module,exports){
 'use strict';
 
 var arraytools  = function () {
@@ -989,7 +1025,7 @@ function barycentric(simplex, point) {
   }
   return y
 }
-},{"robust-linear-solve":228}],18:[function(require,module,exports){
+},{"robust-linear-solve":227}],18:[function(require,module,exports){
 'use strict'
 
 var rationalize = require('./lib/rationalize')
@@ -1077,9 +1113,9 @@ function makeRational(numer, denom) {
     b = num2bn(denom)
   }
   if(shift > 0) {
-    a = a.shln(shift)
+    a = a.ushln(shift)
   } else if(shift < 0) {
-    b = b.shln(-shift)
+    b = b.ushln(-shift)
   }
   return rationalize(a, b)
 }
@@ -1098,16 +1134,18 @@ function isRat(x) {
 },{"./lib/is-bn":26}],23:[function(require,module,exports){
 'use strict'
 
-var bn = require('bn.js')
+var BN = require('bn.js')
 
 module.exports = sign
 
-function sign(x) {
-  return x.cmp(new bn(0))
+function sign (x) {
+  return x.cmp(new BN(0))
 }
 
 },{"bn.js":36}],24:[function(require,module,exports){
 'use strict'
+
+var sign = require('./bn-sign')
 
 module.exports = bn2num
 
@@ -1121,16 +1159,15 @@ function bn2num(b) {
   } else if (l === 2) {
     out = words[0] + (words[1] * 0x4000000)
   } else {
-    var out = 0
     for (var i = 0; i < l; i++) {
       var w = words[i]
       out += w * Math.pow(0x4000000, i)
     }
   }
-  return b.sign ? -out : out
+  return sign(b) * out
 }
 
-},{}],25:[function(require,module,exports){
+},{"./bn-sign":23}],25:[function(require,module,exports){
 'use strict'
 
 var db = require('double-bits')
@@ -1177,7 +1214,7 @@ function num2bn(x) {
   if(e < 52) {
     return new BN(x)
   } else {
-    return (new BN(x * Math.pow(2, 52-e))).shln(e-52)
+    return (new BN(x * Math.pow(2, 52-e))).ushln(e-52)
   }
 }
 
@@ -1261,38 +1298,33 @@ var ctz = require('./lib/ctz')
 
 module.exports = roundRat
 
-//Round a rational to the closest float
-function roundRat(f) {
+// Round a rational to the closest float
+function roundRat (f) {
   var a = f[0]
   var b = f[1]
-  if(a.cmpn(0) === 0) {
+  if (a.cmpn(0) === 0) {
     return 0
   }
-  var h = a.divmod(b)
+  var h = a.abs().divmod(b.abs())
   var iv = h.div
   var x = bn2num(iv)
   var ir = h.mod
-  if(ir.cmpn(0) === 0) {
-    return x
+  var sgn = (a.negative !== b.negative) ? -1 : 1
+  if (ir.cmpn(0) === 0) {
+    return sgn * x
   }
-  if(x) {
+  if (x) {
     var s = ctz(x) + 4
-    var y = bn2num(ir.shln(s).divRound(b))
-
-    // flip the sign of y if x is negative
-    if (x<0) {
-      y = -y;
-    }
-
-    return x + y * Math.pow(2, -s)
+    var y = bn2num(ir.ushln(s).divRound(b))
+    return sgn * (x + y * Math.pow(2, -s))
   } else {
     var ybits = b.bitLength() - ir.bitLength() + 53
-    var y = bn2num(ir.shln(ybits).divRound(b))
-    if(ybits < 1023) {
-      return y * Math.pow(2, -ybits)
+    var y = bn2num(ir.ushln(ybits).divRound(b))
+    if (ybits < 1023) {
+      return sgn * y * Math.pow(2, -ybits)
     }
     y *= Math.pow(2, -1023)
-    return y * Math.pow(2, 1023-ybits)
+    return sgn * y * Math.pow(2, 1023 - ybits)
   }
 }
 
@@ -1566,2322 +1598,3431 @@ exports.nextCombination = function(v) {
 
 },{}],36:[function(require,module,exports){
 (function (module, exports) {
+  'use strict';
 
-'use strict';
-
-// Utils
-
-function assert(val, msg) {
-  if (!val)
-    throw new Error(msg || 'Assertion failed');
-}
-
-// Could use `inherits` module, but don't want to move from single file
-// architecture yet.
-function inherits(ctor, superCtor) {
-  ctor.super_ = superCtor;
-  var TempCtor = function () {};
-  TempCtor.prototype = superCtor.prototype;
-  ctor.prototype = new TempCtor();
-  ctor.prototype.constructor = ctor;
-}
-
-// BN
-
-function BN(number, base, endian) {
-  // May be `new BN(bn)` ?
-  if (number !== null &&
-      typeof number === 'object' &&
-      Array.isArray(number.words)) {
-    return number;
+  // Utils
+  function assert (val, msg) {
+    if (!val) throw new Error(msg || 'Assertion failed');
   }
 
-  this.sign = false;
-  this.words = null;
-  this.length = 0;
-
-  // Reduction context
-  this.red = null;
-
-  if (base === 'le' || base === 'be') {
-    endian = base;
-    base = 10;
+  // Could use `inherits` module, but don't want to move from single file
+  // architecture yet.
+  function inherits (ctor, superCtor) {
+    ctor.super_ = superCtor;
+    var TempCtor = function () {};
+    TempCtor.prototype = superCtor.prototype;
+    ctor.prototype = new TempCtor();
+    ctor.prototype.constructor = ctor;
   }
 
-  if (number !== null)
-    this._init(number || 0, base || 10, endian || 'be');
-}
-if (typeof module === 'object')
-  module.exports = BN;
-else
-  exports.BN = BN;
+  // BN
 
-BN.BN = BN;
-BN.wordSize = 26;
+  function BN (number, base, endian) {
+    if (BN.isBN(number)) {
+      return number;
+    }
 
-BN.prototype._init = function init(number, base, endian) {
-  if (typeof number === 'number') {
-    return this._initNumber(number, base, endian);
-  } else if (typeof number === 'object') {
-    return this._initArray(number, base, endian);
-  }
-  if (base === 'hex')
-    base = 16;
-  assert(base === (base | 0) && base >= 2 && base <= 36);
+    this.negative = 0;
+    this.words = null;
+    this.length = 0;
 
-  number = number.toString().replace(/\s+/g, '');
-  var start = 0;
-  if (number[0] === '-')
-    start++;
+    // Reduction context
+    this.red = null;
 
-  if (base === 16)
-    this._parseHex(number, start);
-  else
-    this._parseBase(number, base, start);
-
-  if (number[0] === '-')
-    this.sign = true;
-
-  this.strip();
-
-  if (endian !== 'le')
-    return;
-
-  this._initArray(this.toArray(), base, endian);
-};
-
-BN.prototype._initNumber = function _initNumber(number, base, endian) {
-  if (number < 0) {
-    this.sign = true;
-    number = -number;
-  }
-  if (number < 0x4000000) {
-    this.words = [ number & 0x3ffffff ];
-    this.length = 1;
-  } else if (number < 0x10000000000000) {
-    this.words = [
-      number & 0x3ffffff,
-      (number / 0x4000000) & 0x3ffffff
-    ];
-    this.length = 2;
-  } else {
-    assert(number < 0x20000000000000); // 2 ^ 53 (unsafe)
-    this.words = [
-      number & 0x3ffffff,
-      (number / 0x4000000) & 0x3ffffff,
-      1
-    ];
-    this.length = 3;
-  }
-
-  if (endian !== 'le')
-    return;
-
-  // Reverse the bytes
-  this._initArray(this.toArray(), base, endian);
-};
-
-BN.prototype._initArray = function _initArray(number, base, endian) {
-  // Perhaps a Uint8Array
-  assert(typeof number.length === 'number');
-  if (number.length <= 0) {
-    this.words = [ 0 ];
-    this.length = 1;
-    return this;
-  }
-
-  this.length = Math.ceil(number.length / 3);
-  this.words = new Array(this.length);
-  for (var i = 0; i < this.length; i++)
-    this.words[i] = 0;
-
-  var off = 0;
-  if (endian === 'be') {
-    for (var i = number.length - 1, j = 0; i >= 0; i -= 3) {
-      var w = number[i] | (number[i - 1] << 8) | (number[i - 2] << 16);
-      this.words[j] |= (w << off) & 0x3ffffff;
-      this.words[j + 1] = (w >>> (26 - off)) & 0x3ffffff;
-      off += 24;
-      if (off >= 26) {
-        off -= 26;
-        j++;
+    if (number !== null) {
+      if (base === 'le' || base === 'be') {
+        endian = base;
+        base = 10;
       }
-    }
-  } else if (endian === 'le') {
-    for (var i = 0, j = 0; i < number.length; i += 3) {
-      var w = number[i] | (number[i + 1] << 8) | (number[i + 2] << 16);
-      this.words[j] |= (w << off) & 0x3ffffff;
-      this.words[j + 1] = (w >>> (26 - off)) & 0x3ffffff;
-      off += 24;
-      if (off >= 26) {
-        off -= 26;
-        j++;
-      }
+
+      this._init(number || 0, base || 10, endian || 'be');
     }
   }
-  return this.strip();
-};
-
-function parseHex(str, start, end) {
-  var r = 0;
-  var len = Math.min(str.length, end);
-  for (var i = start; i < len; i++) {
-    var c = str.charCodeAt(i) - 48;
-
-    r <<= 4;
-
-    // 'a' - 'f'
-    if (c >= 49 && c <= 54)
-      r |= c - 49 + 0xa;
-
-    // 'A' - 'F'
-    else if (c >= 17 && c <= 22)
-      r |= c - 17 + 0xa;
-
-    // '0' - '9'
-    else
-      r |= c & 0xf;
-  }
-  return r;
-}
-
-BN.prototype._parseHex = function _parseHex(number, start) {
-  // Create possibly bigger array to ensure that it fits the number
-  this.length = Math.ceil((number.length - start) / 6);
-  this.words = new Array(this.length);
-  for (var i = 0; i < this.length; i++)
-    this.words[i] = 0;
-
-  // Scan 24-bit chunks and add them to the number
-  var off = 0;
-  for (var i = number.length - 6, j = 0; i >= start; i -= 6) {
-    var w = parseHex(number, i, i + 6);
-    this.words[j] |= (w << off) & 0x3ffffff;
-    this.words[j + 1] |= w >>> (26 - off) & 0x3fffff;
-    off += 24;
-    if (off >= 26) {
-      off -= 26;
-      j++;
-    }
-  }
-  if (i + 6 !== start) {
-    var w = parseHex(number, start, i + 6);
-    this.words[j] |= (w << off) & 0x3ffffff;
-    this.words[j + 1] |= w >>> (26 - off) & 0x3fffff;
-  }
-  this.strip();
-};
-
-function parseBase(str, start, end, mul) {
-  var r = 0;
-  var len = Math.min(str.length, end);
-  for (var i = start; i < len; i++) {
-    var c = str.charCodeAt(i) - 48;
-
-    r *= mul;
-
-    // 'a'
-    if (c >= 49)
-      r += c - 49 + 0xa;
-
-    // 'A'
-    else if (c >= 17)
-      r += c - 17 + 0xa;
-
-    // '0' - '9'
-    else
-      r += c;
-  }
-  return r;
-}
-
-BN.prototype._parseBase = function _parseBase(number, base, start) {
-  // Initialize as zero
-  this.words = [ 0 ];
-  this.length = 1;
-
-  // Find length of limb in base
-  for (var limbLen = 0, limbPow = 1; limbPow <= 0x3ffffff; limbPow *= base)
-    limbLen++;
-  limbLen--;
-  limbPow = (limbPow / base) | 0;
-
-  var total = number.length - start;
-  var mod = total % limbLen;
-  var end = Math.min(total, total - mod) + start;
-
-  var word = 0;
-  for (var i = start; i < end; i += limbLen) {
-    word = parseBase(number, i, i + limbLen, base);
-
-    this.imuln(limbPow);
-    if (this.words[0] + word < 0x4000000)
-      this.words[0] += word;
-    else
-      this._iaddn(word);
-  }
-
-  if (mod !== 0) {
-    var pow = 1;
-    var word = parseBase(number, i, number.length, base);
-
-    for (var i = 0; i < mod; i++)
-      pow *= base;
-    this.imuln(pow);
-    if (this.words[0] + word < 0x4000000)
-      this.words[0] += word;
-    else
-      this._iaddn(word);
-  }
-};
-
-BN.prototype.copy = function copy(dest) {
-  dest.words = new Array(this.length);
-  for (var i = 0; i < this.length; i++)
-    dest.words[i] = this.words[i];
-  dest.length = this.length;
-  dest.sign = this.sign;
-  dest.red = this.red;
-};
-
-BN.prototype.clone = function clone() {
-  var r = new BN(null);
-  this.copy(r);
-  return r;
-};
-
-// Remove leading `0` from `this`
-BN.prototype.strip = function strip() {
-  while (this.length > 1 && this.words[this.length - 1] === 0)
-    this.length--;
-  return this._normSign();
-};
-
-BN.prototype._normSign = function _normSign() {
-  // -0 = 0
-  if (this.length === 1 && this.words[0] === 0)
-    this.sign = false;
-  return this;
-};
-
-BN.prototype.inspect = function inspect() {
-  return (this.red ? '<BN-R: ' : '<BN: ') + this.toString(16) + '>';
-};
-
-/*
-
-var zeros = [];
-var groupSizes = [];
-var groupBases = [];
-
-var s = '';
-var i = -1;
-while (++i < BN.wordSize) {
-  zeros[i] = s;
-  s += '0';
-}
-groupSizes[0] = 0;
-groupSizes[1] = 0;
-groupBases[0] = 0;
-groupBases[1] = 0;
-var base = 2 - 1;
-while (++base < 36 + 1) {
-  var groupSize = 0;
-  var groupBase = 1;
-  while (groupBase < (1 << BN.wordSize) / base) {
-    groupBase *= base;
-    groupSize += 1;
-  }
-  groupSizes[base] = groupSize;
-  groupBases[base] = groupBase;
-}
-
-*/
-
-var zeros = [
-  '',
-  '0',
-  '00',
-  '000',
-  '0000',
-  '00000',
-  '000000',
-  '0000000',
-  '00000000',
-  '000000000',
-  '0000000000',
-  '00000000000',
-  '000000000000',
-  '0000000000000',
-  '00000000000000',
-  '000000000000000',
-  '0000000000000000',
-  '00000000000000000',
-  '000000000000000000',
-  '0000000000000000000',
-  '00000000000000000000',
-  '000000000000000000000',
-  '0000000000000000000000',
-  '00000000000000000000000',
-  '000000000000000000000000',
-  '0000000000000000000000000'
-];
-
-var groupSizes = [
-  0, 0,
-  25, 16, 12, 11, 10, 9, 8,
-  8, 7, 7, 7, 7, 6, 6,
-  6, 6, 6, 6, 6, 5, 5,
-  5, 5, 5, 5, 5, 5, 5,
-  5, 5, 5, 5, 5, 5, 5
-];
-
-var groupBases = [
-  0, 0,
-  33554432, 43046721, 16777216, 48828125, 60466176, 40353607, 16777216,
-  43046721, 10000000, 19487171, 35831808, 62748517, 7529536, 11390625,
-  16777216, 24137569, 34012224, 47045881, 64000000, 4084101, 5153632,
-  6436343, 7962624, 9765625, 11881376, 14348907, 17210368, 20511149,
-  24300000, 28629151, 33554432, 39135393, 45435424, 52521875, 60466176
-];
-
-BN.prototype.toString = function toString(base, padding) {
-  base = base || 10;
-  if (base === 16 || base === 'hex') {
-    var out = '';
-    var off = 0;
-    var padding = padding | 0 || 1;
-    var carry = 0;
-    for (var i = 0; i < this.length; i++) {
-      var w = this.words[i];
-      var word = (((w << off) | carry) & 0xffffff).toString(16);
-      carry = (w >>> (24 - off)) & 0xffffff;
-      if (carry !== 0 || i !== this.length - 1)
-        out = zeros[6 - word.length] + word + out;
-      else
-        out = word + out;
-      off += 2;
-      if (off >= 26) {
-        off -= 26;
-        i--;
-      }
-    }
-    if (carry !== 0)
-      out = carry.toString(16) + out;
-    while (out.length % padding !== 0)
-      out = '0' + out;
-    if (this.sign)
-      out = '-' + out;
-    return out;
-  } else if (base === (base | 0) && base >= 2 && base <= 36) {
-    // var groupSize = Math.floor(BN.wordSize * Math.LN2 / Math.log(base));
-    var groupSize = groupSizes[base];
-    // var groupBase = Math.pow(base, groupSize);
-    var groupBase = groupBases[base];
-    var out = '';
-    var c = this.clone();
-    c.sign = false;
-    while (c.cmpn(0) !== 0) {
-      var r = c.modn(groupBase).toString(base);
-      c = c.idivn(groupBase);
-
-      if (c.cmpn(0) !== 0)
-        out = zeros[groupSize - r.length] + r + out;
-      else
-        out = r + out;
-    }
-    if (this.cmpn(0) === 0)
-      out = '0' + out;
-    if (this.sign)
-      out = '-' + out;
-    return out;
+  if (typeof module === 'object') {
+    module.exports = BN;
   } else {
-    assert(false, 'Base should be between 2 and 36');
-  }
-};
-
-BN.prototype.toJSON = function toJSON() {
-  return this.toString(16);
-};
-
-BN.prototype.toArray = function toArray(endian) {
-  this.strip();
-  var res = new Array(this.byteLength());
-  res[0] = 0;
-
-  var q = this.clone();
-  if (endian !== 'le') {
-    // Assume big-endian
-    for (var i = 0; q.cmpn(0) !== 0; i++) {
-      var b = q.andln(0xff);
-      q.ishrn(8);
-
-      res[res.length - i - 1] = b;
-    }
-  } else {
-    // Assume little-endian
-    for (var i = 0; q.cmpn(0) !== 0; i++) {
-      var b = q.andln(0xff);
-      q.ishrn(8);
-
-      res[i] = b;
-    }
+    exports.BN = BN;
   }
 
-  return res;
-};
+  BN.BN = BN;
+  BN.wordSize = 26;
 
-if (Math.clz32) {
-  BN.prototype._countBits = function _countBits(w) {
-    return 32 - Math.clz32(w);
+  var Buffer;
+  try {
+    Buffer = require('buf' + 'fer').Buffer;
+  } catch (e) {
+  }
+
+  BN.isBN = function isBN (num) {
+    if (num instanceof BN) {
+      return true;
+    }
+
+    return num !== null && typeof num === 'object' &&
+      num.constructor.wordSize === BN.wordSize && Array.isArray(num.words);
   };
-} else {
-  BN.prototype._countBits = function _countBits(w) {
-    var t = w;
-    var r = 0;
-    if (t >= 0x1000) {
-      r += 13;
-      t >>>= 13;
-    }
-    if (t >= 0x40) {
-      r += 7;
-      t >>>= 7;
-    }
-    if (t >= 0x8) {
-      r += 4;
-      t >>>= 4;
-    }
-    if (t >= 0x02) {
-      r += 2;
-      t >>>= 2;
-    }
-    return r + t;
+
+  BN.max = function max (left, right) {
+    if (left.cmp(right) > 0) return left;
+    return right;
   };
-}
 
-BN.prototype._zeroBits = function _zeroBits(w) {
-  // Short-cut
-  if (w === 0)
-    return 26;
+  BN.min = function min (left, right) {
+    if (left.cmp(right) < 0) return left;
+    return right;
+  };
 
-  var t = w;
-  var r = 0;
-  if ((t & 0x1fff) === 0) {
-    r += 13;
-    t >>>= 13;
-  }
-  if ((t & 0x7f) === 0) {
-    r += 7;
-    t >>>= 7;
-  }
-  if ((t & 0xf) === 0) {
-    r += 4;
-    t >>>= 4;
-  }
-  if ((t & 0x3) === 0) {
-    r += 2;
-    t >>>= 2;
-  }
-  if ((t & 0x1) === 0)
-    r++;
-  return r;
-};
-
-// Return number of used bits in a BN
-BN.prototype.bitLength = function bitLength() {
-  var hi = 0;
-  var w = this.words[this.length - 1];
-  var hi = this._countBits(w);
-  return (this.length - 1) * 26 + hi;
-};
-
-// Number of trailing zero bits
-BN.prototype.zeroBits = function zeroBits() {
-  if (this.cmpn(0) === 0)
-    return 0;
-
-  var r = 0;
-  for (var i = 0; i < this.length; i++) {
-    var b = this._zeroBits(this.words[i]);
-    r += b;
-    if (b !== 26)
-      break;
-  }
-  return r;
-};
-
-BN.prototype.byteLength = function byteLength() {
-  return Math.ceil(this.bitLength() / 8);
-};
-
-// Return negative clone of `this`
-BN.prototype.neg = function neg() {
-  if (this.cmpn(0) === 0)
-    return this.clone();
-
-  var r = this.clone();
-  r.sign = !this.sign;
-  return r;
-};
-
-
-// Or `num` with `this` in-place
-BN.prototype.ior = function ior(num) {
-  this.sign = this.sign || num.sign;
-
-  while (this.length < num.length)
-    this.words[this.length++] = 0;
-
-  for (var i = 0; i < num.length; i++)
-    this.words[i] = this.words[i] | num.words[i];
-
-  return this.strip();
-};
-
-
-// Or `num` with `this`
-BN.prototype.or = function or(num) {
-  if (this.length > num.length)
-    return this.clone().ior(num);
-  else
-    return num.clone().ior(this);
-};
-
-
-// And `num` with `this` in-place
-BN.prototype.iand = function iand(num) {
-  this.sign = this.sign && num.sign;
-
-  // b = min-length(num, this)
-  var b;
-  if (this.length > num.length)
-    b = num;
-  else
-    b = this;
-
-  for (var i = 0; i < b.length; i++)
-    this.words[i] = this.words[i] & num.words[i];
-
-  this.length = b.length;
-
-  return this.strip();
-};
-
-
-// And `num` with `this`
-BN.prototype.and = function and(num) {
-  if (this.length > num.length)
-    return this.clone().iand(num);
-  else
-    return num.clone().iand(this);
-};
-
-
-// Xor `num` with `this` in-place
-BN.prototype.ixor = function ixor(num) {
-  this.sign = this.sign || num.sign;
-
-  // a.length > b.length
-  var a;
-  var b;
-  if (this.length > num.length) {
-    a = this;
-    b = num;
-  } else {
-    a = num;
-    b = this;
-  }
-
-  for (var i = 0; i < b.length; i++)
-    this.words[i] = a.words[i] ^ b.words[i];
-
-  if (this !== a)
-    for (; i < a.length; i++)
-      this.words[i] = a.words[i];
-
-  this.length = a.length;
-
-  return this.strip();
-};
-
-
-// Xor `num` with `this`
-BN.prototype.xor = function xor(num) {
-  if (this.length > num.length)
-    return this.clone().ixor(num);
-  else
-    return num.clone().ixor(this);
-};
-
-
-// Set `bit` of `this`
-BN.prototype.setn = function setn(bit, val) {
-  assert(typeof bit === 'number' && bit >= 0);
-
-  var off = (bit / 26) | 0;
-  var wbit = bit % 26;
-
-  while (this.length <= off)
-    this.words[this.length++] = 0;
-
-  if (val)
-    this.words[off] = this.words[off] | (1 << wbit);
-  else
-    this.words[off] = this.words[off] & ~(1 << wbit);
-
-  return this.strip();
-};
-
-
-// Add `num` to `this` in-place
-BN.prototype.iadd = function iadd(num) {
-  // negative + positive
-  if (this.sign && !num.sign) {
-    this.sign = false;
-    var r = this.isub(num);
-    this.sign = !this.sign;
-    return this._normSign();
-
-  // positive + negative
-  } else if (!this.sign && num.sign) {
-    num.sign = false;
-    var r = this.isub(num);
-    num.sign = true;
-    return r._normSign();
-  }
-
-  // a.length > b.length
-  var a;
-  var b;
-  if (this.length > num.length) {
-    a = this;
-    b = num;
-  } else {
-    a = num;
-    b = this;
-  }
-
-  var carry = 0;
-  for (var i = 0; i < b.length; i++) {
-    var r = a.words[i] + b.words[i] + carry;
-    this.words[i] = r & 0x3ffffff;
-    carry = r >>> 26;
-  }
-  for (; carry !== 0 && i < a.length; i++) {
-    var r = a.words[i] + carry;
-    this.words[i] = r & 0x3ffffff;
-    carry = r >>> 26;
-  }
-
-  this.length = a.length;
-  if (carry !== 0) {
-    this.words[this.length] = carry;
-    this.length++;
-  // Copy the rest of the words
-  } else if (a !== this) {
-    for (; i < a.length; i++)
-      this.words[i] = a.words[i];
-  }
-
-  return this;
-};
-
-// Add `num` to `this`
-BN.prototype.add = function add(num) {
-  if (num.sign && !this.sign) {
-    num.sign = false;
-    var res = this.sub(num);
-    num.sign = true;
-    return res;
-  } else if (!num.sign && this.sign) {
-    this.sign = false;
-    var res = num.sub(this);
-    this.sign = true;
-    return res;
-  }
-
-  if (this.length > num.length)
-    return this.clone().iadd(num);
-  else
-    return num.clone().iadd(this);
-};
-
-// Subtract `num` from `this` in-place
-BN.prototype.isub = function isub(num) {
-  // this - (-num) = this + num
-  if (num.sign) {
-    num.sign = false;
-    var r = this.iadd(num);
-    num.sign = true;
-    return r._normSign();
-
-  // -this - num = -(this + num)
-  } else if (this.sign) {
-    this.sign = false;
-    this.iadd(num);
-    this.sign = true;
-    return this._normSign();
-  }
-
-  // At this point both numbers are positive
-  var cmp = this.cmp(num);
-
-  // Optimization - zeroify
-  if (cmp === 0) {
-    this.sign = false;
-    this.length = 1;
-    this.words[0] = 0;
-    return this;
-  }
-
-  // a > b
-  var a;
-  var b;
-  if (cmp > 0) {
-    a = this;
-    b = num;
-  } else {
-    a = num;
-    b = this;
-  }
-
-  var carry = 0;
-  for (var i = 0; i < b.length; i++) {
-    var r = a.words[i] - b.words[i] + carry;
-    carry = r >> 26;
-    this.words[i] = r & 0x3ffffff;
-  }
-  for (; carry !== 0 && i < a.length; i++) {
-    var r = a.words[i] + carry;
-    carry = r >> 26;
-    this.words[i] = r & 0x3ffffff;
-  }
-
-  // Copy rest of the words
-  if (carry === 0 && i < a.length && a !== this)
-    for (; i < a.length; i++)
-      this.words[i] = a.words[i];
-  this.length = Math.max(this.length, i);
-
-  if (a !== this)
-    this.sign = true;
-
-  return this.strip();
-};
-
-// Subtract `num` from `this`
-BN.prototype.sub = function sub(num) {
-  return this.clone().isub(num);
-};
-
-/*
-// NOTE: This could be potentionally used to generate loop-less multiplications
-function _genCombMulTo(alen, blen) {
-  var len = alen + blen - 1;
-  var src = [
-    'var a = this.words, b = num.words, o = out.words, c = 0, w, ' +
-        'mask = 0x3ffffff, shift = 0x4000000;',
-    'out.length = ' + len + ';'
-  ];
-  for (var k = 0; k < len; k++) {
-    var minJ = Math.max(0, k - alen + 1);
-    var maxJ = Math.min(k, blen - 1);
-
-    for (var j = minJ; j <= maxJ; j++) {
-      var i = k - j;
-      var mul = 'a[' + i + '] * b[' + j + ']';
-
-      if (j === minJ) {
-        src.push('w = ' + mul + ' + c;');
-        src.push('c = (w / shift) | 0;');
-      } else {
-        src.push('w += ' + mul + ';');
-        src.push('c += (w / shift) | 0;');
-      }
-      src.push('w &= mask;');
+  BN.prototype._init = function init (number, base, endian) {
+    if (typeof number === 'number') {
+      return this._initNumber(number, base, endian);
     }
-    src.push('o[' + k + '] = w;');
-  }
-  src.push('if (c !== 0) {',
-           '  o[' + k + '] = c;',
-           '  out.length++;',
-           '}',
-           'return out;');
 
-  return src.join('\n');
-}
-*/
-
-BN.prototype._smallMulTo = function _smallMulTo(num, out) {
-  out.sign = num.sign !== this.sign;
-  out.length = this.length + num.length;
-
-  var carry = 0;
-  for (var k = 0; k < out.length - 1; k++) {
-    // Sum all words with the same `i + j = k` and accumulate `ncarry`,
-    // note that ncarry could be >= 0x3ffffff
-    var ncarry = carry >>> 26;
-    var rword = carry & 0x3ffffff;
-    var maxJ = Math.min(k, num.length - 1);
-    for (var j = Math.max(0, k - this.length + 1); j <= maxJ; j++) {
-      var i = k - j;
-      var a = this.words[i] | 0;
-      var b = num.words[j] | 0;
-      var r = a * b;
-
-      var lo = r & 0x3ffffff;
-      ncarry = (ncarry + ((r / 0x4000000) | 0)) | 0;
-      lo = (lo + rword) | 0;
-      rword = lo & 0x3ffffff;
-      ncarry = (ncarry + (lo >>> 26)) | 0;
+    if (typeof number === 'object') {
+      return this._initArray(number, base, endian);
     }
-    out.words[k] = rword;
-    carry = ncarry;
-  }
-  if (carry !== 0) {
-    out.words[k] = carry;
-  } else {
-    out.length--;
-  }
 
-  return out.strip();
-};
-
-BN.prototype._bigMulTo = function _bigMulTo(num, out) {
-  out.sign = num.sign !== this.sign;
-  out.length = this.length + num.length;
-
-  var carry = 0;
-  var hncarry = 0;
-  for (var k = 0; k < out.length - 1; k++) {
-    // Sum all words with the same `i + j = k` and accumulate `ncarry`,
-    // note that ncarry could be >= 0x3ffffff
-    var ncarry = hncarry;
-    hncarry = 0;
-    var rword = carry & 0x3ffffff;
-    var maxJ = Math.min(k, num.length - 1);
-    for (var j = Math.max(0, k - this.length + 1); j <= maxJ; j++) {
-      var i = k - j;
-      var a = this.words[i] | 0;
-      var b = num.words[j] | 0;
-      var r = a * b;
-
-      var lo = r & 0x3ffffff;
-      ncarry = (ncarry + ((r / 0x4000000) | 0)) | 0;
-      lo = (lo + rword) | 0;
-      rword = lo & 0x3ffffff;
-      ncarry = (ncarry + (lo >>> 26)) | 0;
-
-      hncarry += ncarry >>> 26;
-      ncarry &= 0x3ffffff;
+    if (base === 'hex') {
+      base = 16;
     }
-    out.words[k] = rword;
-    carry = ncarry;
-    ncarry = hncarry;
-  }
-  if (carry !== 0) {
-    out.words[k] = carry;
-  } else {
-    out.length--;
-  }
+    assert(base === (base | 0) && base >= 2 && base <= 36);
 
-  return out.strip();
-};
-
-BN.prototype.mulTo = function mulTo(num, out) {
-  var res;
-  if (this.length + num.length < 63)
-    res = this._smallMulTo(num, out);
-  else
-    res = this._bigMulTo(num, out);
-  return res;
-};
-
-// Multiply `this` by `num`
-BN.prototype.mul = function mul(num) {
-  var out = new BN(null);
-  out.words = new Array(this.length + num.length);
-  return this.mulTo(num, out);
-};
-
-// In-place Multiplication
-BN.prototype.imul = function imul(num) {
-  if (this.cmpn(0) === 0 || num.cmpn(0) === 0) {
-    this.words[0] = 0;
-    this.length = 1;
-    return this;
-  }
-
-  var tlen = this.length;
-  var nlen = num.length;
-
-  this.sign = num.sign !== this.sign;
-  this.length = this.length + num.length;
-  this.words[this.length - 1] = 0;
-
-  for (var k = this.length - 2; k >= 0; k--) {
-    // Sum all words with the same `i + j = k` and accumulate `carry`,
-    // note that carry could be >= 0x3ffffff
-    var carry = 0;
-    var rword = 0;
-    var maxJ = Math.min(k, nlen - 1);
-    for (var j = Math.max(0, k - tlen + 1); j <= maxJ; j++) {
-      var i = k - j;
-      var a = this.words[i];
-      var b = num.words[j];
-      var r = a * b;
-
-      var lo = r & 0x3ffffff;
-      carry += (r / 0x4000000) | 0;
-      lo += rword;
-      rword = lo & 0x3ffffff;
-      carry += lo >>> 26;
+    number = number.toString().replace(/\s+/g, '');
+    var start = 0;
+    if (number[0] === '-') {
+      start++;
     }
-    this.words[k] = rword;
-    this.words[k + 1] += carry;
-    carry = 0;
-  }
 
-  // Propagate overflows
-  var carry = 0;
-  for (var i = 1; i < this.length; i++) {
-    var w = this.words[i] + carry;
-    this.words[i] = w & 0x3ffffff;
-    carry = w >>> 26;
-  }
-
-  return this.strip();
-};
-
-BN.prototype.imuln = function imuln(num) {
-  assert(typeof num === 'number');
-
-  // Carry
-  var carry = 0;
-  for (var i = 0; i < this.length; i++) {
-    var w = this.words[i] * num;
-    var lo = (w & 0x3ffffff) + (carry & 0x3ffffff);
-    carry >>= 26;
-    carry += (w / 0x4000000) | 0;
-    // NOTE: lo is 27bit maximum
-    carry += lo >>> 26;
-    this.words[i] = lo & 0x3ffffff;
-  }
-
-  if (carry !== 0) {
-    this.words[i] = carry;
-    this.length++;
-  }
-
-  return this;
-};
-
-BN.prototype.muln = function muln(num) {
-  return this.clone().imuln(num);
-};
-
-// `this` * `this`
-BN.prototype.sqr = function sqr() {
-  return this.mul(this);
-};
-
-// `this` * `this` in-place
-BN.prototype.isqr = function isqr() {
-  return this.mul(this);
-};
-
-// Shift-left in-place
-BN.prototype.ishln = function ishln(bits) {
-  assert(typeof bits === 'number' && bits >= 0);
-  var r = bits % 26;
-  var s = (bits - r) / 26;
-  var carryMask = (0x3ffffff >>> (26 - r)) << (26 - r);
-
-  if (r !== 0) {
-    var carry = 0;
-    for (var i = 0; i < this.length; i++) {
-      var newCarry = this.words[i] & carryMask;
-      var c = (this.words[i] - newCarry) << r;
-      this.words[i] = c | carry;
-      carry = newCarry >>> (26 - r);
+    if (base === 16) {
+      this._parseHex(number, start);
+    } else {
+      this._parseBase(number, base, start);
     }
-    if (carry) {
-      this.words[i] = carry;
-      this.length++;
+
+    if (number[0] === '-') {
+      this.negative = 1;
     }
-  }
 
-  if (s !== 0) {
-    for (var i = this.length - 1; i >= 0; i--)
-      this.words[i + s] = this.words[i];
-    for (var i = 0; i < s; i++)
-      this.words[i] = 0;
-    this.length += s;
-  }
+    this.strip();
 
-  return this.strip();
-};
+    if (endian !== 'le') return;
 
-// Shift-right in-place
-// NOTE: `hint` is a lowest bit before trailing zeroes
-// NOTE: if `extended` is present - it will be filled with destroyed bits
-BN.prototype.ishrn = function ishrn(bits, hint, extended) {
-  assert(typeof bits === 'number' && bits >= 0);
-  var h;
-  if (hint)
-    h = (hint - (hint % 26)) / 26;
-  else
-    h = 0;
+    this._initArray(this.toArray(), base, endian);
+  };
 
-  var r = bits % 26;
-  var s = Math.min((bits - r) / 26, this.length);
-  var mask = 0x3ffffff ^ ((0x3ffffff >>> r) << r);
-  var maskedWords = extended;
+  BN.prototype._initNumber = function _initNumber (number, base, endian) {
+    if (number < 0) {
+      this.negative = 1;
+      number = -number;
+    }
+    if (number < 0x4000000) {
+      this.words = [ number & 0x3ffffff ];
+      this.length = 1;
+    } else if (number < 0x10000000000000) {
+      this.words = [
+        number & 0x3ffffff,
+        (number / 0x4000000) & 0x3ffffff
+      ];
+      this.length = 2;
+    } else {
+      assert(number < 0x20000000000000); // 2 ^ 53 (unsafe)
+      this.words = [
+        number & 0x3ffffff,
+        (number / 0x4000000) & 0x3ffffff,
+        1
+      ];
+      this.length = 3;
+    }
 
-  h -= s;
-  h = Math.max(0, h);
+    if (endian !== 'le') return;
 
-  // Extended mode, copy masked part
-  if (maskedWords) {
-    for (var i = 0; i < s; i++)
-      maskedWords.words[i] = this.words[i];
-    maskedWords.length = s;
-  }
+    // Reverse the bytes
+    this._initArray(this.toArray(), base, endian);
+  };
 
-  if (s === 0) {
-    // No-op, we should not move anything at all
-  } else if (this.length > s) {
-    this.length -= s;
-    for (var i = 0; i < this.length; i++)
-      this.words[i] = this.words[i + s];
-  } else {
-    this.words[0] = 0;
-    this.length = 1;
-  }
-
-  var carry = 0;
-  for (var i = this.length - 1; i >= 0 && (carry !== 0 || i >= h); i--) {
-    var word = this.words[i];
-    this.words[i] = (carry << (26 - r)) | (word >>> r);
-    carry = word & mask;
-  }
-
-  // Push carried bits as a mask
-  if (maskedWords && carry !== 0)
-    maskedWords.words[maskedWords.length++] = carry;
-
-  if (this.length === 0) {
-    this.words[0] = 0;
-    this.length = 1;
-  }
-
-  this.strip();
-
-  return this;
-};
-
-// Shift-left
-BN.prototype.shln = function shln(bits) {
-  return this.clone().ishln(bits);
-};
-
-// Shift-right
-BN.prototype.shrn = function shrn(bits) {
-  return this.clone().ishrn(bits);
-};
-
-// Test if n bit is set
-BN.prototype.testn = function testn(bit) {
-  assert(typeof bit === 'number' && bit >= 0);
-  var r = bit % 26;
-  var s = (bit - r) / 26;
-  var q = 1 << r;
-
-  // Fast case: bit is much higher than all existing words
-  if (this.length <= s) {
-    return false;
-  }
-
-  // Check bit and return
-  var w = this.words[s];
-
-  return !!(w & q);
-};
-
-// Return only lowers bits of number (in-place)
-BN.prototype.imaskn = function imaskn(bits) {
-  assert(typeof bits === 'number' && bits >= 0);
-  var r = bits % 26;
-  var s = (bits - r) / 26;
-
-  assert(!this.sign, 'imaskn works only with positive numbers');
-
-  if (r !== 0)
-    s++;
-  this.length = Math.min(s, this.length);
-
-  if (r !== 0) {
-    var mask = 0x3ffffff ^ ((0x3ffffff >>> r) << r);
-    this.words[this.length - 1] &= mask;
-  }
-
-  return this.strip();
-};
-
-// Return only lowers bits of number
-BN.prototype.maskn = function maskn(bits) {
-  return this.clone().imaskn(bits);
-};
-
-// Add plain number `num` to `this`
-BN.prototype.iaddn = function iaddn(num) {
-  assert(typeof num === 'number');
-  if (num < 0)
-    return this.isubn(-num);
-
-  // Possible sign change
-  if (this.sign) {
-    if (this.length === 1 && this.words[0] < num) {
-      this.words[0] = num - this.words[0];
-      this.sign = false;
+  BN.prototype._initArray = function _initArray (number, base, endian) {
+    // Perhaps a Uint8Array
+    assert(typeof number.length === 'number');
+    if (number.length <= 0) {
+      this.words = [ 0 ];
+      this.length = 1;
       return this;
     }
 
-    this.sign = false;
-    this.isubn(num);
-    this.sign = true;
-    return this;
-  }
-
-  // Add without checks
-  return this._iaddn(num);
-};
-
-BN.prototype._iaddn = function _iaddn(num) {
-  this.words[0] += num;
-
-  // Carry
-  for (var i = 0; i < this.length && this.words[i] >= 0x4000000; i++) {
-    this.words[i] -= 0x4000000;
-    if (i === this.length - 1)
-      this.words[i + 1] = 1;
-    else
-      this.words[i + 1]++;
-  }
-  this.length = Math.max(this.length, i + 1);
-
-  return this;
-};
-
-// Subtract plain number `num` from `this`
-BN.prototype.isubn = function isubn(num) {
-  assert(typeof num === 'number');
-  if (num < 0)
-    return this.iaddn(-num);
-
-  if (this.sign) {
-    this.sign = false;
-    this.iaddn(num);
-    this.sign = true;
-    return this;
-  }
-
-  this.words[0] -= num;
-
-  // Carry
-  for (var i = 0; i < this.length && this.words[i] < 0; i++) {
-    this.words[i] += 0x4000000;
-    this.words[i + 1] -= 1;
-  }
-
-  return this.strip();
-};
-
-BN.prototype.addn = function addn(num) {
-  return this.clone().iaddn(num);
-};
-
-BN.prototype.subn = function subn(num) {
-  return this.clone().isubn(num);
-};
-
-BN.prototype.iabs = function iabs() {
-  this.sign = false;
-
-  return this;
-};
-
-BN.prototype.abs = function abs() {
-  return this.clone().iabs();
-};
-
-BN.prototype._ishlnsubmul = function _ishlnsubmul(num, mul, shift) {
-  // Bigger storage is needed
-  var len = num.length + shift;
-  var i;
-  if (this.words.length < len) {
-    var t = new Array(len);
-    for (var i = 0; i < this.length; i++)
-      t[i] = this.words[i];
-    this.words = t;
-  } else {
-    i = this.length;
-  }
-
-  // Zeroify rest
-  this.length = Math.max(this.length, len);
-  for (; i < this.length; i++)
-    this.words[i] = 0;
-
-  var carry = 0;
-  for (var i = 0; i < num.length; i++) {
-    var w = this.words[i + shift] + carry;
-    var right = num.words[i] * mul;
-    w -= right & 0x3ffffff;
-    carry = (w >> 26) - ((right / 0x4000000) | 0);
-    this.words[i + shift] = w & 0x3ffffff;
-  }
-  for (; i < this.length - shift; i++) {
-    var w = this.words[i + shift] + carry;
-    carry = w >> 26;
-    this.words[i + shift] = w & 0x3ffffff;
-  }
-
-  if (carry === 0)
-    return this.strip();
-
-  // Subtraction overflow
-  assert(carry === -1);
-  carry = 0;
-  for (var i = 0; i < this.length; i++) {
-    var w = -this.words[i] + carry;
-    carry = w >> 26;
-    this.words[i] = w & 0x3ffffff;
-  }
-  this.sign = true;
-
-  return this.strip();
-};
-
-BN.prototype._wordDiv = function _wordDiv(num, mode) {
-  var shift = this.length - num.length;
-
-  var a = this.clone();
-  var b = num;
-
-  // Normalize
-  var bhi = b.words[b.length - 1];
-  var bhiBits = this._countBits(bhi);
-  shift = 26 - bhiBits;
-  if (shift !== 0) {
-    b = b.shln(shift);
-    a.ishln(shift);
-    bhi = b.words[b.length - 1];
-  }
-
-  // Initialize quotient
-  var m = a.length - b.length;
-  var q;
-
-  if (mode !== 'mod') {
-    q = new BN(null);
-    q.length = m + 1;
-    q.words = new Array(q.length);
-    for (var i = 0; i < q.length; i++)
-      q.words[i] = 0;
-  }
-
-  var diff = a.clone()._ishlnsubmul(b, 1, m);
-  if (!diff.sign) {
-    a = diff;
-    if (q)
-      q.words[m] = 1;
-  }
-
-  for (var j = m - 1; j >= 0; j--) {
-    var qj = a.words[b.length + j] * 0x4000000 + a.words[b.length + j - 1];
-
-    // NOTE: (qj / bhi) is (0x3ffffff * 0x4000000 + 0x3ffffff) / 0x2000000 max
-    // (0x7ffffff)
-    qj = Math.min((qj / bhi) | 0, 0x3ffffff);
-
-    a._ishlnsubmul(b, qj, j);
-    while (a.sign) {
-      qj--;
-      a.sign = false;
-      a._ishlnsubmul(b, 1, j);
-      if (a.cmpn(0) !== 0)
-        a.sign = !a.sign;
-    }
-    if (q)
-      q.words[j] = qj;
-  }
-  if (q)
-    q.strip();
-  a.strip();
-
-  // Denormalize
-  if (mode !== 'div' && shift !== 0)
-    a.ishrn(shift);
-  return { div: q ? q : null, mod: a };
-};
-
-BN.prototype.divmod = function divmod(num, mode) {
-  assert(num.cmpn(0) !== 0);
-
-  if (this.sign && !num.sign) {
-    var res = this.neg().divmod(num, mode);
-    var div;
-    var mod;
-    if (mode !== 'mod')
-      div = res.div.neg();
-    if (mode !== 'div')
-      mod = res.mod.cmpn(0) === 0 ? res.mod : num.sub(res.mod);
-    return {
-      div: div,
-      mod: mod
-    };
-  } else if (!this.sign && num.sign) {
-    var res = this.divmod(num.neg(), mode);
-    var div;
-    if (mode !== 'mod')
-      div = res.div.neg();
-    return { div: div, mod: res.mod };
-  } else if (this.sign && num.sign) {
-    return this.neg().divmod(num.neg(), mode);
-  }
-
-  // Both numbers are positive at this point
-
-  // Strip both numbers to approximate shift value
-  if (num.length > this.length || this.cmp(num) < 0)
-    return { div: new BN(0), mod: this };
-
-  // Very short reduction
-  if (num.length === 1) {
-    if (mode === 'div')
-      return { div: this.divn(num.words[0]), mod: null };
-    else if (mode === 'mod')
-      return { div: null, mod: new BN(this.modn(num.words[0])) };
-    return {
-      div: this.divn(num.words[0]),
-      mod: new BN(this.modn(num.words[0]))
-    };
-  }
-
-  return this._wordDiv(num, mode);
-};
-
-// Find `this` / `num`
-BN.prototype.div = function div(num) {
-  return this.divmod(num, 'div').div;
-};
-
-// Find `this` % `num`
-BN.prototype.mod = function mod(num) {
-  return this.divmod(num, 'mod').mod;
-};
-
-// Find Round(`this` / `num`)
-BN.prototype.divRound = function divRound(num) {
-  var dm = this.divmod(num);
-
-  // Fast case - exact division
-  if (dm.mod.cmpn(0) === 0)
-    return dm.div;
-
-  var mod = dm.div.sign ? dm.mod.isub(num) : dm.mod;
-
-  var half = num.shrn(1);
-  var r2 = num.andln(1);
-  var cmp = mod.cmp(half);
-
-  // Round down
-  if (cmp < 0 || r2 === 1 && cmp === 0)
-    return dm.div;
-
-  // Round up
-  return dm.div.sign ? dm.div.isubn(1) : dm.div.iaddn(1);
-};
-
-BN.prototype.modn = function modn(num) {
-  assert(num <= 0x3ffffff);
-  var p = (1 << 26) % num;
-
-  var acc = 0;
-  for (var i = this.length - 1; i >= 0; i--)
-    acc = (p * acc + this.words[i]) % num;
-
-  return acc;
-};
-
-// In-place division by number
-BN.prototype.idivn = function idivn(num) {
-  assert(num <= 0x3ffffff);
-
-  var carry = 0;
-  for (var i = this.length - 1; i >= 0; i--) {
-    var w = this.words[i] + carry * 0x4000000;
-    this.words[i] = (w / num) | 0;
-    carry = w % num;
-  }
-
-  return this.strip();
-};
-
-BN.prototype.divn = function divn(num) {
-  return this.clone().idivn(num);
-};
-
-BN.prototype.egcd = function egcd(p) {
-  assert(!p.sign);
-  assert(p.cmpn(0) !== 0);
-
-  var x = this;
-  var y = p.clone();
-
-  if (x.sign)
-    x = x.mod(p);
-  else
-    x = x.clone();
-
-  // A * x + B * y = x
-  var A = new BN(1);
-  var B = new BN(0);
-
-  // C * x + D * y = y
-  var C = new BN(0);
-  var D = new BN(1);
-
-  var g = 0;
-
-  while (x.isEven() && y.isEven()) {
-    x.ishrn(1);
-    y.ishrn(1);
-    ++g;
-  }
-
-  var yp = y.clone();
-  var xp = x.clone();
-
-  while (x.cmpn(0) !== 0) {
-    while (x.isEven()) {
-      x.ishrn(1);
-      if (A.isEven() && B.isEven()) {
-        A.ishrn(1);
-        B.ishrn(1);
-      } else {
-        A.iadd(yp).ishrn(1);
-        B.isub(xp).ishrn(1);
-      }
-    }
-
-    while (y.isEven()) {
-      y.ishrn(1);
-      if (C.isEven() && D.isEven()) {
-        C.ishrn(1);
-        D.ishrn(1);
-      } else {
-        C.iadd(yp).ishrn(1);
-        D.isub(xp).ishrn(1);
-      }
-    }
-
-    if (x.cmp(y) >= 0) {
-      x.isub(y);
-      A.isub(C);
-      B.isub(D);
-    } else {
-      y.isub(x);
-      C.isub(A);
-      D.isub(B);
-    }
-  }
-
-  return {
-    a: C,
-    b: D,
-    gcd: y.ishln(g)
-  };
-};
-
-// This is reduced incarnation of the binary EEA
-// above, designated to invert members of the
-// _prime_ fields F(p) at a maximal speed
-BN.prototype._invmp = function _invmp(p) {
-  assert(!p.sign);
-  assert(p.cmpn(0) !== 0);
-
-  var a = this;
-  var b = p.clone();
-
-  if (a.sign)
-    a = a.mod(p);
-  else
-    a = a.clone();
-
-  var x1 = new BN(1);
-  var x2 = new BN(0);
-
-  var delta = b.clone();
-
-  while (a.cmpn(1) > 0 && b.cmpn(1) > 0) {
-    while (a.isEven()) {
-      a.ishrn(1);
-      if (x1.isEven())
-        x1.ishrn(1);
-      else
-        x1.iadd(delta).ishrn(1);
-    }
-    while (b.isEven()) {
-      b.ishrn(1);
-      if (x2.isEven())
-        x2.ishrn(1);
-      else
-        x2.iadd(delta).ishrn(1);
-    }
-    if (a.cmp(b) >= 0) {
-      a.isub(b);
-      x1.isub(x2);
-    } else {
-      b.isub(a);
-      x2.isub(x1);
-    }
-  }
-  if (a.cmpn(1) === 0)
-    return x1;
-  else
-    return x2;
-};
-
-BN.prototype.gcd = function gcd(num) {
-  if (this.cmpn(0) === 0)
-    return num.clone();
-  if (num.cmpn(0) === 0)
-    return this.clone();
-
-  var a = this.clone();
-  var b = num.clone();
-  a.sign = false;
-  b.sign = false;
-
-  // Remove common factor of two
-  for (var shift = 0; a.isEven() && b.isEven(); shift++) {
-    a.ishrn(1);
-    b.ishrn(1);
-  }
-
-  do {
-    while (a.isEven())
-      a.ishrn(1);
-    while (b.isEven())
-      b.ishrn(1);
-
-    var r = a.cmp(b);
-    if (r < 0) {
-      // Swap `a` and `b` to make `a` always bigger than `b`
-      var t = a;
-      a = b;
-      b = t;
-    } else if (r === 0 || b.cmpn(1) === 0) {
-      break;
-    }
-
-    a.isub(b);
-  } while (true);
-
-  return b.ishln(shift);
-};
-
-// Invert number in the field F(num)
-BN.prototype.invm = function invm(num) {
-  return this.egcd(num).a.mod(num);
-};
-
-BN.prototype.isEven = function isEven() {
-  return (this.words[0] & 1) === 0;
-};
-
-BN.prototype.isOdd = function isOdd() {
-  return (this.words[0] & 1) === 1;
-};
-
-// And first word and num
-BN.prototype.andln = function andln(num) {
-  return this.words[0] & num;
-};
-
-// Increment at the bit position in-line
-BN.prototype.bincn = function bincn(bit) {
-  assert(typeof bit === 'number');
-  var r = bit % 26;
-  var s = (bit - r) / 26;
-  var q = 1 << r;
-
-  // Fast case: bit is much higher than all existing words
-  if (this.length <= s) {
-    for (var i = this.length; i < s + 1; i++)
+    this.length = Math.ceil(number.length / 3);
+    this.words = new Array(this.length);
+    for (var i = 0; i < this.length; i++) {
       this.words[i] = 0;
-    this.words[s] |= q;
-    this.length = s + 1;
-    return this;
-  }
-
-  // Add bit and propagate, if needed
-  var carry = q;
-  for (var i = s; carry !== 0 && i < this.length; i++) {
-    var w = this.words[i];
-    w += carry;
-    carry = w >>> 26;
-    w &= 0x3ffffff;
-    this.words[i] = w;
-  }
-  if (carry !== 0) {
-    this.words[i] = carry;
-    this.length++;
-  }
-  return this;
-};
-
-BN.prototype.cmpn = function cmpn(num) {
-  var sign = num < 0;
-  if (sign)
-    num = -num;
-
-  if (this.sign && !sign)
-    return -1;
-  else if (!this.sign && sign)
-    return 1;
-
-  num &= 0x3ffffff;
-  this.strip();
-
-  var res;
-  if (this.length > 1) {
-    res = 1;
-  } else {
-    var w = this.words[0];
-    res = w === num ? 0 : w < num ? -1 : 1;
-  }
-  if (this.sign)
-    res = -res;
-  return res;
-};
-
-// Compare two numbers and return:
-// 1 - if `this` > `num`
-// 0 - if `this` == `num`
-// -1 - if `this` < `num`
-BN.prototype.cmp = function cmp(num) {
-  if (this.sign && !num.sign)
-    return -1;
-  else if (!this.sign && num.sign)
-    return 1;
-
-  var res = this.ucmp(num);
-  if (this.sign)
-    return -res;
-  else
-    return res;
-};
-
-// Unsigned comparison
-BN.prototype.ucmp = function ucmp(num) {
-  // At this point both numbers have the same sign
-  if (this.length > num.length)
-    return 1;
-  else if (this.length < num.length)
-    return -1;
-
-  var res = 0;
-  for (var i = this.length - 1; i >= 0; i--) {
-    var a = this.words[i];
-    var b = num.words[i];
-
-    if (a === b)
-      continue;
-    if (a < b)
-      res = -1;
-    else if (a > b)
-      res = 1;
-    break;
-  }
-  return res;
-};
-
-//
-// A reduce context, could be using montgomery or something better, depending
-// on the `m` itself.
-//
-BN.red = function red(num) {
-  return new Red(num);
-};
-
-BN.prototype.toRed = function toRed(ctx) {
-  assert(!this.red, 'Already a number in reduction context');
-  assert(!this.sign, 'red works only with positives');
-  return ctx.convertTo(this)._forceRed(ctx);
-};
-
-BN.prototype.fromRed = function fromRed() {
-  assert(this.red, 'fromRed works only with numbers in reduction context');
-  return this.red.convertFrom(this);
-};
-
-BN.prototype._forceRed = function _forceRed(ctx) {
-  this.red = ctx;
-  return this;
-};
-
-BN.prototype.forceRed = function forceRed(ctx) {
-  assert(!this.red, 'Already a number in reduction context');
-  return this._forceRed(ctx);
-};
-
-BN.prototype.redAdd = function redAdd(num) {
-  assert(this.red, 'redAdd works only with red numbers');
-  return this.red.add(this, num);
-};
-
-BN.prototype.redIAdd = function redIAdd(num) {
-  assert(this.red, 'redIAdd works only with red numbers');
-  return this.red.iadd(this, num);
-};
-
-BN.prototype.redSub = function redSub(num) {
-  assert(this.red, 'redSub works only with red numbers');
-  return this.red.sub(this, num);
-};
-
-BN.prototype.redISub = function redISub(num) {
-  assert(this.red, 'redISub works only with red numbers');
-  return this.red.isub(this, num);
-};
-
-BN.prototype.redShl = function redShl(num) {
-  assert(this.red, 'redShl works only with red numbers');
-  return this.red.shl(this, num);
-};
-
-BN.prototype.redMul = function redMul(num) {
-  assert(this.red, 'redMul works only with red numbers');
-  this.red._verify2(this, num);
-  return this.red.mul(this, num);
-};
-
-BN.prototype.redIMul = function redIMul(num) {
-  assert(this.red, 'redMul works only with red numbers');
-  this.red._verify2(this, num);
-  return this.red.imul(this, num);
-};
-
-BN.prototype.redSqr = function redSqr() {
-  assert(this.red, 'redSqr works only with red numbers');
-  this.red._verify1(this);
-  return this.red.sqr(this);
-};
-
-BN.prototype.redISqr = function redISqr() {
-  assert(this.red, 'redISqr works only with red numbers');
-  this.red._verify1(this);
-  return this.red.isqr(this);
-};
-
-// Square root over p
-BN.prototype.redSqrt = function redSqrt() {
-  assert(this.red, 'redSqrt works only with red numbers');
-  this.red._verify1(this);
-  return this.red.sqrt(this);
-};
-
-BN.prototype.redInvm = function redInvm() {
-  assert(this.red, 'redInvm works only with red numbers');
-  this.red._verify1(this);
-  return this.red.invm(this);
-};
-
-// Return negative clone of `this` % `red modulo`
-BN.prototype.redNeg = function redNeg() {
-  assert(this.red, 'redNeg works only with red numbers');
-  this.red._verify1(this);
-  return this.red.neg(this);
-};
-
-BN.prototype.redPow = function redPow(num) {
-  assert(this.red && !num.red, 'redPow(normalNum)');
-  this.red._verify1(this);
-  return this.red.pow(this, num);
-};
-
-// Prime numbers with efficient reduction
-var primes = {
-  k256: null,
-  p224: null,
-  p192: null,
-  p25519: null
-};
-
-// Pseudo-Mersenne prime
-function MPrime(name, p) {
-  // P = 2 ^ N - K
-  this.name = name;
-  this.p = new BN(p, 16);
-  this.n = this.p.bitLength();
-  this.k = new BN(1).ishln(this.n).isub(this.p);
-
-  this.tmp = this._tmp();
-}
-
-MPrime.prototype._tmp = function _tmp() {
-  var tmp = new BN(null);
-  tmp.words = new Array(Math.ceil(this.n / 13));
-  return tmp;
-};
-
-MPrime.prototype.ireduce = function ireduce(num) {
-  // Assumes that `num` is less than `P^2`
-  // num = HI * (2 ^ N - K) + HI * K + LO = HI * K + LO (mod P)
-  var r = num;
-  var rlen;
-
-  do {
-    this.split(r, this.tmp);
-    r = this.imulK(r);
-    r = r.iadd(this.tmp);
-    rlen = r.bitLength();
-  } while (rlen > this.n);
-
-  var cmp = rlen < this.n ? -1 : r.ucmp(this.p);
-  if (cmp === 0) {
-    r.words[0] = 0;
-    r.length = 1;
-  } else if (cmp > 0) {
-    r.isub(this.p);
-  } else {
-    r.strip();
-  }
-
-  return r;
-};
-
-MPrime.prototype.split = function split(input, out) {
-  input.ishrn(this.n, 0, out);
-};
-
-MPrime.prototype.imulK = function imulK(num) {
-  return num.imul(this.k);
-};
-
-function K256() {
-  MPrime.call(
-    this,
-    'k256',
-    'ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff fffffffe fffffc2f');
-}
-inherits(K256, MPrime);
-
-K256.prototype.split = function split(input, output) {
-  // 256 = 9 * 26 + 22
-  var mask = 0x3fffff;
-
-  var outLen = Math.min(input.length, 9);
-  for (var i = 0; i < outLen; i++)
-    output.words[i] = input.words[i];
-  output.length = outLen;
-
-  if (input.length <= 9) {
-    input.words[0] = 0;
-    input.length = 1;
-    return;
-  }
-
-  // Shift by 9 limbs
-  var prev = input.words[9];
-  output.words[output.length++] = prev & mask;
-
-  for (var i = 10; i < input.length; i++) {
-    var next = input.words[i];
-    input.words[i - 10] = ((next & mask) << 4) | (prev >>> 22);
-    prev = next;
-  }
-  input.words[i - 10] = prev >>> 22;
-  input.length -= 9;
-};
-
-K256.prototype.imulK = function imulK(num) {
-  // K = 0x1000003d1 = [ 0x40, 0x3d1 ]
-  num.words[num.length] = 0;
-  num.words[num.length + 1] = 0;
-  num.length += 2;
-
-  // bounded at: 0x40 * 0x3ffffff + 0x3d0 = 0x100000390
-  var hi;
-  var lo = 0;
-  for (var i = 0; i < num.length; i++) {
-    var w = num.words[i];
-    hi = w * 0x40;
-    lo += w * 0x3d1;
-    hi += (lo / 0x4000000) | 0;
-    lo &= 0x3ffffff;
-
-    num.words[i] = lo;
-
-    lo = hi;
-  }
-
-  // Fast length reduction
-  if (num.words[num.length - 1] === 0) {
-    num.length--;
-    if (num.words[num.length - 1] === 0)
-      num.length--;
-  }
-  return num;
-};
-
-function P224() {
-  MPrime.call(
-    this,
-    'p224',
-    'ffffffff ffffffff ffffffff ffffffff 00000000 00000000 00000001');
-}
-inherits(P224, MPrime);
-
-function P192() {
-  MPrime.call(
-    this,
-    'p192',
-    'ffffffff ffffffff ffffffff fffffffe ffffffff ffffffff');
-}
-inherits(P192, MPrime);
-
-function P25519() {
-  // 2 ^ 255 - 19
-  MPrime.call(
-    this,
-    '25519',
-    '7fffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffed');
-}
-inherits(P25519, MPrime);
-
-P25519.prototype.imulK = function imulK(num) {
-  // K = 0x13
-  var carry = 0;
-  for (var i = 0; i < num.length; i++) {
-    var hi = num.words[i] * 0x13 + carry;
-    var lo = hi & 0x3ffffff;
-    hi >>>= 26;
-
-    num.words[i] = lo;
-    carry = hi;
-  }
-  if (carry !== 0)
-    num.words[num.length++] = carry;
-  return num;
-};
-
-// Exported mostly for testing purposes, use plain name instead
-BN._prime = function prime(name) {
-  // Cached version of prime
-  if (primes[name])
-    return primes[name];
-
-  var prime;
-  if (name === 'k256')
-    prime = new K256();
-  else if (name === 'p224')
-    prime = new P224();
-  else if (name === 'p192')
-    prime = new P192();
-  else if (name === 'p25519')
-    prime = new P25519();
-  else
-    throw new Error('Unknown prime ' + name);
-  primes[name] = prime;
-
-  return prime;
-};
-
-//
-// Base reduction engine
-//
-function Red(m) {
-  if (typeof m === 'string') {
-    var prime = BN._prime(m);
-    this.m = prime.p;
-    this.prime = prime;
-  } else {
-    this.m = m;
-    this.prime = null;
-  }
-}
-
-Red.prototype._verify1 = function _verify1(a) {
-  assert(!a.sign, 'red works only with positives');
-  assert(a.red, 'red works only with red numbers');
-};
-
-Red.prototype._verify2 = function _verify2(a, b) {
-  assert(!a.sign && !b.sign, 'red works only with positives');
-  assert(a.red && a.red === b.red,
-         'red works only with red numbers');
-};
-
-Red.prototype.imod = function imod(a) {
-  if (this.prime)
-    return this.prime.ireduce(a)._forceRed(this);
-  return a.mod(this.m)._forceRed(this);
-};
-
-Red.prototype.neg = function neg(a) {
-  var r = a.clone();
-  r.sign = !r.sign;
-  return r.iadd(this.m)._forceRed(this);
-};
-
-Red.prototype.add = function add(a, b) {
-  this._verify2(a, b);
-
-  var res = a.add(b);
-  if (res.cmp(this.m) >= 0)
-    res.isub(this.m);
-  return res._forceRed(this);
-};
-
-Red.prototype.iadd = function iadd(a, b) {
-  this._verify2(a, b);
-
-  var res = a.iadd(b);
-  if (res.cmp(this.m) >= 0)
-    res.isub(this.m);
-  return res;
-};
-
-Red.prototype.sub = function sub(a, b) {
-  this._verify2(a, b);
-
-  var res = a.sub(b);
-  if (res.cmpn(0) < 0)
-    res.iadd(this.m);
-  return res._forceRed(this);
-};
-
-Red.prototype.isub = function isub(a, b) {
-  this._verify2(a, b);
-
-  var res = a.isub(b);
-  if (res.cmpn(0) < 0)
-    res.iadd(this.m);
-  return res;
-};
-
-Red.prototype.shl = function shl(a, num) {
-  this._verify1(a);
-  return this.imod(a.shln(num));
-};
-
-Red.prototype.imul = function imul(a, b) {
-  this._verify2(a, b);
-  return this.imod(a.imul(b));
-};
-
-Red.prototype.mul = function mul(a, b) {
-  this._verify2(a, b);
-  return this.imod(a.mul(b));
-};
-
-Red.prototype.isqr = function isqr(a) {
-  return this.imul(a, a);
-};
-
-Red.prototype.sqr = function sqr(a) {
-  return this.mul(a, a);
-};
-
-Red.prototype.sqrt = function sqrt(a) {
-  if (a.cmpn(0) === 0)
-    return a.clone();
-
-  var mod3 = this.m.andln(3);
-  assert(mod3 % 2 === 1);
-
-  // Fast case
-  if (mod3 === 3) {
-    var pow = this.m.add(new BN(1)).ishrn(2);
-    var r = this.pow(a, pow);
+    }
+
+    var j, w;
+    var off = 0;
+    if (endian === 'be') {
+      for (i = number.length - 1, j = 0; i >= 0; i -= 3) {
+        w = number[i] | (number[i - 1] << 8) | (number[i - 2] << 16);
+        this.words[j] |= (w << off) & 0x3ffffff;
+        this.words[j + 1] = (w >>> (26 - off)) & 0x3ffffff;
+        off += 24;
+        if (off >= 26) {
+          off -= 26;
+          j++;
+        }
+      }
+    } else if (endian === 'le') {
+      for (i = 0, j = 0; i < number.length; i += 3) {
+        w = number[i] | (number[i + 1] << 8) | (number[i + 2] << 16);
+        this.words[j] |= (w << off) & 0x3ffffff;
+        this.words[j + 1] = (w >>> (26 - off)) & 0x3ffffff;
+        off += 24;
+        if (off >= 26) {
+          off -= 26;
+          j++;
+        }
+      }
+    }
+    return this.strip();
+  };
+
+  function parseHex (str, start, end) {
+    var r = 0;
+    var len = Math.min(str.length, end);
+    for (var i = start; i < len; i++) {
+      var c = str.charCodeAt(i) - 48;
+
+      r <<= 4;
+
+      // 'a' - 'f'
+      if (c >= 49 && c <= 54) {
+        r |= c - 49 + 0xa;
+
+      // 'A' - 'F'
+      } else if (c >= 17 && c <= 22) {
+        r |= c - 17 + 0xa;
+
+      // '0' - '9'
+      } else {
+        r |= c & 0xf;
+      }
+    }
     return r;
   }
 
-  // Tonelli-Shanks algorithm (Totally unoptimized and slow)
-  //
-  // Find Q and S, that Q * 2 ^ S = (P - 1)
-  var q = this.m.subn(1);
-  var s = 0;
-  while (q.cmpn(0) !== 0 && q.andln(1) === 0) {
-    s++;
-    q.ishrn(1);
+  BN.prototype._parseHex = function _parseHex (number, start) {
+    // Create possibly bigger array to ensure that it fits the number
+    this.length = Math.ceil((number.length - start) / 6);
+    this.words = new Array(this.length);
+    for (var i = 0; i < this.length; i++) {
+      this.words[i] = 0;
+    }
+
+    var j, w;
+    // Scan 24-bit chunks and add them to the number
+    var off = 0;
+    for (i = number.length - 6, j = 0; i >= start; i -= 6) {
+      w = parseHex(number, i, i + 6);
+      this.words[j] |= (w << off) & 0x3ffffff;
+      // NOTE: `0x3fffff` is intentional here, 26bits max shift + 24bit hex limb
+      this.words[j + 1] |= w >>> (26 - off) & 0x3fffff;
+      off += 24;
+      if (off >= 26) {
+        off -= 26;
+        j++;
+      }
+    }
+    if (i + 6 !== start) {
+      w = parseHex(number, start, i + 6);
+      this.words[j] |= (w << off) & 0x3ffffff;
+      this.words[j + 1] |= w >>> (26 - off) & 0x3fffff;
+    }
+    this.strip();
+  };
+
+  function parseBase (str, start, end, mul) {
+    var r = 0;
+    var len = Math.min(str.length, end);
+    for (var i = start; i < len; i++) {
+      var c = str.charCodeAt(i) - 48;
+
+      r *= mul;
+
+      // 'a'
+      if (c >= 49) {
+        r += c - 49 + 0xa;
+
+      // 'A'
+      } else if (c >= 17) {
+        r += c - 17 + 0xa;
+
+      // '0' - '9'
+      } else {
+        r += c;
+      }
+    }
+    return r;
   }
-  assert(q.cmpn(0) !== 0);
 
-  var one = new BN(1).toRed(this);
-  var nOne = one.redNeg();
+  BN.prototype._parseBase = function _parseBase (number, base, start) {
+    // Initialize as zero
+    this.words = [ 0 ];
+    this.length = 1;
 
-  // Find quadratic non-residue
-  // NOTE: Max is such because of generalized Riemann hypothesis.
-  var lpow = this.m.subn(1).ishrn(1);
-  var z = this.m.bitLength();
-  z = new BN(2 * z * z).toRed(this);
-  while (this.pow(z, lpow).cmp(nOne) !== 0)
-    z.redIAdd(nOne);
+    // Find length of limb in base
+    for (var limbLen = 0, limbPow = 1; limbPow <= 0x3ffffff; limbPow *= base) {
+      limbLen++;
+    }
+    limbLen--;
+    limbPow = (limbPow / base) | 0;
 
-  var c = this.pow(z, q);
-  var r = this.pow(a, q.addn(1).ishrn(1));
-  var t = this.pow(a, q);
-  var m = s;
-  while (t.cmp(one) !== 0) {
-    var tmp = t;
-    for (var i = 0; tmp.cmp(one) !== 0; i++)
-      tmp = tmp.redSqr();
-    assert(i < m);
-    var b = this.pow(c, new BN(1).ishln(m - i - 1));
+    var total = number.length - start;
+    var mod = total % limbLen;
+    var end = Math.min(total, total - mod) + start;
 
-    r = r.redMul(b);
-    c = b.redSqr();
-    t = t.redMul(c);
-    m = i;
+    var word = 0;
+    for (var i = start; i < end; i += limbLen) {
+      word = parseBase(number, i, i + limbLen, base);
+
+      this.imuln(limbPow);
+      if (this.words[0] + word < 0x4000000) {
+        this.words[0] += word;
+      } else {
+        this._iaddn(word);
+      }
+    }
+
+    if (mod !== 0) {
+      var pow = 1;
+      word = parseBase(number, i, number.length, base);
+
+      for (i = 0; i < mod; i++) {
+        pow *= base;
+      }
+
+      this.imuln(pow);
+      if (this.words[0] + word < 0x4000000) {
+        this.words[0] += word;
+      } else {
+        this._iaddn(word);
+      }
+    }
+  };
+
+  BN.prototype.copy = function copy (dest) {
+    dest.words = new Array(this.length);
+    for (var i = 0; i < this.length; i++) {
+      dest.words[i] = this.words[i];
+    }
+    dest.length = this.length;
+    dest.negative = this.negative;
+    dest.red = this.red;
+  };
+
+  BN.prototype.clone = function clone () {
+    var r = new BN(null);
+    this.copy(r);
+    return r;
+  };
+
+  BN.prototype._expand = function _expand (size) {
+    while (this.length < size) {
+      this.words[this.length++] = 0;
+    }
+    return this;
+  };
+
+  // Remove leading `0` from `this`
+  BN.prototype.strip = function strip () {
+    while (this.length > 1 && this.words[this.length - 1] === 0) {
+      this.length--;
+    }
+    return this._normSign();
+  };
+
+  BN.prototype._normSign = function _normSign () {
+    // -0 = 0
+    if (this.length === 1 && this.words[0] === 0) {
+      this.negative = 0;
+    }
+    return this;
+  };
+
+  BN.prototype.inspect = function inspect () {
+    return (this.red ? '<BN-R: ' : '<BN: ') + this.toString(16) + '>';
+  };
+
+  /*
+
+  var zeros = [];
+  var groupSizes = [];
+  var groupBases = [];
+
+  var s = '';
+  var i = -1;
+  while (++i < BN.wordSize) {
+    zeros[i] = s;
+    s += '0';
+  }
+  groupSizes[0] = 0;
+  groupSizes[1] = 0;
+  groupBases[0] = 0;
+  groupBases[1] = 0;
+  var base = 2 - 1;
+  while (++base < 36 + 1) {
+    var groupSize = 0;
+    var groupBase = 1;
+    while (groupBase < (1 << BN.wordSize) / base) {
+      groupBase *= base;
+      groupSize += 1;
+    }
+    groupSizes[base] = groupSize;
+    groupBases[base] = groupBase;
   }
 
-  return r;
-};
+  */
 
-Red.prototype.invm = function invm(a) {
-  var inv = a._invmp(this.m);
-  if (inv.sign) {
-    inv.sign = false;
-    return this.imod(inv).redNeg();
+  var zeros = [
+    '',
+    '0',
+    '00',
+    '000',
+    '0000',
+    '00000',
+    '000000',
+    '0000000',
+    '00000000',
+    '000000000',
+    '0000000000',
+    '00000000000',
+    '000000000000',
+    '0000000000000',
+    '00000000000000',
+    '000000000000000',
+    '0000000000000000',
+    '00000000000000000',
+    '000000000000000000',
+    '0000000000000000000',
+    '00000000000000000000',
+    '000000000000000000000',
+    '0000000000000000000000',
+    '00000000000000000000000',
+    '000000000000000000000000',
+    '0000000000000000000000000'
+  ];
+
+  var groupSizes = [
+    0, 0,
+    25, 16, 12, 11, 10, 9, 8,
+    8, 7, 7, 7, 7, 6, 6,
+    6, 6, 6, 6, 6, 5, 5,
+    5, 5, 5, 5, 5, 5, 5,
+    5, 5, 5, 5, 5, 5, 5
+  ];
+
+  var groupBases = [
+    0, 0,
+    33554432, 43046721, 16777216, 48828125, 60466176, 40353607, 16777216,
+    43046721, 10000000, 19487171, 35831808, 62748517, 7529536, 11390625,
+    16777216, 24137569, 34012224, 47045881, 64000000, 4084101, 5153632,
+    6436343, 7962624, 9765625, 11881376, 14348907, 17210368, 20511149,
+    24300000, 28629151, 33554432, 39135393, 45435424, 52521875, 60466176
+  ];
+
+  BN.prototype.toString = function toString (base, padding) {
+    base = base || 10;
+    padding = padding | 0 || 1;
+
+    var out;
+    if (base === 16 || base === 'hex') {
+      out = '';
+      var off = 0;
+      var carry = 0;
+      for (var i = 0; i < this.length; i++) {
+        var w = this.words[i];
+        var word = (((w << off) | carry) & 0xffffff).toString(16);
+        carry = (w >>> (24 - off)) & 0xffffff;
+        if (carry !== 0 || i !== this.length - 1) {
+          out = zeros[6 - word.length] + word + out;
+        } else {
+          out = word + out;
+        }
+        off += 2;
+        if (off >= 26) {
+          off -= 26;
+          i--;
+        }
+      }
+      if (carry !== 0) {
+        out = carry.toString(16) + out;
+      }
+      while (out.length % padding !== 0) {
+        out = '0' + out;
+      }
+      if (this.negative !== 0) {
+        out = '-' + out;
+      }
+      return out;
+    }
+
+    if (base === (base | 0) && base >= 2 && base <= 36) {
+      // var groupSize = Math.floor(BN.wordSize * Math.LN2 / Math.log(base));
+      var groupSize = groupSizes[base];
+      // var groupBase = Math.pow(base, groupSize);
+      var groupBase = groupBases[base];
+      out = '';
+      var c = this.clone();
+      c.negative = 0;
+      while (!c.isZero()) {
+        var r = c.modn(groupBase).toString(base);
+        c = c.idivn(groupBase);
+
+        if (!c.isZero()) {
+          out = zeros[groupSize - r.length] + r + out;
+        } else {
+          out = r + out;
+        }
+      }
+      if (this.isZero()) {
+        out = '0' + out;
+      }
+      while (out.length % padding !== 0) {
+        out = '0' + out;
+      }
+      if (this.negative !== 0) {
+        out = '-' + out;
+      }
+      return out;
+    }
+
+    assert(false, 'Base should be between 2 and 36');
+  };
+
+  BN.prototype.toNumber = function toNumber () {
+    var ret = this.words[0];
+    if (this.length === 2) {
+      ret += this.words[1] * 0x4000000;
+    } else if (this.length === 3 && this.words[2] === 0x01) {
+      // NOTE: at this stage it is known that the top bit is set
+      ret += 0x10000000000000 + (this.words[1] * 0x4000000);
+    } else if (this.length > 2) {
+      assert(false, 'Number can only safely store up to 53 bits');
+    }
+    return (this.negative !== 0) ? -ret : ret;
+  };
+
+  BN.prototype.toJSON = function toJSON () {
+    return this.toString(16);
+  };
+
+  BN.prototype.toBuffer = function toBuffer (endian, length) {
+    assert(typeof Buffer !== 'undefined');
+    return this.toArrayLike(Buffer, endian, length);
+  };
+
+  BN.prototype.toArray = function toArray (endian, length) {
+    return this.toArrayLike(Array, endian, length);
+  };
+
+  BN.prototype.toArrayLike = function toArrayLike (ArrayType, endian, length) {
+    var byteLength = this.byteLength();
+    var reqLength = length || Math.max(1, byteLength);
+    assert(byteLength <= reqLength, 'byte array longer than desired length');
+    assert(reqLength > 0, 'Requested array length <= 0');
+
+    this.strip();
+    var littleEndian = endian === 'le';
+    var res = new ArrayType(reqLength);
+
+    var b, i;
+    var q = this.clone();
+    if (!littleEndian) {
+      // Assume big-endian
+      for (i = 0; i < reqLength - byteLength; i++) {
+        res[i] = 0;
+      }
+
+      for (i = 0; !q.isZero(); i++) {
+        b = q.andln(0xff);
+        q.iushrn(8);
+
+        res[reqLength - i - 1] = b;
+      }
+    } else {
+      for (i = 0; !q.isZero(); i++) {
+        b = q.andln(0xff);
+        q.iushrn(8);
+
+        res[i] = b;
+      }
+
+      for (; i < reqLength; i++) {
+        res[i] = 0;
+      }
+    }
+
+    return res;
+  };
+
+  if (Math.clz32) {
+    BN.prototype._countBits = function _countBits (w) {
+      return 32 - Math.clz32(w);
+    };
   } else {
-    return this.imod(inv);
+    BN.prototype._countBits = function _countBits (w) {
+      var t = w;
+      var r = 0;
+      if (t >= 0x1000) {
+        r += 13;
+        t >>>= 13;
+      }
+      if (t >= 0x40) {
+        r += 7;
+        t >>>= 7;
+      }
+      if (t >= 0x8) {
+        r += 4;
+        t >>>= 4;
+      }
+      if (t >= 0x02) {
+        r += 2;
+        t >>>= 2;
+      }
+      return r + t;
+    };
   }
-};
 
-Red.prototype.pow = function pow(a, num) {
-  var w = [];
+  BN.prototype._zeroBits = function _zeroBits (w) {
+    // Short-cut
+    if (w === 0) return 26;
 
-  if (num.cmpn(0) === 0)
-    return new BN(1);
+    var t = w;
+    var r = 0;
+    if ((t & 0x1fff) === 0) {
+      r += 13;
+      t >>>= 13;
+    }
+    if ((t & 0x7f) === 0) {
+      r += 7;
+      t >>>= 7;
+    }
+    if ((t & 0xf) === 0) {
+      r += 4;
+      t >>>= 4;
+    }
+    if ((t & 0x3) === 0) {
+      r += 2;
+      t >>>= 2;
+    }
+    if ((t & 0x1) === 0) {
+      r++;
+    }
+    return r;
+  };
 
-  var q = num.clone();
+  // Return number of used bits in a BN
+  BN.prototype.bitLength = function bitLength () {
+    var w = this.words[this.length - 1];
+    var hi = this._countBits(w);
+    return (this.length - 1) * 26 + hi;
+  };
 
-  while (q.cmpn(0) !== 0) {
-    w.push(q.andln(1));
-    q.ishrn(1);
+  function toBitArray (num) {
+    var w = new Array(num.bitLength());
+
+    for (var bit = 0; bit < w.length; bit++) {
+      var off = (bit / 26) | 0;
+      var wbit = bit % 26;
+
+      w[bit] = (num.words[off] & (1 << wbit)) >>> wbit;
+    }
+
+    return w;
   }
 
-  // Skip leading zeroes
-  var res = a;
-  for (var i = 0; i < w.length; i++, res = this.sqr(res))
-    if (w[i] !== 0)
+  // Number of trailing zero bits
+  BN.prototype.zeroBits = function zeroBits () {
+    if (this.isZero()) return 0;
+
+    var r = 0;
+    for (var i = 0; i < this.length; i++) {
+      var b = this._zeroBits(this.words[i]);
+      r += b;
+      if (b !== 26) break;
+    }
+    return r;
+  };
+
+  BN.prototype.byteLength = function byteLength () {
+    return Math.ceil(this.bitLength() / 8);
+  };
+
+  BN.prototype.toTwos = function toTwos (width) {
+    if (this.negative !== 0) {
+      return this.abs().inotn(width).iaddn(1);
+    }
+    return this.clone();
+  };
+
+  BN.prototype.fromTwos = function fromTwos (width) {
+    if (this.testn(width - 1)) {
+      return this.notn(width).iaddn(1).ineg();
+    }
+    return this.clone();
+  };
+
+  BN.prototype.isNeg = function isNeg () {
+    return this.negative !== 0;
+  };
+
+  // Return negative clone of `this`
+  BN.prototype.neg = function neg () {
+    return this.clone().ineg();
+  };
+
+  BN.prototype.ineg = function ineg () {
+    if (!this.isZero()) {
+      this.negative ^= 1;
+    }
+
+    return this;
+  };
+
+  // Or `num` with `this` in-place
+  BN.prototype.iuor = function iuor (num) {
+    while (this.length < num.length) {
+      this.words[this.length++] = 0;
+    }
+
+    for (var i = 0; i < num.length; i++) {
+      this.words[i] = this.words[i] | num.words[i];
+    }
+
+    return this.strip();
+  };
+
+  BN.prototype.ior = function ior (num) {
+    assert((this.negative | num.negative) === 0);
+    return this.iuor(num);
+  };
+
+  // Or `num` with `this`
+  BN.prototype.or = function or (num) {
+    if (this.length > num.length) return this.clone().ior(num);
+    return num.clone().ior(this);
+  };
+
+  BN.prototype.uor = function uor (num) {
+    if (this.length > num.length) return this.clone().iuor(num);
+    return num.clone().iuor(this);
+  };
+
+  // And `num` with `this` in-place
+  BN.prototype.iuand = function iuand (num) {
+    // b = min-length(num, this)
+    var b;
+    if (this.length > num.length) {
+      b = num;
+    } else {
+      b = this;
+    }
+
+    for (var i = 0; i < b.length; i++) {
+      this.words[i] = this.words[i] & num.words[i];
+    }
+
+    this.length = b.length;
+
+    return this.strip();
+  };
+
+  BN.prototype.iand = function iand (num) {
+    assert((this.negative | num.negative) === 0);
+    return this.iuand(num);
+  };
+
+  // And `num` with `this`
+  BN.prototype.and = function and (num) {
+    if (this.length > num.length) return this.clone().iand(num);
+    return num.clone().iand(this);
+  };
+
+  BN.prototype.uand = function uand (num) {
+    if (this.length > num.length) return this.clone().iuand(num);
+    return num.clone().iuand(this);
+  };
+
+  // Xor `num` with `this` in-place
+  BN.prototype.iuxor = function iuxor (num) {
+    // a.length > b.length
+    var a;
+    var b;
+    if (this.length > num.length) {
+      a = this;
+      b = num;
+    } else {
+      a = num;
+      b = this;
+    }
+
+    for (var i = 0; i < b.length; i++) {
+      this.words[i] = a.words[i] ^ b.words[i];
+    }
+
+    if (this !== a) {
+      for (; i < a.length; i++) {
+        this.words[i] = a.words[i];
+      }
+    }
+
+    this.length = a.length;
+
+    return this.strip();
+  };
+
+  BN.prototype.ixor = function ixor (num) {
+    assert((this.negative | num.negative) === 0);
+    return this.iuxor(num);
+  };
+
+  // Xor `num` with `this`
+  BN.prototype.xor = function xor (num) {
+    if (this.length > num.length) return this.clone().ixor(num);
+    return num.clone().ixor(this);
+  };
+
+  BN.prototype.uxor = function uxor (num) {
+    if (this.length > num.length) return this.clone().iuxor(num);
+    return num.clone().iuxor(this);
+  };
+
+  // Not ``this`` with ``width`` bitwidth
+  BN.prototype.inotn = function inotn (width) {
+    assert(typeof width === 'number' && width >= 0);
+
+    var bytesNeeded = Math.ceil(width / 26) | 0;
+    var bitsLeft = width % 26;
+
+    // Extend the buffer with leading zeroes
+    this._expand(bytesNeeded);
+
+    if (bitsLeft > 0) {
+      bytesNeeded--;
+    }
+
+    // Handle complete words
+    for (var i = 0; i < bytesNeeded; i++) {
+      this.words[i] = ~this.words[i] & 0x3ffffff;
+    }
+
+    // Handle the residue
+    if (bitsLeft > 0) {
+      this.words[i] = ~this.words[i] & (0x3ffffff >> (26 - bitsLeft));
+    }
+
+    // And remove leading zeroes
+    return this.strip();
+  };
+
+  BN.prototype.notn = function notn (width) {
+    return this.clone().inotn(width);
+  };
+
+  // Set `bit` of `this`
+  BN.prototype.setn = function setn (bit, val) {
+    assert(typeof bit === 'number' && bit >= 0);
+
+    var off = (bit / 26) | 0;
+    var wbit = bit % 26;
+
+    this._expand(off + 1);
+
+    if (val) {
+      this.words[off] = this.words[off] | (1 << wbit);
+    } else {
+      this.words[off] = this.words[off] & ~(1 << wbit);
+    }
+
+    return this.strip();
+  };
+
+  // Add `num` to `this` in-place
+  BN.prototype.iadd = function iadd (num) {
+    var r;
+
+    // negative + positive
+    if (this.negative !== 0 && num.negative === 0) {
+      this.negative = 0;
+      r = this.isub(num);
+      this.negative ^= 1;
+      return this._normSign();
+
+    // positive + negative
+    } else if (this.negative === 0 && num.negative !== 0) {
+      num.negative = 0;
+      r = this.isub(num);
+      num.negative = 1;
+      return r._normSign();
+    }
+
+    // a.length > b.length
+    var a, b;
+    if (this.length > num.length) {
+      a = this;
+      b = num;
+    } else {
+      a = num;
+      b = this;
+    }
+
+    var carry = 0;
+    for (var i = 0; i < b.length; i++) {
+      r = (a.words[i] | 0) + (b.words[i] | 0) + carry;
+      this.words[i] = r & 0x3ffffff;
+      carry = r >>> 26;
+    }
+    for (; carry !== 0 && i < a.length; i++) {
+      r = (a.words[i] | 0) + carry;
+      this.words[i] = r & 0x3ffffff;
+      carry = r >>> 26;
+    }
+
+    this.length = a.length;
+    if (carry !== 0) {
+      this.words[this.length] = carry;
+      this.length++;
+    // Copy the rest of the words
+    } else if (a !== this) {
+      for (; i < a.length; i++) {
+        this.words[i] = a.words[i];
+      }
+    }
+
+    return this;
+  };
+
+  // Add `num` to `this`
+  BN.prototype.add = function add (num) {
+    var res;
+    if (num.negative !== 0 && this.negative === 0) {
+      num.negative = 0;
+      res = this.sub(num);
+      num.negative ^= 1;
+      return res;
+    } else if (num.negative === 0 && this.negative !== 0) {
+      this.negative = 0;
+      res = num.sub(this);
+      this.negative = 1;
+      return res;
+    }
+
+    if (this.length > num.length) return this.clone().iadd(num);
+
+    return num.clone().iadd(this);
+  };
+
+  // Subtract `num` from `this` in-place
+  BN.prototype.isub = function isub (num) {
+    // this - (-num) = this + num
+    if (num.negative !== 0) {
+      num.negative = 0;
+      var r = this.iadd(num);
+      num.negative = 1;
+      return r._normSign();
+
+    // -this - num = -(this + num)
+    } else if (this.negative !== 0) {
+      this.negative = 0;
+      this.iadd(num);
+      this.negative = 1;
+      return this._normSign();
+    }
+
+    // At this point both numbers are positive
+    var cmp = this.cmp(num);
+
+    // Optimization - zeroify
+    if (cmp === 0) {
+      this.negative = 0;
+      this.length = 1;
+      this.words[0] = 0;
+      return this;
+    }
+
+    // a > b
+    var a, b;
+    if (cmp > 0) {
+      a = this;
+      b = num;
+    } else {
+      a = num;
+      b = this;
+    }
+
+    var carry = 0;
+    for (var i = 0; i < b.length; i++) {
+      r = (a.words[i] | 0) - (b.words[i] | 0) + carry;
+      carry = r >> 26;
+      this.words[i] = r & 0x3ffffff;
+    }
+    for (; carry !== 0 && i < a.length; i++) {
+      r = (a.words[i] | 0) + carry;
+      carry = r >> 26;
+      this.words[i] = r & 0x3ffffff;
+    }
+
+    // Copy rest of the words
+    if (carry === 0 && i < a.length && a !== this) {
+      for (; i < a.length; i++) {
+        this.words[i] = a.words[i];
+      }
+    }
+
+    this.length = Math.max(this.length, i);
+
+    if (a !== this) {
+      this.negative = 1;
+    }
+
+    return this.strip();
+  };
+
+  // Subtract `num` from `this`
+  BN.prototype.sub = function sub (num) {
+    return this.clone().isub(num);
+  };
+
+  function smallMulTo (self, num, out) {
+    out.negative = num.negative ^ self.negative;
+    var len = (self.length + num.length) | 0;
+    out.length = len;
+    len = (len - 1) | 0;
+
+    // Peel one iteration (compiler can't do it, because of code complexity)
+    var a = self.words[0] | 0;
+    var b = num.words[0] | 0;
+    var r = a * b;
+
+    var lo = r & 0x3ffffff;
+    var carry = (r / 0x4000000) | 0;
+    out.words[0] = lo;
+
+    for (var k = 1; k < len; k++) {
+      // Sum all words with the same `i + j = k` and accumulate `ncarry`,
+      // note that ncarry could be >= 0x3ffffff
+      var ncarry = carry >>> 26;
+      var rword = carry & 0x3ffffff;
+      var maxJ = Math.min(k, num.length - 1);
+      for (var j = Math.max(0, k - self.length + 1); j <= maxJ; j++) {
+        var i = (k - j) | 0;
+        a = self.words[i] | 0;
+        b = num.words[j] | 0;
+        r = a * b + rword;
+        ncarry += (r / 0x4000000) | 0;
+        rword = r & 0x3ffffff;
+      }
+      out.words[k] = rword | 0;
+      carry = ncarry | 0;
+    }
+    if (carry !== 0) {
+      out.words[k] = carry | 0;
+    } else {
+      out.length--;
+    }
+
+    return out.strip();
+  }
+
+  // TODO(indutny): it may be reasonable to omit it for users who don't need
+  // to work with 256-bit numbers, otherwise it gives 20% improvement for 256-bit
+  // multiplication (like elliptic secp256k1).
+  var comb10MulTo = function comb10MulTo (self, num, out) {
+    var a = self.words;
+    var b = num.words;
+    var o = out.words;
+    var c = 0;
+    var lo;
+    var mid;
+    var hi;
+    var a0 = a[0] | 0;
+    var al0 = a0 & 0x1fff;
+    var ah0 = a0 >>> 13;
+    var a1 = a[1] | 0;
+    var al1 = a1 & 0x1fff;
+    var ah1 = a1 >>> 13;
+    var a2 = a[2] | 0;
+    var al2 = a2 & 0x1fff;
+    var ah2 = a2 >>> 13;
+    var a3 = a[3] | 0;
+    var al3 = a3 & 0x1fff;
+    var ah3 = a3 >>> 13;
+    var a4 = a[4] | 0;
+    var al4 = a4 & 0x1fff;
+    var ah4 = a4 >>> 13;
+    var a5 = a[5] | 0;
+    var al5 = a5 & 0x1fff;
+    var ah5 = a5 >>> 13;
+    var a6 = a[6] | 0;
+    var al6 = a6 & 0x1fff;
+    var ah6 = a6 >>> 13;
+    var a7 = a[7] | 0;
+    var al7 = a7 & 0x1fff;
+    var ah7 = a7 >>> 13;
+    var a8 = a[8] | 0;
+    var al8 = a8 & 0x1fff;
+    var ah8 = a8 >>> 13;
+    var a9 = a[9] | 0;
+    var al9 = a9 & 0x1fff;
+    var ah9 = a9 >>> 13;
+    var b0 = b[0] | 0;
+    var bl0 = b0 & 0x1fff;
+    var bh0 = b0 >>> 13;
+    var b1 = b[1] | 0;
+    var bl1 = b1 & 0x1fff;
+    var bh1 = b1 >>> 13;
+    var b2 = b[2] | 0;
+    var bl2 = b2 & 0x1fff;
+    var bh2 = b2 >>> 13;
+    var b3 = b[3] | 0;
+    var bl3 = b3 & 0x1fff;
+    var bh3 = b3 >>> 13;
+    var b4 = b[4] | 0;
+    var bl4 = b4 & 0x1fff;
+    var bh4 = b4 >>> 13;
+    var b5 = b[5] | 0;
+    var bl5 = b5 & 0x1fff;
+    var bh5 = b5 >>> 13;
+    var b6 = b[6] | 0;
+    var bl6 = b6 & 0x1fff;
+    var bh6 = b6 >>> 13;
+    var b7 = b[7] | 0;
+    var bl7 = b7 & 0x1fff;
+    var bh7 = b7 >>> 13;
+    var b8 = b[8] | 0;
+    var bl8 = b8 & 0x1fff;
+    var bh8 = b8 >>> 13;
+    var b9 = b[9] | 0;
+    var bl9 = b9 & 0x1fff;
+    var bh9 = b9 >>> 13;
+
+    out.negative = self.negative ^ num.negative;
+    out.length = 19;
+    /* k = 0 */
+    lo = Math.imul(al0, bl0);
+    mid = Math.imul(al0, bh0);
+    mid = (mid + Math.imul(ah0, bl0)) | 0;
+    hi = Math.imul(ah0, bh0);
+    var w0 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w0 >>> 26)) | 0;
+    w0 &= 0x3ffffff;
+    /* k = 1 */
+    lo = Math.imul(al1, bl0);
+    mid = Math.imul(al1, bh0);
+    mid = (mid + Math.imul(ah1, bl0)) | 0;
+    hi = Math.imul(ah1, bh0);
+    lo = (lo + Math.imul(al0, bl1)) | 0;
+    mid = (mid + Math.imul(al0, bh1)) | 0;
+    mid = (mid + Math.imul(ah0, bl1)) | 0;
+    hi = (hi + Math.imul(ah0, bh1)) | 0;
+    var w1 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w1 >>> 26)) | 0;
+    w1 &= 0x3ffffff;
+    /* k = 2 */
+    lo = Math.imul(al2, bl0);
+    mid = Math.imul(al2, bh0);
+    mid = (mid + Math.imul(ah2, bl0)) | 0;
+    hi = Math.imul(ah2, bh0);
+    lo = (lo + Math.imul(al1, bl1)) | 0;
+    mid = (mid + Math.imul(al1, bh1)) | 0;
+    mid = (mid + Math.imul(ah1, bl1)) | 0;
+    hi = (hi + Math.imul(ah1, bh1)) | 0;
+    lo = (lo + Math.imul(al0, bl2)) | 0;
+    mid = (mid + Math.imul(al0, bh2)) | 0;
+    mid = (mid + Math.imul(ah0, bl2)) | 0;
+    hi = (hi + Math.imul(ah0, bh2)) | 0;
+    var w2 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w2 >>> 26)) | 0;
+    w2 &= 0x3ffffff;
+    /* k = 3 */
+    lo = Math.imul(al3, bl0);
+    mid = Math.imul(al3, bh0);
+    mid = (mid + Math.imul(ah3, bl0)) | 0;
+    hi = Math.imul(ah3, bh0);
+    lo = (lo + Math.imul(al2, bl1)) | 0;
+    mid = (mid + Math.imul(al2, bh1)) | 0;
+    mid = (mid + Math.imul(ah2, bl1)) | 0;
+    hi = (hi + Math.imul(ah2, bh1)) | 0;
+    lo = (lo + Math.imul(al1, bl2)) | 0;
+    mid = (mid + Math.imul(al1, bh2)) | 0;
+    mid = (mid + Math.imul(ah1, bl2)) | 0;
+    hi = (hi + Math.imul(ah1, bh2)) | 0;
+    lo = (lo + Math.imul(al0, bl3)) | 0;
+    mid = (mid + Math.imul(al0, bh3)) | 0;
+    mid = (mid + Math.imul(ah0, bl3)) | 0;
+    hi = (hi + Math.imul(ah0, bh3)) | 0;
+    var w3 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w3 >>> 26)) | 0;
+    w3 &= 0x3ffffff;
+    /* k = 4 */
+    lo = Math.imul(al4, bl0);
+    mid = Math.imul(al4, bh0);
+    mid = (mid + Math.imul(ah4, bl0)) | 0;
+    hi = Math.imul(ah4, bh0);
+    lo = (lo + Math.imul(al3, bl1)) | 0;
+    mid = (mid + Math.imul(al3, bh1)) | 0;
+    mid = (mid + Math.imul(ah3, bl1)) | 0;
+    hi = (hi + Math.imul(ah3, bh1)) | 0;
+    lo = (lo + Math.imul(al2, bl2)) | 0;
+    mid = (mid + Math.imul(al2, bh2)) | 0;
+    mid = (mid + Math.imul(ah2, bl2)) | 0;
+    hi = (hi + Math.imul(ah2, bh2)) | 0;
+    lo = (lo + Math.imul(al1, bl3)) | 0;
+    mid = (mid + Math.imul(al1, bh3)) | 0;
+    mid = (mid + Math.imul(ah1, bl3)) | 0;
+    hi = (hi + Math.imul(ah1, bh3)) | 0;
+    lo = (lo + Math.imul(al0, bl4)) | 0;
+    mid = (mid + Math.imul(al0, bh4)) | 0;
+    mid = (mid + Math.imul(ah0, bl4)) | 0;
+    hi = (hi + Math.imul(ah0, bh4)) | 0;
+    var w4 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w4 >>> 26)) | 0;
+    w4 &= 0x3ffffff;
+    /* k = 5 */
+    lo = Math.imul(al5, bl0);
+    mid = Math.imul(al5, bh0);
+    mid = (mid + Math.imul(ah5, bl0)) | 0;
+    hi = Math.imul(ah5, bh0);
+    lo = (lo + Math.imul(al4, bl1)) | 0;
+    mid = (mid + Math.imul(al4, bh1)) | 0;
+    mid = (mid + Math.imul(ah4, bl1)) | 0;
+    hi = (hi + Math.imul(ah4, bh1)) | 0;
+    lo = (lo + Math.imul(al3, bl2)) | 0;
+    mid = (mid + Math.imul(al3, bh2)) | 0;
+    mid = (mid + Math.imul(ah3, bl2)) | 0;
+    hi = (hi + Math.imul(ah3, bh2)) | 0;
+    lo = (lo + Math.imul(al2, bl3)) | 0;
+    mid = (mid + Math.imul(al2, bh3)) | 0;
+    mid = (mid + Math.imul(ah2, bl3)) | 0;
+    hi = (hi + Math.imul(ah2, bh3)) | 0;
+    lo = (lo + Math.imul(al1, bl4)) | 0;
+    mid = (mid + Math.imul(al1, bh4)) | 0;
+    mid = (mid + Math.imul(ah1, bl4)) | 0;
+    hi = (hi + Math.imul(ah1, bh4)) | 0;
+    lo = (lo + Math.imul(al0, bl5)) | 0;
+    mid = (mid + Math.imul(al0, bh5)) | 0;
+    mid = (mid + Math.imul(ah0, bl5)) | 0;
+    hi = (hi + Math.imul(ah0, bh5)) | 0;
+    var w5 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w5 >>> 26)) | 0;
+    w5 &= 0x3ffffff;
+    /* k = 6 */
+    lo = Math.imul(al6, bl0);
+    mid = Math.imul(al6, bh0);
+    mid = (mid + Math.imul(ah6, bl0)) | 0;
+    hi = Math.imul(ah6, bh0);
+    lo = (lo + Math.imul(al5, bl1)) | 0;
+    mid = (mid + Math.imul(al5, bh1)) | 0;
+    mid = (mid + Math.imul(ah5, bl1)) | 0;
+    hi = (hi + Math.imul(ah5, bh1)) | 0;
+    lo = (lo + Math.imul(al4, bl2)) | 0;
+    mid = (mid + Math.imul(al4, bh2)) | 0;
+    mid = (mid + Math.imul(ah4, bl2)) | 0;
+    hi = (hi + Math.imul(ah4, bh2)) | 0;
+    lo = (lo + Math.imul(al3, bl3)) | 0;
+    mid = (mid + Math.imul(al3, bh3)) | 0;
+    mid = (mid + Math.imul(ah3, bl3)) | 0;
+    hi = (hi + Math.imul(ah3, bh3)) | 0;
+    lo = (lo + Math.imul(al2, bl4)) | 0;
+    mid = (mid + Math.imul(al2, bh4)) | 0;
+    mid = (mid + Math.imul(ah2, bl4)) | 0;
+    hi = (hi + Math.imul(ah2, bh4)) | 0;
+    lo = (lo + Math.imul(al1, bl5)) | 0;
+    mid = (mid + Math.imul(al1, bh5)) | 0;
+    mid = (mid + Math.imul(ah1, bl5)) | 0;
+    hi = (hi + Math.imul(ah1, bh5)) | 0;
+    lo = (lo + Math.imul(al0, bl6)) | 0;
+    mid = (mid + Math.imul(al0, bh6)) | 0;
+    mid = (mid + Math.imul(ah0, bl6)) | 0;
+    hi = (hi + Math.imul(ah0, bh6)) | 0;
+    var w6 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w6 >>> 26)) | 0;
+    w6 &= 0x3ffffff;
+    /* k = 7 */
+    lo = Math.imul(al7, bl0);
+    mid = Math.imul(al7, bh0);
+    mid = (mid + Math.imul(ah7, bl0)) | 0;
+    hi = Math.imul(ah7, bh0);
+    lo = (lo + Math.imul(al6, bl1)) | 0;
+    mid = (mid + Math.imul(al6, bh1)) | 0;
+    mid = (mid + Math.imul(ah6, bl1)) | 0;
+    hi = (hi + Math.imul(ah6, bh1)) | 0;
+    lo = (lo + Math.imul(al5, bl2)) | 0;
+    mid = (mid + Math.imul(al5, bh2)) | 0;
+    mid = (mid + Math.imul(ah5, bl2)) | 0;
+    hi = (hi + Math.imul(ah5, bh2)) | 0;
+    lo = (lo + Math.imul(al4, bl3)) | 0;
+    mid = (mid + Math.imul(al4, bh3)) | 0;
+    mid = (mid + Math.imul(ah4, bl3)) | 0;
+    hi = (hi + Math.imul(ah4, bh3)) | 0;
+    lo = (lo + Math.imul(al3, bl4)) | 0;
+    mid = (mid + Math.imul(al3, bh4)) | 0;
+    mid = (mid + Math.imul(ah3, bl4)) | 0;
+    hi = (hi + Math.imul(ah3, bh4)) | 0;
+    lo = (lo + Math.imul(al2, bl5)) | 0;
+    mid = (mid + Math.imul(al2, bh5)) | 0;
+    mid = (mid + Math.imul(ah2, bl5)) | 0;
+    hi = (hi + Math.imul(ah2, bh5)) | 0;
+    lo = (lo + Math.imul(al1, bl6)) | 0;
+    mid = (mid + Math.imul(al1, bh6)) | 0;
+    mid = (mid + Math.imul(ah1, bl6)) | 0;
+    hi = (hi + Math.imul(ah1, bh6)) | 0;
+    lo = (lo + Math.imul(al0, bl7)) | 0;
+    mid = (mid + Math.imul(al0, bh7)) | 0;
+    mid = (mid + Math.imul(ah0, bl7)) | 0;
+    hi = (hi + Math.imul(ah0, bh7)) | 0;
+    var w7 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w7 >>> 26)) | 0;
+    w7 &= 0x3ffffff;
+    /* k = 8 */
+    lo = Math.imul(al8, bl0);
+    mid = Math.imul(al8, bh0);
+    mid = (mid + Math.imul(ah8, bl0)) | 0;
+    hi = Math.imul(ah8, bh0);
+    lo = (lo + Math.imul(al7, bl1)) | 0;
+    mid = (mid + Math.imul(al7, bh1)) | 0;
+    mid = (mid + Math.imul(ah7, bl1)) | 0;
+    hi = (hi + Math.imul(ah7, bh1)) | 0;
+    lo = (lo + Math.imul(al6, bl2)) | 0;
+    mid = (mid + Math.imul(al6, bh2)) | 0;
+    mid = (mid + Math.imul(ah6, bl2)) | 0;
+    hi = (hi + Math.imul(ah6, bh2)) | 0;
+    lo = (lo + Math.imul(al5, bl3)) | 0;
+    mid = (mid + Math.imul(al5, bh3)) | 0;
+    mid = (mid + Math.imul(ah5, bl3)) | 0;
+    hi = (hi + Math.imul(ah5, bh3)) | 0;
+    lo = (lo + Math.imul(al4, bl4)) | 0;
+    mid = (mid + Math.imul(al4, bh4)) | 0;
+    mid = (mid + Math.imul(ah4, bl4)) | 0;
+    hi = (hi + Math.imul(ah4, bh4)) | 0;
+    lo = (lo + Math.imul(al3, bl5)) | 0;
+    mid = (mid + Math.imul(al3, bh5)) | 0;
+    mid = (mid + Math.imul(ah3, bl5)) | 0;
+    hi = (hi + Math.imul(ah3, bh5)) | 0;
+    lo = (lo + Math.imul(al2, bl6)) | 0;
+    mid = (mid + Math.imul(al2, bh6)) | 0;
+    mid = (mid + Math.imul(ah2, bl6)) | 0;
+    hi = (hi + Math.imul(ah2, bh6)) | 0;
+    lo = (lo + Math.imul(al1, bl7)) | 0;
+    mid = (mid + Math.imul(al1, bh7)) | 0;
+    mid = (mid + Math.imul(ah1, bl7)) | 0;
+    hi = (hi + Math.imul(ah1, bh7)) | 0;
+    lo = (lo + Math.imul(al0, bl8)) | 0;
+    mid = (mid + Math.imul(al0, bh8)) | 0;
+    mid = (mid + Math.imul(ah0, bl8)) | 0;
+    hi = (hi + Math.imul(ah0, bh8)) | 0;
+    var w8 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w8 >>> 26)) | 0;
+    w8 &= 0x3ffffff;
+    /* k = 9 */
+    lo = Math.imul(al9, bl0);
+    mid = Math.imul(al9, bh0);
+    mid = (mid + Math.imul(ah9, bl0)) | 0;
+    hi = Math.imul(ah9, bh0);
+    lo = (lo + Math.imul(al8, bl1)) | 0;
+    mid = (mid + Math.imul(al8, bh1)) | 0;
+    mid = (mid + Math.imul(ah8, bl1)) | 0;
+    hi = (hi + Math.imul(ah8, bh1)) | 0;
+    lo = (lo + Math.imul(al7, bl2)) | 0;
+    mid = (mid + Math.imul(al7, bh2)) | 0;
+    mid = (mid + Math.imul(ah7, bl2)) | 0;
+    hi = (hi + Math.imul(ah7, bh2)) | 0;
+    lo = (lo + Math.imul(al6, bl3)) | 0;
+    mid = (mid + Math.imul(al6, bh3)) | 0;
+    mid = (mid + Math.imul(ah6, bl3)) | 0;
+    hi = (hi + Math.imul(ah6, bh3)) | 0;
+    lo = (lo + Math.imul(al5, bl4)) | 0;
+    mid = (mid + Math.imul(al5, bh4)) | 0;
+    mid = (mid + Math.imul(ah5, bl4)) | 0;
+    hi = (hi + Math.imul(ah5, bh4)) | 0;
+    lo = (lo + Math.imul(al4, bl5)) | 0;
+    mid = (mid + Math.imul(al4, bh5)) | 0;
+    mid = (mid + Math.imul(ah4, bl5)) | 0;
+    hi = (hi + Math.imul(ah4, bh5)) | 0;
+    lo = (lo + Math.imul(al3, bl6)) | 0;
+    mid = (mid + Math.imul(al3, bh6)) | 0;
+    mid = (mid + Math.imul(ah3, bl6)) | 0;
+    hi = (hi + Math.imul(ah3, bh6)) | 0;
+    lo = (lo + Math.imul(al2, bl7)) | 0;
+    mid = (mid + Math.imul(al2, bh7)) | 0;
+    mid = (mid + Math.imul(ah2, bl7)) | 0;
+    hi = (hi + Math.imul(ah2, bh7)) | 0;
+    lo = (lo + Math.imul(al1, bl8)) | 0;
+    mid = (mid + Math.imul(al1, bh8)) | 0;
+    mid = (mid + Math.imul(ah1, bl8)) | 0;
+    hi = (hi + Math.imul(ah1, bh8)) | 0;
+    lo = (lo + Math.imul(al0, bl9)) | 0;
+    mid = (mid + Math.imul(al0, bh9)) | 0;
+    mid = (mid + Math.imul(ah0, bl9)) | 0;
+    hi = (hi + Math.imul(ah0, bh9)) | 0;
+    var w9 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w9 >>> 26)) | 0;
+    w9 &= 0x3ffffff;
+    /* k = 10 */
+    lo = Math.imul(al9, bl1);
+    mid = Math.imul(al9, bh1);
+    mid = (mid + Math.imul(ah9, bl1)) | 0;
+    hi = Math.imul(ah9, bh1);
+    lo = (lo + Math.imul(al8, bl2)) | 0;
+    mid = (mid + Math.imul(al8, bh2)) | 0;
+    mid = (mid + Math.imul(ah8, bl2)) | 0;
+    hi = (hi + Math.imul(ah8, bh2)) | 0;
+    lo = (lo + Math.imul(al7, bl3)) | 0;
+    mid = (mid + Math.imul(al7, bh3)) | 0;
+    mid = (mid + Math.imul(ah7, bl3)) | 0;
+    hi = (hi + Math.imul(ah7, bh3)) | 0;
+    lo = (lo + Math.imul(al6, bl4)) | 0;
+    mid = (mid + Math.imul(al6, bh4)) | 0;
+    mid = (mid + Math.imul(ah6, bl4)) | 0;
+    hi = (hi + Math.imul(ah6, bh4)) | 0;
+    lo = (lo + Math.imul(al5, bl5)) | 0;
+    mid = (mid + Math.imul(al5, bh5)) | 0;
+    mid = (mid + Math.imul(ah5, bl5)) | 0;
+    hi = (hi + Math.imul(ah5, bh5)) | 0;
+    lo = (lo + Math.imul(al4, bl6)) | 0;
+    mid = (mid + Math.imul(al4, bh6)) | 0;
+    mid = (mid + Math.imul(ah4, bl6)) | 0;
+    hi = (hi + Math.imul(ah4, bh6)) | 0;
+    lo = (lo + Math.imul(al3, bl7)) | 0;
+    mid = (mid + Math.imul(al3, bh7)) | 0;
+    mid = (mid + Math.imul(ah3, bl7)) | 0;
+    hi = (hi + Math.imul(ah3, bh7)) | 0;
+    lo = (lo + Math.imul(al2, bl8)) | 0;
+    mid = (mid + Math.imul(al2, bh8)) | 0;
+    mid = (mid + Math.imul(ah2, bl8)) | 0;
+    hi = (hi + Math.imul(ah2, bh8)) | 0;
+    lo = (lo + Math.imul(al1, bl9)) | 0;
+    mid = (mid + Math.imul(al1, bh9)) | 0;
+    mid = (mid + Math.imul(ah1, bl9)) | 0;
+    hi = (hi + Math.imul(ah1, bh9)) | 0;
+    var w10 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w10 >>> 26)) | 0;
+    w10 &= 0x3ffffff;
+    /* k = 11 */
+    lo = Math.imul(al9, bl2);
+    mid = Math.imul(al9, bh2);
+    mid = (mid + Math.imul(ah9, bl2)) | 0;
+    hi = Math.imul(ah9, bh2);
+    lo = (lo + Math.imul(al8, bl3)) | 0;
+    mid = (mid + Math.imul(al8, bh3)) | 0;
+    mid = (mid + Math.imul(ah8, bl3)) | 0;
+    hi = (hi + Math.imul(ah8, bh3)) | 0;
+    lo = (lo + Math.imul(al7, bl4)) | 0;
+    mid = (mid + Math.imul(al7, bh4)) | 0;
+    mid = (mid + Math.imul(ah7, bl4)) | 0;
+    hi = (hi + Math.imul(ah7, bh4)) | 0;
+    lo = (lo + Math.imul(al6, bl5)) | 0;
+    mid = (mid + Math.imul(al6, bh5)) | 0;
+    mid = (mid + Math.imul(ah6, bl5)) | 0;
+    hi = (hi + Math.imul(ah6, bh5)) | 0;
+    lo = (lo + Math.imul(al5, bl6)) | 0;
+    mid = (mid + Math.imul(al5, bh6)) | 0;
+    mid = (mid + Math.imul(ah5, bl6)) | 0;
+    hi = (hi + Math.imul(ah5, bh6)) | 0;
+    lo = (lo + Math.imul(al4, bl7)) | 0;
+    mid = (mid + Math.imul(al4, bh7)) | 0;
+    mid = (mid + Math.imul(ah4, bl7)) | 0;
+    hi = (hi + Math.imul(ah4, bh7)) | 0;
+    lo = (lo + Math.imul(al3, bl8)) | 0;
+    mid = (mid + Math.imul(al3, bh8)) | 0;
+    mid = (mid + Math.imul(ah3, bl8)) | 0;
+    hi = (hi + Math.imul(ah3, bh8)) | 0;
+    lo = (lo + Math.imul(al2, bl9)) | 0;
+    mid = (mid + Math.imul(al2, bh9)) | 0;
+    mid = (mid + Math.imul(ah2, bl9)) | 0;
+    hi = (hi + Math.imul(ah2, bh9)) | 0;
+    var w11 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w11 >>> 26)) | 0;
+    w11 &= 0x3ffffff;
+    /* k = 12 */
+    lo = Math.imul(al9, bl3);
+    mid = Math.imul(al9, bh3);
+    mid = (mid + Math.imul(ah9, bl3)) | 0;
+    hi = Math.imul(ah9, bh3);
+    lo = (lo + Math.imul(al8, bl4)) | 0;
+    mid = (mid + Math.imul(al8, bh4)) | 0;
+    mid = (mid + Math.imul(ah8, bl4)) | 0;
+    hi = (hi + Math.imul(ah8, bh4)) | 0;
+    lo = (lo + Math.imul(al7, bl5)) | 0;
+    mid = (mid + Math.imul(al7, bh5)) | 0;
+    mid = (mid + Math.imul(ah7, bl5)) | 0;
+    hi = (hi + Math.imul(ah7, bh5)) | 0;
+    lo = (lo + Math.imul(al6, bl6)) | 0;
+    mid = (mid + Math.imul(al6, bh6)) | 0;
+    mid = (mid + Math.imul(ah6, bl6)) | 0;
+    hi = (hi + Math.imul(ah6, bh6)) | 0;
+    lo = (lo + Math.imul(al5, bl7)) | 0;
+    mid = (mid + Math.imul(al5, bh7)) | 0;
+    mid = (mid + Math.imul(ah5, bl7)) | 0;
+    hi = (hi + Math.imul(ah5, bh7)) | 0;
+    lo = (lo + Math.imul(al4, bl8)) | 0;
+    mid = (mid + Math.imul(al4, bh8)) | 0;
+    mid = (mid + Math.imul(ah4, bl8)) | 0;
+    hi = (hi + Math.imul(ah4, bh8)) | 0;
+    lo = (lo + Math.imul(al3, bl9)) | 0;
+    mid = (mid + Math.imul(al3, bh9)) | 0;
+    mid = (mid + Math.imul(ah3, bl9)) | 0;
+    hi = (hi + Math.imul(ah3, bh9)) | 0;
+    var w12 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w12 >>> 26)) | 0;
+    w12 &= 0x3ffffff;
+    /* k = 13 */
+    lo = Math.imul(al9, bl4);
+    mid = Math.imul(al9, bh4);
+    mid = (mid + Math.imul(ah9, bl4)) | 0;
+    hi = Math.imul(ah9, bh4);
+    lo = (lo + Math.imul(al8, bl5)) | 0;
+    mid = (mid + Math.imul(al8, bh5)) | 0;
+    mid = (mid + Math.imul(ah8, bl5)) | 0;
+    hi = (hi + Math.imul(ah8, bh5)) | 0;
+    lo = (lo + Math.imul(al7, bl6)) | 0;
+    mid = (mid + Math.imul(al7, bh6)) | 0;
+    mid = (mid + Math.imul(ah7, bl6)) | 0;
+    hi = (hi + Math.imul(ah7, bh6)) | 0;
+    lo = (lo + Math.imul(al6, bl7)) | 0;
+    mid = (mid + Math.imul(al6, bh7)) | 0;
+    mid = (mid + Math.imul(ah6, bl7)) | 0;
+    hi = (hi + Math.imul(ah6, bh7)) | 0;
+    lo = (lo + Math.imul(al5, bl8)) | 0;
+    mid = (mid + Math.imul(al5, bh8)) | 0;
+    mid = (mid + Math.imul(ah5, bl8)) | 0;
+    hi = (hi + Math.imul(ah5, bh8)) | 0;
+    lo = (lo + Math.imul(al4, bl9)) | 0;
+    mid = (mid + Math.imul(al4, bh9)) | 0;
+    mid = (mid + Math.imul(ah4, bl9)) | 0;
+    hi = (hi + Math.imul(ah4, bh9)) | 0;
+    var w13 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w13 >>> 26)) | 0;
+    w13 &= 0x3ffffff;
+    /* k = 14 */
+    lo = Math.imul(al9, bl5);
+    mid = Math.imul(al9, bh5);
+    mid = (mid + Math.imul(ah9, bl5)) | 0;
+    hi = Math.imul(ah9, bh5);
+    lo = (lo + Math.imul(al8, bl6)) | 0;
+    mid = (mid + Math.imul(al8, bh6)) | 0;
+    mid = (mid + Math.imul(ah8, bl6)) | 0;
+    hi = (hi + Math.imul(ah8, bh6)) | 0;
+    lo = (lo + Math.imul(al7, bl7)) | 0;
+    mid = (mid + Math.imul(al7, bh7)) | 0;
+    mid = (mid + Math.imul(ah7, bl7)) | 0;
+    hi = (hi + Math.imul(ah7, bh7)) | 0;
+    lo = (lo + Math.imul(al6, bl8)) | 0;
+    mid = (mid + Math.imul(al6, bh8)) | 0;
+    mid = (mid + Math.imul(ah6, bl8)) | 0;
+    hi = (hi + Math.imul(ah6, bh8)) | 0;
+    lo = (lo + Math.imul(al5, bl9)) | 0;
+    mid = (mid + Math.imul(al5, bh9)) | 0;
+    mid = (mid + Math.imul(ah5, bl9)) | 0;
+    hi = (hi + Math.imul(ah5, bh9)) | 0;
+    var w14 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w14 >>> 26)) | 0;
+    w14 &= 0x3ffffff;
+    /* k = 15 */
+    lo = Math.imul(al9, bl6);
+    mid = Math.imul(al9, bh6);
+    mid = (mid + Math.imul(ah9, bl6)) | 0;
+    hi = Math.imul(ah9, bh6);
+    lo = (lo + Math.imul(al8, bl7)) | 0;
+    mid = (mid + Math.imul(al8, bh7)) | 0;
+    mid = (mid + Math.imul(ah8, bl7)) | 0;
+    hi = (hi + Math.imul(ah8, bh7)) | 0;
+    lo = (lo + Math.imul(al7, bl8)) | 0;
+    mid = (mid + Math.imul(al7, bh8)) | 0;
+    mid = (mid + Math.imul(ah7, bl8)) | 0;
+    hi = (hi + Math.imul(ah7, bh8)) | 0;
+    lo = (lo + Math.imul(al6, bl9)) | 0;
+    mid = (mid + Math.imul(al6, bh9)) | 0;
+    mid = (mid + Math.imul(ah6, bl9)) | 0;
+    hi = (hi + Math.imul(ah6, bh9)) | 0;
+    var w15 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w15 >>> 26)) | 0;
+    w15 &= 0x3ffffff;
+    /* k = 16 */
+    lo = Math.imul(al9, bl7);
+    mid = Math.imul(al9, bh7);
+    mid = (mid + Math.imul(ah9, bl7)) | 0;
+    hi = Math.imul(ah9, bh7);
+    lo = (lo + Math.imul(al8, bl8)) | 0;
+    mid = (mid + Math.imul(al8, bh8)) | 0;
+    mid = (mid + Math.imul(ah8, bl8)) | 0;
+    hi = (hi + Math.imul(ah8, bh8)) | 0;
+    lo = (lo + Math.imul(al7, bl9)) | 0;
+    mid = (mid + Math.imul(al7, bh9)) | 0;
+    mid = (mid + Math.imul(ah7, bl9)) | 0;
+    hi = (hi + Math.imul(ah7, bh9)) | 0;
+    var w16 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w16 >>> 26)) | 0;
+    w16 &= 0x3ffffff;
+    /* k = 17 */
+    lo = Math.imul(al9, bl8);
+    mid = Math.imul(al9, bh8);
+    mid = (mid + Math.imul(ah9, bl8)) | 0;
+    hi = Math.imul(ah9, bh8);
+    lo = (lo + Math.imul(al8, bl9)) | 0;
+    mid = (mid + Math.imul(al8, bh9)) | 0;
+    mid = (mid + Math.imul(ah8, bl9)) | 0;
+    hi = (hi + Math.imul(ah8, bh9)) | 0;
+    var w17 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w17 >>> 26)) | 0;
+    w17 &= 0x3ffffff;
+    /* k = 18 */
+    lo = Math.imul(al9, bl9);
+    mid = Math.imul(al9, bh9);
+    mid = (mid + Math.imul(ah9, bl9)) | 0;
+    hi = Math.imul(ah9, bh9);
+    var w18 = (((c + lo) | 0) + ((mid & 0x1fff) << 13)) | 0;
+    c = (((hi + (mid >>> 13)) | 0) + (w18 >>> 26)) | 0;
+    w18 &= 0x3ffffff;
+    o[0] = w0;
+    o[1] = w1;
+    o[2] = w2;
+    o[3] = w3;
+    o[4] = w4;
+    o[5] = w5;
+    o[6] = w6;
+    o[7] = w7;
+    o[8] = w8;
+    o[9] = w9;
+    o[10] = w10;
+    o[11] = w11;
+    o[12] = w12;
+    o[13] = w13;
+    o[14] = w14;
+    o[15] = w15;
+    o[16] = w16;
+    o[17] = w17;
+    o[18] = w18;
+    if (c !== 0) {
+      o[19] = c;
+      out.length++;
+    }
+    return out;
+  };
+
+  // Polyfill comb
+  if (!Math.imul) {
+    comb10MulTo = smallMulTo;
+  }
+
+  function bigMulTo (self, num, out) {
+    out.negative = num.negative ^ self.negative;
+    out.length = self.length + num.length;
+
+    var carry = 0;
+    var hncarry = 0;
+    for (var k = 0; k < out.length - 1; k++) {
+      // Sum all words with the same `i + j = k` and accumulate `ncarry`,
+      // note that ncarry could be >= 0x3ffffff
+      var ncarry = hncarry;
+      hncarry = 0;
+      var rword = carry & 0x3ffffff;
+      var maxJ = Math.min(k, num.length - 1);
+      for (var j = Math.max(0, k - self.length + 1); j <= maxJ; j++) {
+        var i = k - j;
+        var a = self.words[i] | 0;
+        var b = num.words[j] | 0;
+        var r = a * b;
+
+        var lo = r & 0x3ffffff;
+        ncarry = (ncarry + ((r / 0x4000000) | 0)) | 0;
+        lo = (lo + rword) | 0;
+        rword = lo & 0x3ffffff;
+        ncarry = (ncarry + (lo >>> 26)) | 0;
+
+        hncarry += ncarry >>> 26;
+        ncarry &= 0x3ffffff;
+      }
+      out.words[k] = rword;
+      carry = ncarry;
+      ncarry = hncarry;
+    }
+    if (carry !== 0) {
+      out.words[k] = carry;
+    } else {
+      out.length--;
+    }
+
+    return out.strip();
+  }
+
+  function jumboMulTo (self, num, out) {
+    var fftm = new FFTM();
+    return fftm.mulp(self, num, out);
+  }
+
+  BN.prototype.mulTo = function mulTo (num, out) {
+    var res;
+    var len = this.length + num.length;
+    if (this.length === 10 && num.length === 10) {
+      res = comb10MulTo(this, num, out);
+    } else if (len < 63) {
+      res = smallMulTo(this, num, out);
+    } else if (len < 1024) {
+      res = bigMulTo(this, num, out);
+    } else {
+      res = jumboMulTo(this, num, out);
+    }
+
+    return res;
+  };
+
+  // Cooley-Tukey algorithm for FFT
+  // slightly revisited to rely on looping instead of recursion
+
+  function FFTM (x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  FFTM.prototype.makeRBT = function makeRBT (N) {
+    var t = new Array(N);
+    var l = BN.prototype._countBits(N) - 1;
+    for (var i = 0; i < N; i++) {
+      t[i] = this.revBin(i, l, N);
+    }
+
+    return t;
+  };
+
+  // Returns binary-reversed representation of `x`
+  FFTM.prototype.revBin = function revBin (x, l, N) {
+    if (x === 0 || x === N - 1) return x;
+
+    var rb = 0;
+    for (var i = 0; i < l; i++) {
+      rb |= (x & 1) << (l - i - 1);
+      x >>= 1;
+    }
+
+    return rb;
+  };
+
+  // Performs "tweedling" phase, therefore 'emulating'
+  // behaviour of the recursive algorithm
+  FFTM.prototype.permute = function permute (rbt, rws, iws, rtws, itws, N) {
+    for (var i = 0; i < N; i++) {
+      rtws[i] = rws[rbt[i]];
+      itws[i] = iws[rbt[i]];
+    }
+  };
+
+  FFTM.prototype.transform = function transform (rws, iws, rtws, itws, N, rbt) {
+    this.permute(rbt, rws, iws, rtws, itws, N);
+
+    for (var s = 1; s < N; s <<= 1) {
+      var l = s << 1;
+
+      var rtwdf = Math.cos(2 * Math.PI / l);
+      var itwdf = Math.sin(2 * Math.PI / l);
+
+      for (var p = 0; p < N; p += l) {
+        var rtwdf_ = rtwdf;
+        var itwdf_ = itwdf;
+
+        for (var j = 0; j < s; j++) {
+          var re = rtws[p + j];
+          var ie = itws[p + j];
+
+          var ro = rtws[p + j + s];
+          var io = itws[p + j + s];
+
+          var rx = rtwdf_ * ro - itwdf_ * io;
+
+          io = rtwdf_ * io + itwdf_ * ro;
+          ro = rx;
+
+          rtws[p + j] = re + ro;
+          itws[p + j] = ie + io;
+
+          rtws[p + j + s] = re - ro;
+          itws[p + j + s] = ie - io;
+
+          /* jshint maxdepth : false */
+          if (j !== l) {
+            rx = rtwdf * rtwdf_ - itwdf * itwdf_;
+
+            itwdf_ = rtwdf * itwdf_ + itwdf * rtwdf_;
+            rtwdf_ = rx;
+          }
+        }
+      }
+    }
+  };
+
+  FFTM.prototype.guessLen13b = function guessLen13b (n, m) {
+    var N = Math.max(m, n) | 1;
+    var odd = N & 1;
+    var i = 0;
+    for (N = N / 2 | 0; N; N = N >>> 1) {
+      i++;
+    }
+
+    return 1 << i + 1 + odd;
+  };
+
+  FFTM.prototype.conjugate = function conjugate (rws, iws, N) {
+    if (N <= 1) return;
+
+    for (var i = 0; i < N / 2; i++) {
+      var t = rws[i];
+
+      rws[i] = rws[N - i - 1];
+      rws[N - i - 1] = t;
+
+      t = iws[i];
+
+      iws[i] = -iws[N - i - 1];
+      iws[N - i - 1] = -t;
+    }
+  };
+
+  FFTM.prototype.normalize13b = function normalize13b (ws, N) {
+    var carry = 0;
+    for (var i = 0; i < N / 2; i++) {
+      var w = Math.round(ws[2 * i + 1] / N) * 0x2000 +
+        Math.round(ws[2 * i] / N) +
+        carry;
+
+      ws[i] = w & 0x3ffffff;
+
+      if (w < 0x4000000) {
+        carry = 0;
+      } else {
+        carry = w / 0x4000000 | 0;
+      }
+    }
+
+    return ws;
+  };
+
+  FFTM.prototype.convert13b = function convert13b (ws, len, rws, N) {
+    var carry = 0;
+    for (var i = 0; i < len; i++) {
+      carry = carry + (ws[i] | 0);
+
+      rws[2 * i] = carry & 0x1fff; carry = carry >>> 13;
+      rws[2 * i + 1] = carry & 0x1fff; carry = carry >>> 13;
+    }
+
+    // Pad with zeroes
+    for (i = 2 * len; i < N; ++i) {
+      rws[i] = 0;
+    }
+
+    assert(carry === 0);
+    assert((carry & ~0x1fff) === 0);
+  };
+
+  FFTM.prototype.stub = function stub (N) {
+    var ph = new Array(N);
+    for (var i = 0; i < N; i++) {
+      ph[i] = 0;
+    }
+
+    return ph;
+  };
+
+  FFTM.prototype.mulp = function mulp (x, y, out) {
+    var N = 2 * this.guessLen13b(x.length, y.length);
+
+    var rbt = this.makeRBT(N);
+
+    var _ = this.stub(N);
+
+    var rws = new Array(N);
+    var rwst = new Array(N);
+    var iwst = new Array(N);
+
+    var nrws = new Array(N);
+    var nrwst = new Array(N);
+    var niwst = new Array(N);
+
+    var rmws = out.words;
+    rmws.length = N;
+
+    this.convert13b(x.words, x.length, rws, N);
+    this.convert13b(y.words, y.length, nrws, N);
+
+    this.transform(rws, _, rwst, iwst, N, rbt);
+    this.transform(nrws, _, nrwst, niwst, N, rbt);
+
+    for (var i = 0; i < N; i++) {
+      var rx = rwst[i] * nrwst[i] - iwst[i] * niwst[i];
+      iwst[i] = rwst[i] * niwst[i] + iwst[i] * nrwst[i];
+      rwst[i] = rx;
+    }
+
+    this.conjugate(rwst, iwst, N);
+    this.transform(rwst, iwst, rmws, _, N, rbt);
+    this.conjugate(rmws, _, N);
+    this.normalize13b(rmws, N);
+
+    out.negative = x.negative ^ y.negative;
+    out.length = x.length + y.length;
+    return out.strip();
+  };
+
+  // Multiply `this` by `num`
+  BN.prototype.mul = function mul (num) {
+    var out = new BN(null);
+    out.words = new Array(this.length + num.length);
+    return this.mulTo(num, out);
+  };
+
+  // Multiply employing FFT
+  BN.prototype.mulf = function mulf (num) {
+    var out = new BN(null);
+    out.words = new Array(this.length + num.length);
+    return jumboMulTo(this, num, out);
+  };
+
+  // In-place Multiplication
+  BN.prototype.imul = function imul (num) {
+    return this.clone().mulTo(num, this);
+  };
+
+  BN.prototype.imuln = function imuln (num) {
+    assert(typeof num === 'number');
+    assert(num < 0x4000000);
+
+    // Carry
+    var carry = 0;
+    for (var i = 0; i < this.length; i++) {
+      var w = (this.words[i] | 0) * num;
+      var lo = (w & 0x3ffffff) + (carry & 0x3ffffff);
+      carry >>= 26;
+      carry += (w / 0x4000000) | 0;
+      // NOTE: lo is 27bit maximum
+      carry += lo >>> 26;
+      this.words[i] = lo & 0x3ffffff;
+    }
+
+    if (carry !== 0) {
+      this.words[i] = carry;
+      this.length++;
+    }
+
+    return this;
+  };
+
+  BN.prototype.muln = function muln (num) {
+    return this.clone().imuln(num);
+  };
+
+  // `this` * `this`
+  BN.prototype.sqr = function sqr () {
+    return this.mul(this);
+  };
+
+  // `this` * `this` in-place
+  BN.prototype.isqr = function isqr () {
+    return this.imul(this.clone());
+  };
+
+  // Math.pow(`this`, `num`)
+  BN.prototype.pow = function pow (num) {
+    var w = toBitArray(num);
+    if (w.length === 0) return new BN(1);
+
+    // Skip leading zeroes
+    var res = this;
+    for (var i = 0; i < w.length; i++, res = res.sqr()) {
+      if (w[i] !== 0) break;
+    }
+
+    if (++i < w.length) {
+      for (var q = res.sqr(); i < w.length; i++, q = q.sqr()) {
+        if (w[i] === 0) continue;
+
+        res = res.mul(q);
+      }
+    }
+
+    return res;
+  };
+
+  // Shift-left in-place
+  BN.prototype.iushln = function iushln (bits) {
+    assert(typeof bits === 'number' && bits >= 0);
+    var r = bits % 26;
+    var s = (bits - r) / 26;
+    var carryMask = (0x3ffffff >>> (26 - r)) << (26 - r);
+    var i;
+
+    if (r !== 0) {
+      var carry = 0;
+
+      for (i = 0; i < this.length; i++) {
+        var newCarry = this.words[i] & carryMask;
+        var c = ((this.words[i] | 0) - newCarry) << r;
+        this.words[i] = c | carry;
+        carry = newCarry >>> (26 - r);
+      }
+
+      if (carry) {
+        this.words[i] = carry;
+        this.length++;
+      }
+    }
+
+    if (s !== 0) {
+      for (i = this.length - 1; i >= 0; i--) {
+        this.words[i + s] = this.words[i];
+      }
+
+      for (i = 0; i < s; i++) {
+        this.words[i] = 0;
+      }
+
+      this.length += s;
+    }
+
+    return this.strip();
+  };
+
+  BN.prototype.ishln = function ishln (bits) {
+    // TODO(indutny): implement me
+    assert(this.negative === 0);
+    return this.iushln(bits);
+  };
+
+  // Shift-right in-place
+  // NOTE: `hint` is a lowest bit before trailing zeroes
+  // NOTE: if `extended` is present - it will be filled with destroyed bits
+  BN.prototype.iushrn = function iushrn (bits, hint, extended) {
+    assert(typeof bits === 'number' && bits >= 0);
+    var h;
+    if (hint) {
+      h = (hint - (hint % 26)) / 26;
+    } else {
+      h = 0;
+    }
+
+    var r = bits % 26;
+    var s = Math.min((bits - r) / 26, this.length);
+    var mask = 0x3ffffff ^ ((0x3ffffff >>> r) << r);
+    var maskedWords = extended;
+
+    h -= s;
+    h = Math.max(0, h);
+
+    // Extended mode, copy masked part
+    if (maskedWords) {
+      for (var i = 0; i < s; i++) {
+        maskedWords.words[i] = this.words[i];
+      }
+      maskedWords.length = s;
+    }
+
+    if (s === 0) {
+      // No-op, we should not move anything at all
+    } else if (this.length > s) {
+      this.length -= s;
+      for (i = 0; i < this.length; i++) {
+        this.words[i] = this.words[i + s];
+      }
+    } else {
+      this.words[0] = 0;
+      this.length = 1;
+    }
+
+    var carry = 0;
+    for (i = this.length - 1; i >= 0 && (carry !== 0 || i >= h); i--) {
+      var word = this.words[i] | 0;
+      this.words[i] = (carry << (26 - r)) | (word >>> r);
+      carry = word & mask;
+    }
+
+    // Push carried bits as a mask
+    if (maskedWords && carry !== 0) {
+      maskedWords.words[maskedWords.length++] = carry;
+    }
+
+    if (this.length === 0) {
+      this.words[0] = 0;
+      this.length = 1;
+    }
+
+    return this.strip();
+  };
+
+  BN.prototype.ishrn = function ishrn (bits, hint, extended) {
+    // TODO(indutny): implement me
+    assert(this.negative === 0);
+    return this.iushrn(bits, hint, extended);
+  };
+
+  // Shift-left
+  BN.prototype.shln = function shln (bits) {
+    return this.clone().ishln(bits);
+  };
+
+  BN.prototype.ushln = function ushln (bits) {
+    return this.clone().iushln(bits);
+  };
+
+  // Shift-right
+  BN.prototype.shrn = function shrn (bits) {
+    return this.clone().ishrn(bits);
+  };
+
+  BN.prototype.ushrn = function ushrn (bits) {
+    return this.clone().iushrn(bits);
+  };
+
+  // Test if n bit is set
+  BN.prototype.testn = function testn (bit) {
+    assert(typeof bit === 'number' && bit >= 0);
+    var r = bit % 26;
+    var s = (bit - r) / 26;
+    var q = 1 << r;
+
+    // Fast case: bit is much higher than all existing words
+    if (this.length <= s) return false;
+
+    // Check bit and return
+    var w = this.words[s];
+
+    return !!(w & q);
+  };
+
+  // Return only lowers bits of number (in-place)
+  BN.prototype.imaskn = function imaskn (bits) {
+    assert(typeof bits === 'number' && bits >= 0);
+    var r = bits % 26;
+    var s = (bits - r) / 26;
+
+    assert(this.negative === 0, 'imaskn works only with positive numbers');
+
+    if (this.length <= s) {
+      return this;
+    }
+
+    if (r !== 0) {
+      s++;
+    }
+    this.length = Math.min(s, this.length);
+
+    if (r !== 0) {
+      var mask = 0x3ffffff ^ ((0x3ffffff >>> r) << r);
+      this.words[this.length - 1] &= mask;
+    }
+
+    return this.strip();
+  };
+
+  // Return only lowers bits of number
+  BN.prototype.maskn = function maskn (bits) {
+    return this.clone().imaskn(bits);
+  };
+
+  // Add plain number `num` to `this`
+  BN.prototype.iaddn = function iaddn (num) {
+    assert(typeof num === 'number');
+    assert(num < 0x4000000);
+    if (num < 0) return this.isubn(-num);
+
+    // Possible sign change
+    if (this.negative !== 0) {
+      if (this.length === 1 && (this.words[0] | 0) < num) {
+        this.words[0] = num - (this.words[0] | 0);
+        this.negative = 0;
+        return this;
+      }
+
+      this.negative = 0;
+      this.isubn(num);
+      this.negative = 1;
+      return this;
+    }
+
+    // Add without checks
+    return this._iaddn(num);
+  };
+
+  BN.prototype._iaddn = function _iaddn (num) {
+    this.words[0] += num;
+
+    // Carry
+    for (var i = 0; i < this.length && this.words[i] >= 0x4000000; i++) {
+      this.words[i] -= 0x4000000;
+      if (i === this.length - 1) {
+        this.words[i + 1] = 1;
+      } else {
+        this.words[i + 1]++;
+      }
+    }
+    this.length = Math.max(this.length, i + 1);
+
+    return this;
+  };
+
+  // Subtract plain number `num` from `this`
+  BN.prototype.isubn = function isubn (num) {
+    assert(typeof num === 'number');
+    assert(num < 0x4000000);
+    if (num < 0) return this.iaddn(-num);
+
+    if (this.negative !== 0) {
+      this.negative = 0;
+      this.iaddn(num);
+      this.negative = 1;
+      return this;
+    }
+
+    this.words[0] -= num;
+
+    if (this.length === 1 && this.words[0] < 0) {
+      this.words[0] = -this.words[0];
+      this.negative = 1;
+    } else {
+      // Carry
+      for (var i = 0; i < this.length && this.words[i] < 0; i++) {
+        this.words[i] += 0x4000000;
+        this.words[i + 1] -= 1;
+      }
+    }
+
+    return this.strip();
+  };
+
+  BN.prototype.addn = function addn (num) {
+    return this.clone().iaddn(num);
+  };
+
+  BN.prototype.subn = function subn (num) {
+    return this.clone().isubn(num);
+  };
+
+  BN.prototype.iabs = function iabs () {
+    this.negative = 0;
+
+    return this;
+  };
+
+  BN.prototype.abs = function abs () {
+    return this.clone().iabs();
+  };
+
+  BN.prototype._ishlnsubmul = function _ishlnsubmul (num, mul, shift) {
+    var len = num.length + shift;
+    var i;
+
+    this._expand(len);
+
+    var w;
+    var carry = 0;
+    for (i = 0; i < num.length; i++) {
+      w = (this.words[i + shift] | 0) + carry;
+      var right = (num.words[i] | 0) * mul;
+      w -= right & 0x3ffffff;
+      carry = (w >> 26) - ((right / 0x4000000) | 0);
+      this.words[i + shift] = w & 0x3ffffff;
+    }
+    for (; i < this.length - shift; i++) {
+      w = (this.words[i + shift] | 0) + carry;
+      carry = w >> 26;
+      this.words[i + shift] = w & 0x3ffffff;
+    }
+
+    if (carry === 0) return this.strip();
+
+    // Subtraction overflow
+    assert(carry === -1);
+    carry = 0;
+    for (i = 0; i < this.length; i++) {
+      w = -(this.words[i] | 0) + carry;
+      carry = w >> 26;
+      this.words[i] = w & 0x3ffffff;
+    }
+    this.negative = 1;
+
+    return this.strip();
+  };
+
+  BN.prototype._wordDiv = function _wordDiv (num, mode) {
+    var shift = this.length - num.length;
+
+    var a = this.clone();
+    var b = num;
+
+    // Normalize
+    var bhi = b.words[b.length - 1] | 0;
+    var bhiBits = this._countBits(bhi);
+    shift = 26 - bhiBits;
+    if (shift !== 0) {
+      b = b.ushln(shift);
+      a.iushln(shift);
+      bhi = b.words[b.length - 1] | 0;
+    }
+
+    // Initialize quotient
+    var m = a.length - b.length;
+    var q;
+
+    if (mode !== 'mod') {
+      q = new BN(null);
+      q.length = m + 1;
+      q.words = new Array(q.length);
+      for (var i = 0; i < q.length; i++) {
+        q.words[i] = 0;
+      }
+    }
+
+    var diff = a.clone()._ishlnsubmul(b, 1, m);
+    if (diff.negative === 0) {
+      a = diff;
+      if (q) {
+        q.words[m] = 1;
+      }
+    }
+
+    for (var j = m - 1; j >= 0; j--) {
+      var qj = (a.words[b.length + j] | 0) * 0x4000000 +
+        (a.words[b.length + j - 1] | 0);
+
+      // NOTE: (qj / bhi) is (0x3ffffff * 0x4000000 + 0x3ffffff) / 0x2000000 max
+      // (0x7ffffff)
+      qj = Math.min((qj / bhi) | 0, 0x3ffffff);
+
+      a._ishlnsubmul(b, qj, j);
+      while (a.negative !== 0) {
+        qj--;
+        a.negative = 0;
+        a._ishlnsubmul(b, 1, j);
+        if (!a.isZero()) {
+          a.negative ^= 1;
+        }
+      }
+      if (q) {
+        q.words[j] = qj;
+      }
+    }
+    if (q) {
+      q.strip();
+    }
+    a.strip();
+
+    // Denormalize
+    if (mode !== 'div' && shift !== 0) {
+      a.iushrn(shift);
+    }
+
+    return {
+      div: q || null,
+      mod: a
+    };
+  };
+
+  // NOTE: 1) `mode` can be set to `mod` to request mod only,
+  //       to `div` to request div only, or be absent to
+  //       request both div & mod
+  //       2) `positive` is true if unsigned mod is requested
+  BN.prototype.divmod = function divmod (num, mode, positive) {
+    assert(!num.isZero());
+
+    if (this.isZero()) {
+      return {
+        div: new BN(0),
+        mod: new BN(0)
+      };
+    }
+
+    var div, mod, res;
+    if (this.negative !== 0 && num.negative === 0) {
+      res = this.neg().divmod(num, mode);
+
+      if (mode !== 'mod') {
+        div = res.div.neg();
+      }
+
+      if (mode !== 'div') {
+        mod = res.mod.neg();
+        if (positive && mod.negative !== 0) {
+          mod.iadd(num);
+        }
+      }
+
+      return {
+        div: div,
+        mod: mod
+      };
+    }
+
+    if (this.negative === 0 && num.negative !== 0) {
+      res = this.divmod(num.neg(), mode);
+
+      if (mode !== 'mod') {
+        div = res.div.neg();
+      }
+
+      return {
+        div: div,
+        mod: res.mod
+      };
+    }
+
+    if ((this.negative & num.negative) !== 0) {
+      res = this.neg().divmod(num.neg(), mode);
+
+      if (mode !== 'div') {
+        mod = res.mod.neg();
+        if (positive && mod.negative !== 0) {
+          mod.isub(num);
+        }
+      }
+
+      return {
+        div: res.div,
+        mod: mod
+      };
+    }
+
+    // Both numbers are positive at this point
+
+    // Strip both numbers to approximate shift value
+    if (num.length > this.length || this.cmp(num) < 0) {
+      return {
+        div: new BN(0),
+        mod: this
+      };
+    }
+
+    // Very short reduction
+    if (num.length === 1) {
+      if (mode === 'div') {
+        return {
+          div: this.divn(num.words[0]),
+          mod: null
+        };
+      }
+
+      if (mode === 'mod') {
+        return {
+          div: null,
+          mod: new BN(this.modn(num.words[0]))
+        };
+      }
+
+      return {
+        div: this.divn(num.words[0]),
+        mod: new BN(this.modn(num.words[0]))
+      };
+    }
+
+    return this._wordDiv(num, mode);
+  };
+
+  // Find `this` / `num`
+  BN.prototype.div = function div (num) {
+    return this.divmod(num, 'div', false).div;
+  };
+
+  // Find `this` % `num`
+  BN.prototype.mod = function mod (num) {
+    return this.divmod(num, 'mod', false).mod;
+  };
+
+  BN.prototype.umod = function umod (num) {
+    return this.divmod(num, 'mod', true).mod;
+  };
+
+  // Find Round(`this` / `num`)
+  BN.prototype.divRound = function divRound (num) {
+    var dm = this.divmod(num);
+
+    // Fast case - exact division
+    if (dm.mod.isZero()) return dm.div;
+
+    var mod = dm.div.negative !== 0 ? dm.mod.isub(num) : dm.mod;
+
+    var half = num.ushrn(1);
+    var r2 = num.andln(1);
+    var cmp = mod.cmp(half);
+
+    // Round down
+    if (cmp < 0 || r2 === 1 && cmp === 0) return dm.div;
+
+    // Round up
+    return dm.div.negative !== 0 ? dm.div.isubn(1) : dm.div.iaddn(1);
+  };
+
+  BN.prototype.modn = function modn (num) {
+    assert(num <= 0x3ffffff);
+    var p = (1 << 26) % num;
+
+    var acc = 0;
+    for (var i = this.length - 1; i >= 0; i--) {
+      acc = (p * acc + (this.words[i] | 0)) % num;
+    }
+
+    return acc;
+  };
+
+  // In-place division by number
+  BN.prototype.idivn = function idivn (num) {
+    assert(num <= 0x3ffffff);
+
+    var carry = 0;
+    for (var i = this.length - 1; i >= 0; i--) {
+      var w = (this.words[i] | 0) + carry * 0x4000000;
+      this.words[i] = (w / num) | 0;
+      carry = w % num;
+    }
+
+    return this.strip();
+  };
+
+  BN.prototype.divn = function divn (num) {
+    return this.clone().idivn(num);
+  };
+
+  BN.prototype.egcd = function egcd (p) {
+    assert(p.negative === 0);
+    assert(!p.isZero());
+
+    var x = this;
+    var y = p.clone();
+
+    if (x.negative !== 0) {
+      x = x.umod(p);
+    } else {
+      x = x.clone();
+    }
+
+    // A * x + B * y = x
+    var A = new BN(1);
+    var B = new BN(0);
+
+    // C * x + D * y = y
+    var C = new BN(0);
+    var D = new BN(1);
+
+    var g = 0;
+
+    while (x.isEven() && y.isEven()) {
+      x.iushrn(1);
+      y.iushrn(1);
+      ++g;
+    }
+
+    var yp = y.clone();
+    var xp = x.clone();
+
+    while (!x.isZero()) {
+      for (var i = 0, im = 1; (x.words[0] & im) === 0 && i < 26; ++i, im <<= 1);
+      if (i > 0) {
+        x.iushrn(i);
+        while (i-- > 0) {
+          if (A.isOdd() || B.isOdd()) {
+            A.iadd(yp);
+            B.isub(xp);
+          }
+
+          A.iushrn(1);
+          B.iushrn(1);
+        }
+      }
+
+      for (var j = 0, jm = 1; (y.words[0] & jm) === 0 && j < 26; ++j, jm <<= 1);
+      if (j > 0) {
+        y.iushrn(j);
+        while (j-- > 0) {
+          if (C.isOdd() || D.isOdd()) {
+            C.iadd(yp);
+            D.isub(xp);
+          }
+
+          C.iushrn(1);
+          D.iushrn(1);
+        }
+      }
+
+      if (x.cmp(y) >= 0) {
+        x.isub(y);
+        A.isub(C);
+        B.isub(D);
+      } else {
+        y.isub(x);
+        C.isub(A);
+        D.isub(B);
+      }
+    }
+
+    return {
+      a: C,
+      b: D,
+      gcd: y.iushln(g)
+    };
+  };
+
+  // This is reduced incarnation of the binary EEA
+  // above, designated to invert members of the
+  // _prime_ fields F(p) at a maximal speed
+  BN.prototype._invmp = function _invmp (p) {
+    assert(p.negative === 0);
+    assert(!p.isZero());
+
+    var a = this;
+    var b = p.clone();
+
+    if (a.negative !== 0) {
+      a = a.umod(p);
+    } else {
+      a = a.clone();
+    }
+
+    var x1 = new BN(1);
+    var x2 = new BN(0);
+
+    var delta = b.clone();
+
+    while (a.cmpn(1) > 0 && b.cmpn(1) > 0) {
+      for (var i = 0, im = 1; (a.words[0] & im) === 0 && i < 26; ++i, im <<= 1);
+      if (i > 0) {
+        a.iushrn(i);
+        while (i-- > 0) {
+          if (x1.isOdd()) {
+            x1.iadd(delta);
+          }
+
+          x1.iushrn(1);
+        }
+      }
+
+      for (var j = 0, jm = 1; (b.words[0] & jm) === 0 && j < 26; ++j, jm <<= 1);
+      if (j > 0) {
+        b.iushrn(j);
+        while (j-- > 0) {
+          if (x2.isOdd()) {
+            x2.iadd(delta);
+          }
+
+          x2.iushrn(1);
+        }
+      }
+
+      if (a.cmp(b) >= 0) {
+        a.isub(b);
+        x1.isub(x2);
+      } else {
+        b.isub(a);
+        x2.isub(x1);
+      }
+    }
+
+    var res;
+    if (a.cmpn(1) === 0) {
+      res = x1;
+    } else {
+      res = x2;
+    }
+
+    if (res.cmpn(0) < 0) {
+      res.iadd(p);
+    }
+
+    return res;
+  };
+
+  BN.prototype.gcd = function gcd (num) {
+    if (this.isZero()) return num.abs();
+    if (num.isZero()) return this.abs();
+
+    var a = this.clone();
+    var b = num.clone();
+    a.negative = 0;
+    b.negative = 0;
+
+    // Remove common factor of two
+    for (var shift = 0; a.isEven() && b.isEven(); shift++) {
+      a.iushrn(1);
+      b.iushrn(1);
+    }
+
+    do {
+      while (a.isEven()) {
+        a.iushrn(1);
+      }
+      while (b.isEven()) {
+        b.iushrn(1);
+      }
+
+      var r = a.cmp(b);
+      if (r < 0) {
+        // Swap `a` and `b` to make `a` always bigger than `b`
+        var t = a;
+        a = b;
+        b = t;
+      } else if (r === 0 || b.cmpn(1) === 0) {
+        break;
+      }
+
+      a.isub(b);
+    } while (true);
+
+    return b.iushln(shift);
+  };
+
+  // Invert number in the field F(num)
+  BN.prototype.invm = function invm (num) {
+    return this.egcd(num).a.umod(num);
+  };
+
+  BN.prototype.isEven = function isEven () {
+    return (this.words[0] & 1) === 0;
+  };
+
+  BN.prototype.isOdd = function isOdd () {
+    return (this.words[0] & 1) === 1;
+  };
+
+  // And first word and num
+  BN.prototype.andln = function andln (num) {
+    return this.words[0] & num;
+  };
+
+  // Increment at the bit position in-line
+  BN.prototype.bincn = function bincn (bit) {
+    assert(typeof bit === 'number');
+    var r = bit % 26;
+    var s = (bit - r) / 26;
+    var q = 1 << r;
+
+    // Fast case: bit is much higher than all existing words
+    if (this.length <= s) {
+      this._expand(s + 1);
+      this.words[s] |= q;
+      return this;
+    }
+
+    // Add bit and propagate, if needed
+    var carry = q;
+    for (var i = s; carry !== 0 && i < this.length; i++) {
+      var w = this.words[i] | 0;
+      w += carry;
+      carry = w >>> 26;
+      w &= 0x3ffffff;
+      this.words[i] = w;
+    }
+    if (carry !== 0) {
+      this.words[i] = carry;
+      this.length++;
+    }
+    return this;
+  };
+
+  BN.prototype.isZero = function isZero () {
+    return this.length === 1 && this.words[0] === 0;
+  };
+
+  BN.prototype.cmpn = function cmpn (num) {
+    var negative = num < 0;
+
+    if (this.negative !== 0 && !negative) return -1;
+    if (this.negative === 0 && negative) return 1;
+
+    this.strip();
+
+    var res;
+    if (this.length > 1) {
+      res = 1;
+    } else {
+      if (negative) {
+        num = -num;
+      }
+
+      assert(num <= 0x3ffffff, 'Number is too big');
+
+      var w = this.words[0] | 0;
+      res = w === num ? 0 : w < num ? -1 : 1;
+    }
+    if (this.negative !== 0) return -res | 0;
+    return res;
+  };
+
+  // Compare two numbers and return:
+  // 1 - if `this` > `num`
+  // 0 - if `this` == `num`
+  // -1 - if `this` < `num`
+  BN.prototype.cmp = function cmp (num) {
+    if (this.negative !== 0 && num.negative === 0) return -1;
+    if (this.negative === 0 && num.negative !== 0) return 1;
+
+    var res = this.ucmp(num);
+    if (this.negative !== 0) return -res | 0;
+    return res;
+  };
+
+  // Unsigned comparison
+  BN.prototype.ucmp = function ucmp (num) {
+    // At this point both numbers have the same sign
+    if (this.length > num.length) return 1;
+    if (this.length < num.length) return -1;
+
+    var res = 0;
+    for (var i = this.length - 1; i >= 0; i--) {
+      var a = this.words[i] | 0;
+      var b = num.words[i] | 0;
+
+      if (a === b) continue;
+      if (a < b) {
+        res = -1;
+      } else if (a > b) {
+        res = 1;
+      }
       break;
+    }
+    return res;
+  };
 
-  if (++i < w.length) {
-    for (var q = this.sqr(res); i < w.length; i++, q = this.sqr(q)) {
-      if (w[i] === 0)
-        continue;
-      res = this.mul(res, q);
+  BN.prototype.gtn = function gtn (num) {
+    return this.cmpn(num) === 1;
+  };
+
+  BN.prototype.gt = function gt (num) {
+    return this.cmp(num) === 1;
+  };
+
+  BN.prototype.gten = function gten (num) {
+    return this.cmpn(num) >= 0;
+  };
+
+  BN.prototype.gte = function gte (num) {
+    return this.cmp(num) >= 0;
+  };
+
+  BN.prototype.ltn = function ltn (num) {
+    return this.cmpn(num) === -1;
+  };
+
+  BN.prototype.lt = function lt (num) {
+    return this.cmp(num) === -1;
+  };
+
+  BN.prototype.lten = function lten (num) {
+    return this.cmpn(num) <= 0;
+  };
+
+  BN.prototype.lte = function lte (num) {
+    return this.cmp(num) <= 0;
+  };
+
+  BN.prototype.eqn = function eqn (num) {
+    return this.cmpn(num) === 0;
+  };
+
+  BN.prototype.eq = function eq (num) {
+    return this.cmp(num) === 0;
+  };
+
+  //
+  // A reduce context, could be using montgomery or something better, depending
+  // on the `m` itself.
+  //
+  BN.red = function red (num) {
+    return new Red(num);
+  };
+
+  BN.prototype.toRed = function toRed (ctx) {
+    assert(!this.red, 'Already a number in reduction context');
+    assert(this.negative === 0, 'red works only with positives');
+    return ctx.convertTo(this)._forceRed(ctx);
+  };
+
+  BN.prototype.fromRed = function fromRed () {
+    assert(this.red, 'fromRed works only with numbers in reduction context');
+    return this.red.convertFrom(this);
+  };
+
+  BN.prototype._forceRed = function _forceRed (ctx) {
+    this.red = ctx;
+    return this;
+  };
+
+  BN.prototype.forceRed = function forceRed (ctx) {
+    assert(!this.red, 'Already a number in reduction context');
+    return this._forceRed(ctx);
+  };
+
+  BN.prototype.redAdd = function redAdd (num) {
+    assert(this.red, 'redAdd works only with red numbers');
+    return this.red.add(this, num);
+  };
+
+  BN.prototype.redIAdd = function redIAdd (num) {
+    assert(this.red, 'redIAdd works only with red numbers');
+    return this.red.iadd(this, num);
+  };
+
+  BN.prototype.redSub = function redSub (num) {
+    assert(this.red, 'redSub works only with red numbers');
+    return this.red.sub(this, num);
+  };
+
+  BN.prototype.redISub = function redISub (num) {
+    assert(this.red, 'redISub works only with red numbers');
+    return this.red.isub(this, num);
+  };
+
+  BN.prototype.redShl = function redShl (num) {
+    assert(this.red, 'redShl works only with red numbers');
+    return this.red.shl(this, num);
+  };
+
+  BN.prototype.redMul = function redMul (num) {
+    assert(this.red, 'redMul works only with red numbers');
+    this.red._verify2(this, num);
+    return this.red.mul(this, num);
+  };
+
+  BN.prototype.redIMul = function redIMul (num) {
+    assert(this.red, 'redMul works only with red numbers');
+    this.red._verify2(this, num);
+    return this.red.imul(this, num);
+  };
+
+  BN.prototype.redSqr = function redSqr () {
+    assert(this.red, 'redSqr works only with red numbers');
+    this.red._verify1(this);
+    return this.red.sqr(this);
+  };
+
+  BN.prototype.redISqr = function redISqr () {
+    assert(this.red, 'redISqr works only with red numbers');
+    this.red._verify1(this);
+    return this.red.isqr(this);
+  };
+
+  // Square root over p
+  BN.prototype.redSqrt = function redSqrt () {
+    assert(this.red, 'redSqrt works only with red numbers');
+    this.red._verify1(this);
+    return this.red.sqrt(this);
+  };
+
+  BN.prototype.redInvm = function redInvm () {
+    assert(this.red, 'redInvm works only with red numbers');
+    this.red._verify1(this);
+    return this.red.invm(this);
+  };
+
+  // Return negative clone of `this` % `red modulo`
+  BN.prototype.redNeg = function redNeg () {
+    assert(this.red, 'redNeg works only with red numbers');
+    this.red._verify1(this);
+    return this.red.neg(this);
+  };
+
+  BN.prototype.redPow = function redPow (num) {
+    assert(this.red && !num.red, 'redPow(normalNum)');
+    this.red._verify1(this);
+    return this.red.pow(this, num);
+  };
+
+  // Prime numbers with efficient reduction
+  var primes = {
+    k256: null,
+    p224: null,
+    p192: null,
+    p25519: null
+  };
+
+  // Pseudo-Mersenne prime
+  function MPrime (name, p) {
+    // P = 2 ^ N - K
+    this.name = name;
+    this.p = new BN(p, 16);
+    this.n = this.p.bitLength();
+    this.k = new BN(1).iushln(this.n).isub(this.p);
+
+    this.tmp = this._tmp();
+  }
+
+  MPrime.prototype._tmp = function _tmp () {
+    var tmp = new BN(null);
+    tmp.words = new Array(Math.ceil(this.n / 13));
+    return tmp;
+  };
+
+  MPrime.prototype.ireduce = function ireduce (num) {
+    // Assumes that `num` is less than `P^2`
+    // num = HI * (2 ^ N - K) + HI * K + LO = HI * K + LO (mod P)
+    var r = num;
+    var rlen;
+
+    do {
+      this.split(r, this.tmp);
+      r = this.imulK(r);
+      r = r.iadd(this.tmp);
+      rlen = r.bitLength();
+    } while (rlen > this.n);
+
+    var cmp = rlen < this.n ? -1 : r.ucmp(this.p);
+    if (cmp === 0) {
+      r.words[0] = 0;
+      r.length = 1;
+    } else if (cmp > 0) {
+      r.isub(this.p);
+    } else {
+      r.strip();
+    }
+
+    return r;
+  };
+
+  MPrime.prototype.split = function split (input, out) {
+    input.iushrn(this.n, 0, out);
+  };
+
+  MPrime.prototype.imulK = function imulK (num) {
+    return num.imul(this.k);
+  };
+
+  function K256 () {
+    MPrime.call(
+      this,
+      'k256',
+      'ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff fffffffe fffffc2f');
+  }
+  inherits(K256, MPrime);
+
+  K256.prototype.split = function split (input, output) {
+    // 256 = 9 * 26 + 22
+    var mask = 0x3fffff;
+
+    var outLen = Math.min(input.length, 9);
+    for (var i = 0; i < outLen; i++) {
+      output.words[i] = input.words[i];
+    }
+    output.length = outLen;
+
+    if (input.length <= 9) {
+      input.words[0] = 0;
+      input.length = 1;
+      return;
+    }
+
+    // Shift by 9 limbs
+    var prev = input.words[9];
+    output.words[output.length++] = prev & mask;
+
+    for (i = 10; i < input.length; i++) {
+      var next = input.words[i] | 0;
+      input.words[i - 10] = ((next & mask) << 4) | (prev >>> 22);
+      prev = next;
+    }
+    prev >>>= 22;
+    input.words[i - 10] = prev;
+    if (prev === 0 && input.length > 10) {
+      input.length -= 10;
+    } else {
+      input.length -= 9;
+    }
+  };
+
+  K256.prototype.imulK = function imulK (num) {
+    // K = 0x1000003d1 = [ 0x40, 0x3d1 ]
+    num.words[num.length] = 0;
+    num.words[num.length + 1] = 0;
+    num.length += 2;
+
+    // bounded at: 0x40 * 0x3ffffff + 0x3d0 = 0x100000390
+    var lo = 0;
+    for (var i = 0; i < num.length; i++) {
+      var w = num.words[i] | 0;
+      lo += w * 0x3d1;
+      num.words[i] = lo & 0x3ffffff;
+      lo = w * 0x40 + ((lo / 0x4000000) | 0);
+    }
+
+    // Fast length reduction
+    if (num.words[num.length - 1] === 0) {
+      num.length--;
+      if (num.words[num.length - 1] === 0) {
+        num.length--;
+      }
+    }
+    return num;
+  };
+
+  function P224 () {
+    MPrime.call(
+      this,
+      'p224',
+      'ffffffff ffffffff ffffffff ffffffff 00000000 00000000 00000001');
+  }
+  inherits(P224, MPrime);
+
+  function P192 () {
+    MPrime.call(
+      this,
+      'p192',
+      'ffffffff ffffffff ffffffff fffffffe ffffffff ffffffff');
+  }
+  inherits(P192, MPrime);
+
+  function P25519 () {
+    // 2 ^ 255 - 19
+    MPrime.call(
+      this,
+      '25519',
+      '7fffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffed');
+  }
+  inherits(P25519, MPrime);
+
+  P25519.prototype.imulK = function imulK (num) {
+    // K = 0x13
+    var carry = 0;
+    for (var i = 0; i < num.length; i++) {
+      var hi = (num.words[i] | 0) * 0x13 + carry;
+      var lo = hi & 0x3ffffff;
+      hi >>>= 26;
+
+      num.words[i] = lo;
+      carry = hi;
+    }
+    if (carry !== 0) {
+      num.words[num.length++] = carry;
+    }
+    return num;
+  };
+
+  // Exported mostly for testing purposes, use plain name instead
+  BN._prime = function prime (name) {
+    // Cached version of prime
+    if (primes[name]) return primes[name];
+
+    var prime;
+    if (name === 'k256') {
+      prime = new K256();
+    } else if (name === 'p224') {
+      prime = new P224();
+    } else if (name === 'p192') {
+      prime = new P192();
+    } else if (name === 'p25519') {
+      prime = new P25519();
+    } else {
+      throw new Error('Unknown prime ' + name);
+    }
+    primes[name] = prime;
+
+    return prime;
+  };
+
+  //
+  // Base reduction engine
+  //
+  function Red (m) {
+    if (typeof m === 'string') {
+      var prime = BN._prime(m);
+      this.m = prime.p;
+      this.prime = prime;
+    } else {
+      assert(m.gtn(1), 'modulus must be greater than 1');
+      this.m = m;
+      this.prime = null;
     }
   }
 
-  return res;
-};
+  Red.prototype._verify1 = function _verify1 (a) {
+    assert(a.negative === 0, 'red works only with positives');
+    assert(a.red, 'red works only with red numbers');
+  };
 
-Red.prototype.convertTo = function convertTo(num) {
-  var r = num.mod(this.m);
-  if (r === num)
-    return r.clone();
-  else
+  Red.prototype._verify2 = function _verify2 (a, b) {
+    assert((a.negative | b.negative) === 0, 'red works only with positives');
+    assert(a.red && a.red === b.red,
+      'red works only with red numbers');
+  };
+
+  Red.prototype.imod = function imod (a) {
+    if (this.prime) return this.prime.ireduce(a)._forceRed(this);
+    return a.umod(this.m)._forceRed(this);
+  };
+
+  Red.prototype.neg = function neg (a) {
+    if (a.isZero()) {
+      return a.clone();
+    }
+
+    return this.m.sub(a)._forceRed(this);
+  };
+
+  Red.prototype.add = function add (a, b) {
+    this._verify2(a, b);
+
+    var res = a.add(b);
+    if (res.cmp(this.m) >= 0) {
+      res.isub(this.m);
+    }
+    return res._forceRed(this);
+  };
+
+  Red.prototype.iadd = function iadd (a, b) {
+    this._verify2(a, b);
+
+    var res = a.iadd(b);
+    if (res.cmp(this.m) >= 0) {
+      res.isub(this.m);
+    }
+    return res;
+  };
+
+  Red.prototype.sub = function sub (a, b) {
+    this._verify2(a, b);
+
+    var res = a.sub(b);
+    if (res.cmpn(0) < 0) {
+      res.iadd(this.m);
+    }
+    return res._forceRed(this);
+  };
+
+  Red.prototype.isub = function isub (a, b) {
+    this._verify2(a, b);
+
+    var res = a.isub(b);
+    if (res.cmpn(0) < 0) {
+      res.iadd(this.m);
+    }
+    return res;
+  };
+
+  Red.prototype.shl = function shl (a, num) {
+    this._verify1(a);
+    return this.imod(a.ushln(num));
+  };
+
+  Red.prototype.imul = function imul (a, b) {
+    this._verify2(a, b);
+    return this.imod(a.imul(b));
+  };
+
+  Red.prototype.mul = function mul (a, b) {
+    this._verify2(a, b);
+    return this.imod(a.mul(b));
+  };
+
+  Red.prototype.isqr = function isqr (a) {
+    return this.imul(a, a.clone());
+  };
+
+  Red.prototype.sqr = function sqr (a) {
+    return this.mul(a, a);
+  };
+
+  Red.prototype.sqrt = function sqrt (a) {
+    if (a.isZero()) return a.clone();
+
+    var mod3 = this.m.andln(3);
+    assert(mod3 % 2 === 1);
+
+    // Fast case
+    if (mod3 === 3) {
+      var pow = this.m.add(new BN(1)).iushrn(2);
+      return this.pow(a, pow);
+    }
+
+    // Tonelli-Shanks algorithm (Totally unoptimized and slow)
+    //
+    // Find Q and S, that Q * 2 ^ S = (P - 1)
+    var q = this.m.subn(1);
+    var s = 0;
+    while (!q.isZero() && q.andln(1) === 0) {
+      s++;
+      q.iushrn(1);
+    }
+    assert(!q.isZero());
+
+    var one = new BN(1).toRed(this);
+    var nOne = one.redNeg();
+
+    // Find quadratic non-residue
+    // NOTE: Max is such because of generalized Riemann hypothesis.
+    var lpow = this.m.subn(1).iushrn(1);
+    var z = this.m.bitLength();
+    z = new BN(2 * z * z).toRed(this);
+
+    while (this.pow(z, lpow).cmp(nOne) !== 0) {
+      z.redIAdd(nOne);
+    }
+
+    var c = this.pow(z, q);
+    var r = this.pow(a, q.addn(1).iushrn(1));
+    var t = this.pow(a, q);
+    var m = s;
+    while (t.cmp(one) !== 0) {
+      var tmp = t;
+      for (var i = 0; tmp.cmp(one) !== 0; i++) {
+        tmp = tmp.redSqr();
+      }
+      assert(i < m);
+      var b = this.pow(c, new BN(1).iushln(m - i - 1));
+
+      r = r.redMul(b);
+      c = b.redSqr();
+      t = t.redMul(c);
+      m = i;
+    }
+
     return r;
-};
+  };
 
-Red.prototype.convertFrom = function convertFrom(num) {
-  var res = num.clone();
-  res.red = null;
-  return res;
-};
+  Red.prototype.invm = function invm (a) {
+    var inv = a._invmp(this.m);
+    if (inv.negative !== 0) {
+      inv.negative = 0;
+      return this.imod(inv).redNeg();
+    } else {
+      return this.imod(inv);
+    }
+  };
 
-//
-// Montgomery method engine
-//
+  Red.prototype.pow = function pow (a, num) {
+    if (num.isZero()) return new BN(1);
+    if (num.cmpn(1) === 0) return a.clone();
 
-BN.mont = function mont(num) {
-  return new Mont(num);
-};
+    var windowSize = 4;
+    var wnd = new Array(1 << windowSize);
+    wnd[0] = new BN(1).toRed(this);
+    wnd[1] = a;
+    for (var i = 2; i < wnd.length; i++) {
+      wnd[i] = this.mul(wnd[i - 1], a);
+    }
 
-function Mont(m) {
-  Red.call(this, m);
+    var res = wnd[0];
+    var current = 0;
+    var currentLen = 0;
+    var start = num.bitLength() % 26;
+    if (start === 0) {
+      start = 26;
+    }
 
-  this.shift = this.m.bitLength();
-  if (this.shift % 26 !== 0)
-    this.shift += 26 - (this.shift % 26);
-  this.r = new BN(1).ishln(this.shift);
-  this.r2 = this.imod(this.r.sqr());
-  this.rinv = this.r._invmp(this.m);
+    for (i = num.length - 1; i >= 0; i--) {
+      var word = num.words[i];
+      for (var j = start - 1; j >= 0; j--) {
+        var bit = (word >> j) & 1;
+        if (res !== wnd[0]) {
+          res = this.sqr(res);
+        }
 
-  this.minv = this.rinv.mul(this.r).isubn(1).div(this.m);
-  this.minv.sign = true;
-  this.minv = this.minv.mod(this.r);
-}
-inherits(Mont, Red);
+        if (bit === 0 && current === 0) {
+          currentLen = 0;
+          continue;
+        }
 
-Mont.prototype.convertTo = function convertTo(num) {
-  return this.imod(num.shln(this.shift));
-};
+        current <<= 1;
+        current |= bit;
+        currentLen++;
+        if (currentLen !== windowSize && (i !== 0 || j !== 0)) continue;
 
-Mont.prototype.convertFrom = function convertFrom(num) {
-  var r = this.imod(num.mul(this.rinv));
-  r.red = null;
-  return r;
-};
+        res = this.mul(res, wnd[current]);
+        currentLen = 0;
+        current = 0;
+      }
+      start = 26;
+    }
 
-Mont.prototype.imul = function imul(a, b) {
-  if (a.cmpn(0) === 0 || b.cmpn(0) === 0) {
-    a.words[0] = 0;
-    a.length = 1;
-    return a;
+    return res;
+  };
+
+  Red.prototype.convertTo = function convertTo (num) {
+    var r = num.umod(this.m);
+
+    return r === num ? r.clone() : r;
+  };
+
+  Red.prototype.convertFrom = function convertFrom (num) {
+    var res = num.clone();
+    res.red = null;
+    return res;
+  };
+
+  //
+  // Montgomery method engine
+  //
+
+  BN.mont = function mont (num) {
+    return new Mont(num);
+  };
+
+  function Mont (m) {
+    Red.call(this, m);
+
+    this.shift = this.m.bitLength();
+    if (this.shift % 26 !== 0) {
+      this.shift += 26 - (this.shift % 26);
+    }
+
+    this.r = new BN(1).iushln(this.shift);
+    this.r2 = this.imod(this.r.sqr());
+    this.rinv = this.r._invmp(this.m);
+
+    this.minv = this.rinv.mul(this.r).isubn(1).div(this.m);
+    this.minv = this.minv.umod(this.r);
+    this.minv = this.r.sub(this.minv);
   }
+  inherits(Mont, Red);
 
-  var t = a.imul(b);
-  var c = t.maskn(this.shift).mul(this.minv).imaskn(this.shift).mul(this.m);
-  var u = t.isub(c).ishrn(this.shift);
-  var res = u;
-  if (u.cmp(this.m) >= 0)
-    res = u.isub(this.m);
-  else if (u.cmpn(0) < 0)
-    res = u.iadd(this.m);
+  Mont.prototype.convertTo = function convertTo (num) {
+    return this.imod(num.ushln(this.shift));
+  };
 
-  return res._forceRed(this);
-};
+  Mont.prototype.convertFrom = function convertFrom (num) {
+    var r = this.imod(num.mul(this.rinv));
+    r.red = null;
+    return r;
+  };
 
-Mont.prototype.mul = function mul(a, b) {
-  if (a.cmpn(0) === 0 || b.cmpn(0) === 0)
-    return new BN(0)._forceRed(this);
+  Mont.prototype.imul = function imul (a, b) {
+    if (a.isZero() || b.isZero()) {
+      a.words[0] = 0;
+      a.length = 1;
+      return a;
+    }
 
-  var t = a.mul(b);
-  var c = t.maskn(this.shift).mul(this.minv).imaskn(this.shift).mul(this.m);
-  var u = t.isub(c).ishrn(this.shift);
-  var res = u;
-  if (u.cmp(this.m) >= 0)
-    res = u.isub(this.m);
-  else if (u.cmpn(0) < 0)
-    res = u.iadd(this.m);
+    var t = a.imul(b);
+    var c = t.maskn(this.shift).mul(this.minv).imaskn(this.shift).mul(this.m);
+    var u = t.isub(c).iushrn(this.shift);
+    var res = u;
 
-  return res._forceRed(this);
-};
+    if (u.cmp(this.m) >= 0) {
+      res = u.isub(this.m);
+    } else if (u.cmpn(0) < 0) {
+      res = u.iadd(this.m);
+    }
 
-Mont.prototype.invm = function invm(a) {
-  // (AR)^-1 * R^2 = (A^-1 * R^-1) * R^2 = A^-1 * R
-  var res = this.imod(a._invmp(this.m).mul(this.r2));
-  return res._forceRed(this);
-};
+    return res._forceRed(this);
+  };
 
+  Mont.prototype.mul = function mul (a, b) {
+    if (a.isZero() || b.isZero()) return new BN(0)._forceRed(this);
+
+    var t = a.mul(b);
+    var c = t.maskn(this.shift).mul(this.minv).imaskn(this.shift).mul(this.m);
+    var u = t.isub(c).iushrn(this.shift);
+    var res = u;
+    if (u.cmp(this.m) >= 0) {
+      res = u.isub(this.m);
+    } else if (u.cmpn(0) < 0) {
+      res = u.iadd(this.m);
+    }
+
+    return res._forceRed(this);
+  };
+
+  Mont.prototype.invm = function invm (a) {
+    // (AR)^-1 * R^2 = (A^-1 * R^-1) * R^2 = A^-1 * R
+    var res = this.imod(a._invmp(this.m).mul(this.r2));
+    return res._forceRed(this);
+  };
 })(typeof module === 'undefined' || module, this);
 
 },{}],37:[function(require,module,exports){
@@ -4059,7 +5200,7 @@ function boxIntersectWrapper(arg0, arg1, arg2) {
       throw new Error('box-intersect: Invalid arguments')
   }
 }
-},{"./lib/intersect":40,"./lib/sweep":44,"typedarray-pool":256}],39:[function(require,module,exports){
+},{"./lib/intersect":40,"./lib/sweep":44,"typedarray-pool":255}],39:[function(require,module,exports){
 'use strict'
 
 var DIMENSION   = 'd'
@@ -4699,7 +5840,7 @@ function boxIntersectIter(
     }
   }
 }
-},{"./brute":39,"./median":41,"./partition":42,"./sweep":44,"bit-twiddle":35,"typedarray-pool":256}],41:[function(require,module,exports){
+},{"./brute":39,"./median":41,"./partition":42,"./sweep":44,"bit-twiddle":35,"typedarray-pool":255}],41:[function(require,module,exports){
 'use strict'
 
 module.exports = findMedian
@@ -5535,7 +6676,7 @@ red_loop:
     }
   }
 }
-},{"./sort":43,"bit-twiddle":35,"typedarray-pool":256}],45:[function(require,module,exports){
+},{"./sort":43,"bit-twiddle":35,"typedarray-pool":255}],45:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -5790,8 +6931,8 @@ function fromObject (obj) {
   }
 
   if (obj) {
-    if (ArrayBuffer.isView(obj) || 'length' in obj) {
-      if (typeof obj.length !== 'number' || isnan(obj.length)) {
+    if (isArrayBufferView(obj) || 'length' in obj) {
+      if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
         return createBuffer(0)
       }
       return fromArrayLike(obj)
@@ -5902,7 +7043,7 @@ function byteLength (string, encoding) {
   if (Buffer.isBuffer(string)) {
     return string.length
   }
-  if (ArrayBuffer.isView(string) || string instanceof ArrayBuffer) {
+  if (isArrayBufferView(string) || string instanceof ArrayBuffer) {
     return string.byteLength
   }
   if (typeof string !== 'string') {
@@ -6168,7 +7309,7 @@ function bidirectionalIndexOf (buffer, val, byteOffset, encoding, dir) {
     byteOffset = -0x80000000
   }
   byteOffset = +byteOffset  // Coerce to Number.
-  if (isNaN(byteOffset)) {
+  if (numberIsNaN(byteOffset)) {
     // byteOffset: it it's undefined, null, NaN, "foo", etc, search whole buffer
     byteOffset = dir ? 0 : (buffer.length - 1)
   }
@@ -6299,7 +7440,7 @@ function hexWrite (buf, string, offset, length) {
   }
   for (var i = 0; i < length; ++i) {
     var parsed = parseInt(string.substr(i * 2, 2), 16)
-    if (isNaN(parsed)) return i
+    if (numberIsNaN(parsed)) return i
     buf[offset + i] = parsed
   }
   return i
@@ -7102,7 +8243,7 @@ var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g
 
 function base64clean (str) {
   // Node strips out invalid characters like \n and \t from the string, base64-js does not
-  str = stringtrim(str).replace(INVALID_BASE64_RE, '')
+  str = str.trim().replace(INVALID_BASE64_RE, '')
   // Node converts strings with length < 2 to ''
   if (str.length < 2) return ''
   // Node allows for non-padded base64 strings (missing trailing ===), base64-js does not
@@ -7110,11 +8251,6 @@ function base64clean (str) {
     str = str + '='
   }
   return str
-}
-
-function stringtrim (str) {
-  if (str.trim) return str.trim()
-  return str.replace(/^\s+|\s+$/g, '')
 }
 
 function toHex (n) {
@@ -7239,8 +8375,13 @@ function blitBuffer (src, dst, offset, length) {
   return i
 }
 
-function isnan (val) {
-  return val !== val // eslint-disable-line no-self-compare
+// Node 0.10 supports `ArrayBuffer` but lacks `ArrayBuffer.isView`
+function isArrayBufferView (obj) {
+  return (typeof ArrayBuffer.isView === 'function') && ArrayBuffer.isView(obj)
+}
+
+function numberIsNaN (obj) {
+  return obj !== obj // eslint-disable-line no-self-compare
 }
 
 },{"base64-js":46,"ieee754":170}],46:[function(require,module,exports){
@@ -7560,7 +8701,7 @@ function delaunayRefine(points, triangulation) {
   }
 }
 
-},{"binary-search-bounds":52,"robust-in-sphere":227}],49:[function(require,module,exports){
+},{"binary-search-bounds":52,"robust-in-sphere":226}],49:[function(require,module,exports){
 'use strict'
 
 var bsearch = require('binary-search-bounds')
@@ -7931,7 +9072,7 @@ function monotoneTriangulate(points, edges) {
   return cells
 }
 
-},{"binary-search-bounds":52,"robust-orientation":229}],51:[function(require,module,exports){
+},{"binary-search-bounds":52,"robust-orientation":228}],51:[function(require,module,exports){
 'use strict'
 
 var bsearch = require('binary-search-bounds')
@@ -8179,7 +9320,7 @@ function circumcenter(points) {
 
 circumcenter.barycenetric = barycentricCircumcenter
 module.exports = circumcenter
-},{"dup":82,"robust-linear-solve":228}],55:[function(require,module,exports){
+},{"dup":82,"robust-linear-solve":227}],55:[function(require,module,exports){
 module.exports = circumradius
 
 var circumcenter = require('circumcenter')
@@ -8211,7 +9352,6 @@ module.exports = cleanPSLG
 
 var UnionFind = require('union-find')
 var boxIntersect = require('box-intersect')
-var compareCell = require('compare-cell')
 var segseg = require('robust-segment-intersect')
 var rat = require('big-rat')
 var ratCmp = require('big-rat/cmp')
@@ -8221,93 +9361,100 @@ var nextafter = require('nextafter')
 
 var solveIntersection = require('./lib/rat-seg-intersect')
 
-//Bounds on a rational number when rounded to a float
-function boundRat(r) {
+// Bounds on a rational number when rounded to a float
+function boundRat (r) {
   var f = ratToFloat(r)
-  var cmp = ratCmp(rat(f), r)
-  if(cmp < 0) {
-    return [f, nextafter(f, Infinity)]
-  } else if(cmp > 0) {
-    return [nextafter(f, -Infinity), f]
-  } else {
-    return [f, f]
-  }
+  return [
+    nextafter(f, -Infinity),
+    nextafter(f, Infinity)
+  ]
 }
 
-//Convert a list of edges in a pslg to bounding boxes
-function boundEdges(points, edges) {
+// Convert a list of edges in a pslg to bounding boxes
+function boundEdges (points, edges) {
   var bounds = new Array(edges.length)
-  for(var i=0; i<edges.length; ++i) {
+  for (var i = 0; i < edges.length; ++i) {
     var e = edges[i]
     var a = points[e[0]]
     var b = points[e[1]]
     bounds[i] = [
-      Math.min(a[0], b[0]),
-      Math.min(a[1], b[1]),
-      Math.max(a[0], b[0]),
-      Math.max(a[1], b[1]) ]
+      nextafter(Math.min(a[0], b[0]), -Infinity),
+      nextafter(Math.min(a[1], b[1]), -Infinity),
+      nextafter(Math.max(a[0], b[0]), Infinity),
+      nextafter(Math.max(a[1], b[1]), Infinity)
+    ]
   }
   return bounds
 }
 
-//Convert a list of points into bounding boxes by duplicating coords
-function boundPoints(points) {
+// Convert a list of points into bounding boxes by duplicating coords
+function boundPoints (points) {
   var bounds = new Array(points.length)
-  for(var i=0; i<points.length; ++i) {
+  for (var i = 0; i < points.length; ++i) {
     var p = points[i]
-    bounds[i] = [ p[0], p[1], p[0], p[1] ]
+    bounds[i] = [
+      nextafter(p[0], -Infinity),
+      nextafter(p[1], -Infinity),
+      nextafter(p[0], Infinity),
+      nextafter(p[1], Infinity)
+    ]
   }
   return bounds
 }
 
-//Find all pairs of crossing edges in a pslg (given edge bounds)
-function getCrossings(points, edges, edgeBounds) {
+// Find all pairs of crossing edges in a pslg (given edge bounds)
+function getCrossings (points, edges, edgeBounds) {
   var result = []
-  boxIntersect(edgeBounds, function(i, j) {
+  boxIntersect(edgeBounds, function (i, j) {
     var e = edges[i]
     var f = edges[j]
-    if(e[0] === f[0] || e[0] === f[1] ||
-       e[1] === f[0] || e[1] === f[1]) {
-         return
+    if (e[0] === f[0] || e[0] === f[1] ||
+      e[1] === f[0] || e[1] === f[1]) {
+      return
     }
     var a = points[e[0]]
     var b = points[e[1]]
     var c = points[f[0]]
     var d = points[f[1]]
-    if(segseg(a, b, c, d)) {
+    if (segseg(a, b, c, d)) {
       result.push([i, j])
     }
   })
   return result
 }
 
-//Find all pairs of crossing vertices in a pslg (given edge/vert bounds)
-function getTJunctions(points, edges, edgeBounds, vertBounds) {
+// Find all pairs of crossing vertices in a pslg (given edge/vert bounds)
+function getTJunctions (points, edges, edgeBounds, vertBounds) {
   var result = []
-  boxIntersect(edgeBounds, vertBounds, function(i, v) {
+  boxIntersect(edgeBounds, vertBounds, function (i, v) {
     var e = edges[i]
-    if(e[0] === v || e[1] === v) {
+    if (e[0] === v || e[1] === v) {
       return
     }
     var p = points[v]
     var a = points[e[0]]
     var b = points[e[1]]
-    if(segseg(a, b, p, p)) {
+    if (segseg(a, b, p, p)) {
       result.push([i, v])
     }
   })
   return result
 }
 
+// Cut edges along crossings/tjunctions
+function cutEdges (floatPoints, edges, crossings, junctions, useColor) {
+  var i, e
 
-//Cut edges along crossings/tjunctions
-function cutEdges(floatPoints, edges, crossings, junctions, useColor) {
-
-  //Convert crossings into tjunctions by constructing rational points
-  var ratPoints = []
-  for(var i=0; i<crossings.length; ++i) {
+  // Convert crossings into tjunctions by constructing rational points
+  var ratPoints = floatPoints.map(function(p) {
+      return [
+          rat(p[0]),
+          rat(p[1])
+      ]
+  })
+  for (i = 0; i < crossings.length; ++i) {
     var crossing = crossings[i]
-    var e = crossing[0]
+    e = crossing[0]
     var f = crossing[1]
     var ee = edges[e]
     var ef = edges[f]
@@ -8316,65 +9463,59 @@ function cutEdges(floatPoints, edges, crossings, junctions, useColor) {
       ratVec(floatPoints[ee[1]]),
       ratVec(floatPoints[ef[0]]),
       ratVec(floatPoints[ef[1]]))
-    if(!x) {
-      //Segments are parallel, should already be handled by t-junctions
+    if (!x) {
+      // Segments are parallel, should already be handled by t-junctions
       continue
     }
-    var idx = ratPoints.length + floatPoints.length
+    var idx = floatPoints.length
+    floatPoints.push([ratToFloat(x[0]), ratToFloat(x[1])])
     ratPoints.push(x)
     junctions.push([e, idx], [f, idx])
   }
 
-  //Sort tjunctions
-  function getPoint(idx) {
-    if(idx >= floatPoints.length) {
-      return ratPoints[idx-floatPoints.length]
-    }
-    var p = floatPoints[idx]
-    return [ rat(p[0]), rat(p[1]) ]
-  }
-  junctions.sort(function(a, b) {
-    if(a[0] !== b[0]) {
+  // Sort tjunctions
+  junctions.sort(function (a, b) {
+    if (a[0] !== b[0]) {
       return a[0] - b[0]
     }
-    var u = getPoint(a[1])
-    var v = getPoint(b[1])
+    var u = ratPoints[a[1]]
+    var v = ratPoints[b[1]]
     return ratCmp(u[0], v[0]) || ratCmp(u[1], v[1])
   })
 
-  //Split edges along junctions
-  for(var i=junctions.length-1; i>=0; --i) {
+  // Split edges along junctions
+  for (i = junctions.length - 1; i >= 0; --i) {
     var junction = junctions[i]
-    var e = junction[0]
+    e = junction[0]
 
     var edge = edges[e]
     var s = edge[0]
     var t = edge[1]
 
-    //Check if edge is not lexicographically sorted
+    // Check if edge is not lexicographically sorted
     var a = floatPoints[s]
     var b = floatPoints[t]
-    if(((a[0] - b[0]) || (a[1] - b[1])) < 0) {
+    if (((a[0] - b[0]) || (a[1] - b[1])) < 0) {
       var tmp = s
       s = t
       t = tmp
     }
 
-    //Split leading edge
+    // Split leading edge
     edge[0] = s
     var last = edge[1] = junction[1]
 
-    //If we are grouping edges by color, remember to track data
+    // If we are grouping edges by color, remember to track data
     var color
-    if(useColor) {
+    if (useColor) {
       color = edge[2]
     }
 
-    //Split other edges
-    while(i > 0 && junctions[i-1][0] === e) {
+    // Split other edges
+    while (i > 0 && junctions[i - 1][0] === e) {
       var junction = junctions[--i]
       var next = junction[1]
-      if(useColor) {
+      if (useColor) {
         edges.push([last, next, color])
       } else {
         edges.push([last, next])
@@ -8382,93 +9523,108 @@ function cutEdges(floatPoints, edges, crossings, junctions, useColor) {
       last = next
     }
 
-    //Add final edge
-    if(useColor) {
+    // Add final edge
+    if (useColor) {
       edges.push([last, t, color])
     } else {
       edges.push([last, t])
     }
   }
 
-  //Return constructed rational points
+  // Return constructed rational points
   return ratPoints
 }
 
-//Merge overlapping points
-function dedupPoints(floatPoints, ratPoints, floatBounds) {
-  var numPoints = floatPoints.length + ratPoints.length
-  var uf        = new UnionFind(numPoints)
+// Merge overlapping points
+function dedupPoints (floatPoints, ratPoints, floatBounds) {
+  var numPoints = ratPoints.length
+  var uf = new UnionFind(numPoints)
 
-  //Compute rational bounds
-  var bounds = floatBounds
-  for(var i=0; i<ratPoints.length; ++i) {
+  // Compute rational bounds
+  var bounds = []
+  for (var i = 0; i < ratPoints.length; ++i) {
     var p = ratPoints[i]
     var xb = boundRat(p[0])
     var yb = boundRat(p[1])
-    bounds.push([ xb[0], yb[0], xb[1], yb[1] ])
-    floatPoints.push([ ratToFloat(p[0]), ratToFloat(p[1]) ])
+    bounds.push([
+      nextafter(xb[0], -Infinity),
+      nextafter(yb[0], -Infinity),
+      nextafter(xb[1], Infinity),
+      nextafter(yb[1], Infinity)
+    ])
   }
 
-  //Link all points with over lapping boxes
-  boxIntersect(bounds, function(i, j) {
+  // Link all points with over lapping boxes
+  boxIntersect(bounds, function (i, j) {
     uf.link(i, j)
   })
 
-  //Call find on each point to get a relabeling
-  var ptr = 0
+  // Do 1 pass over points to combine points in label sets
   var noDupes = true
   var labels = new Array(numPoints)
-  for(var i=0; i<numPoints; ++i) {
+  for (var i = 0; i < numPoints; ++i) {
     var j = uf.find(i)
-    if(j === i) {
-      //If not a duplicate, then don't bother
-      labels[i] = ptr
-      floatPoints[ptr++] = floatPoints[i]
-    } else {
-      //Clear no-dupes flag, zero out label
+    if (j !== i) {
+      // Clear no-dupes flag, zero out label
       noDupes = false
-      labels[i] = -1
+      // Make each point the top-left point from its cell
+      floatPoints[j] = [
+        Math.min(floatPoints[i][0], floatPoints[j][0]),
+        Math.min(floatPoints[i][1], floatPoints[j][1])
+      ]
     }
   }
-  floatPoints.length = ptr
 
-  //If no duplicates, return null to signal termination
-  if(noDupes) {
+  // If no duplicates, return null to signal termination
+  if (noDupes) {
     return null
   }
 
-  //Do a second pass to fix up missing labels
-  for(var i=0; i<numPoints; ++i) {
-    if(labels[i] < 0) {
+  var ptr = 0
+  for (var i = 0; i < numPoints; ++i) {
+    var j = uf.find(i)
+    if (j === i) {
+      labels[i] = ptr
+      floatPoints[ptr++] = floatPoints[i]
+    } else {
+      labels[i] = -1
+    }
+  }
+
+  floatPoints.length = ptr
+
+  // Do a second pass to fix up missing labels
+  for (var i = 0; i < numPoints; ++i) {
+    if (labels[i] < 0) {
       labels[i] = labels[uf.find(i)]
     }
   }
 
-  //Return resulting union-find data structure
+  // Return resulting union-find data structure
   return labels
 }
 
-function compareLex2(a,b) { return (a[0]-b[0]) || (a[1]-b[1]) }
-function compareLex3(a,b) {
+function compareLex2 (a, b) { return (a[0] - b[0]) || (a[1] - b[1]) }
+function compareLex3 (a, b) {
   var d = (a[0] - b[0]) || (a[1] - b[1])
-  if(d) {
+  if (d) {
     return d
   }
-  if(a[2] < b[2]) {
+  if (a[2] < b[2]) {
     return -1
-  } else if(a[2] > b[2]) {
+  } else if (a[2] > b[2]) {
     return 1
   }
   return 0
 }
 
-//Remove duplicate edge labels
-function dedupEdges(edges, labels, useColor) {
-  if(edges.length === 0) {
+// Remove duplicate edge labels
+function dedupEdges (edges, labels, useColor) {
+  if (edges.length === 0) {
     return
   }
-  if(labels) {
-    for(var i=0; i<edges.length; ++i) {
+  if (labels) {
+    for (var i = 0; i < edges.length; ++i) {
       var e = edges[i]
       var a = labels[e[0]]
       var b = labels[e[1]]
@@ -8476,7 +9632,7 @@ function dedupEdges(edges, labels, useColor) {
       e[1] = Math.max(a, b)
     }
   } else {
-    for(var i=0; i<edges.length; ++i) {
+    for (var i = 0; i < edges.length; ++i) {
       var e = edges[i]
       var a = e[0]
       var b = e[1]
@@ -8484,16 +9640,16 @@ function dedupEdges(edges, labels, useColor) {
       e[1] = Math.max(a, b)
     }
   }
-  if(useColor) {
+  if (useColor) {
     edges.sort(compareLex3)
   } else {
     edges.sort(compareLex2)
   }
   var ptr = 1
-  for(var i=1; i<edges.length; ++i) {
-    var prev = edges[i-1]
+  for (var i = 1; i < edges.length; ++i) {
+    var prev = edges[i - 1]
     var next = edges[i]
-    if(next[0] === prev[0] && next[1] === prev[1] &&
+    if (next[0] === prev[0] && next[1] === prev[1] &&
       (!useColor || next[2] === prev[2])) {
       continue
     }
@@ -8502,28 +9658,33 @@ function dedupEdges(edges, labels, useColor) {
   edges.length = ptr
 }
 
-//Repeat until convergence
-function snapRound(points, edges, useColor) {
+function preRound (points, edges, useColor) {
+  var labels = dedupPoints(points, [], boundPoints(points))
+  dedupEdges(edges, labels, useColor)
+  return !!labels
+}
 
+// Repeat until convergence
+function snapRound (points, edges, useColor) {
   // 1. find edge crossings
   var edgeBounds = boundEdges(points, edges)
-  var crossings  = getCrossings(points, edges, edgeBounds)
+  var crossings = getCrossings(points, edges, edgeBounds)
 
   // 2. find t-junctions
   var vertBounds = boundPoints(points)
   var tjunctions = getTJunctions(points, edges, edgeBounds, vertBounds)
 
   // 3. cut edges, construct rational points
-  var ratPoints  = cutEdges(points, edges, crossings, tjunctions, useColor)
+  var ratPoints = cutEdges(points, edges, crossings, tjunctions, useColor)
 
   // 4. dedupe verts
-  var labels     = dedupPoints(points, ratPoints, vertBounds)
+  var labels = dedupPoints(points, ratPoints, vertBounds)
 
-  // 6. dedupe edges
+  // 5. dedupe edges
   dedupEdges(edges, labels, useColor)
 
-  // 5. check termination
-  if(!labels) {
+  // 6. check termination
+  if (!labels) {
     return (crossings.length > 0 || tjunctions.length > 0)
   }
 
@@ -8531,32 +9692,33 @@ function snapRound(points, edges, useColor) {
   return true
 }
 
-//Main loop, runs PSLG clean up until completion
-function cleanPSLG(points, edges, colors) {
-  var modified = false
-
-  //If using colors, augment edges with color data
+// Main loop, runs PSLG clean up until completion
+function cleanPSLG (points, edges, colors) {
+  // If using colors, augment edges with color data
   var prevEdges
-  if(colors) {
+  if (colors) {
     prevEdges = edges
     var augEdges = new Array(edges.length)
-    for(var i=0; i<edges.length; ++i) {
+    for (var i = 0; i < edges.length; ++i) {
       var e = edges[i]
       augEdges[i] = [e[0], e[1], colors[i]]
     }
     edges = augEdges
   }
 
-  //Run snap rounding until convergence
-  while(snapRound(points, edges, !!colors)) {
+  // First round: remove duplicate edges and points
+  var modified = preRound(points, edges, !!colors)
+
+  // Run snap rounding until convergence
+  while (snapRound(points, edges, !!colors)) {
     modified = true
   }
 
-  //Strip color tags
-  if(!!colors && modified) {
+  // Strip color tags
+  if (!!colors && modified) {
     prevEdges.length = 0
     colors.length = 0
-    for(var i=0; i<edges.length; ++i) {
+    for (var i = 0; i < edges.length; ++i) {
       var e = edges[i]
       prevEdges.push([e[0], e[1]])
       colors.push(e[2])
@@ -8566,10 +9728,8 @@ function cleanPSLG(points, edges, colors) {
   return modified
 }
 
-},{"./lib/rat-seg-intersect":58,"big-rat":21,"big-rat/cmp":19,"big-rat/to-float":33,"box-intersect":38,"compare-cell":68,"nextafter":202,"rat-vec":218,"robust-segment-intersect":232,"union-find":257}],58:[function(require,module,exports){
+},{"./lib/rat-seg-intersect":58,"big-rat":21,"big-rat/cmp":19,"big-rat/to-float":33,"box-intersect":38,"nextafter":201,"rat-vec":217,"robust-segment-intersect":231,"union-find":256}],58:[function(require,module,exports){
 'use strict'
-
-//TODO: Move this to a separate module
 
 module.exports = solveIntersection
 
@@ -8581,26 +9741,24 @@ var rvSub = require('rat-vec/sub')
 var rvAdd = require('rat-vec/add')
 var rvMuls = require('rat-vec/muls')
 
-var toFloat = require('big-rat/to-float')
-
-function ratPerp(a, b) {
+function ratPerp (a, b) {
   return ratSub(ratMul(a[0], b[1]), ratMul(a[1], b[0]))
 }
 
-//Solve for intersection
+// Solve for intersection
 //  x = a + t (b-a)
 //  (x - c) ^ (d-c) = 0
 //  (t * (b-a) + (a-c) ) ^ (d-c) = 0
 //  t * (b-a)^(d-c) = (d-c)^(a-c)
 //  t = (d-c)^(a-c) / (b-a)^(d-c)
 
-function solveIntersection(a, b, c, d) {
+function solveIntersection (a, b, c, d) {
   var ba = rvSub(b, a)
   var dc = rvSub(d, c)
 
   var baXdc = ratPerp(ba, dc)
 
-  if(ratSign(baXdc) === 0) {
+  if (ratSign(baXdc) === 0) {
     return null
   }
 
@@ -8608,11 +9766,13 @@ function solveIntersection(a, b, c, d) {
   var dcXac = ratPerp(dc, ac)
 
   var t = ratDiv(dcXac, baXdc)
+  var s = rvMuls(ba, t)
+  var r = rvAdd(a, s)
 
-  return rvAdd(a, rvMuls(ba, t))
+  return r
 }
 
-},{"big-rat/div":20,"big-rat/mul":30,"big-rat/sign":31,"big-rat/sub":32,"big-rat/to-float":33,"rat-vec/add":217,"rat-vec/muls":219,"rat-vec/sub":220}],59:[function(require,module,exports){
+},{"big-rat/div":20,"big-rat/mul":30,"big-rat/sign":31,"big-rat/sub":32,"rat-vec/add":216,"rat-vec/muls":218,"rat-vec/sub":219}],59:[function(require,module,exports){
 (function (Buffer){
 var clone = (function() {
 'use strict';
@@ -9584,7 +10744,7 @@ function compareAngle(a, b, c, d) {
     }
   }
 }
-},{"robust-orientation":229,"robust-product":230,"robust-sum":234,"signum":235,"two-sum":255}],68:[function(require,module,exports){
+},{"robust-orientation":228,"robust-product":229,"robust-sum":233,"signum":234,"two-sum":254}],68:[function(require,module,exports){
 module.exports = compareCells
 
 var min = Math.min
@@ -10293,7 +11453,7 @@ function generateCWiseOp(proc, typesig) {
 }
 module.exports = generateCWiseOp
 
-},{"uniq":258}],77:[function(require,module,exports){
+},{"uniq":257}],77:[function(require,module,exports){
 "use strict"
 
 // The function below is called when constructing a cwise function object, and does the following:
@@ -20098,7 +21258,7 @@ function triangulate(points, includePointAtInfinity) {
 
   return hull
 }
-},{"incremental-convex-hull":171,"uniq":258}],81:[function(require,module,exports){
+},{"incremental-convex-hull":171,"uniq":257}],81:[function(require,module,exports){
 (function (Buffer){
 var hasTypedArrays = false
 if(typeof Float64Array !== "undefined") {
@@ -20286,7 +21446,7 @@ function edgeToAdjacency(edges, numVertices) {
   }
   return adj
 }
-},{"uniq":258}],84:[function(require,module,exports){
+},{"uniq":257}],84:[function(require,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -21443,7 +22603,7 @@ return Promise;
 })));
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":215}],85:[function(require,module,exports){
+},{"_process":214}],85:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -24096,7 +25256,7 @@ function getCubeEdges(model, view, projection, bounds) {
   //Return result
   return CUBE_RESULT
 }
-},{"bit-twiddle":35,"gl-mat4/invert":117,"gl-mat4/multiply":119,"robust-orientation":229,"split-polygon":246}],95:[function(require,module,exports){
+},{"bit-twiddle":35,"gl-mat4/invert":117,"gl-mat4/multiply":119,"robust-orientation":228,"split-polygon":245}],95:[function(require,module,exports){
 'use strict'
 
 module.exports    = createLines
@@ -24535,7 +25695,7 @@ function createTextSprites(
 }
 
 }).call(this,require('_process'))
-},{"./shaders":96,"_process":215,"gl-buffer":100,"gl-vao":154,"vectorize-text":259}],98:[function(require,module,exports){
+},{"./shaders":96,"_process":214,"gl-buffer":100,"gl-vao":154,"vectorize-text":258}],98:[function(require,module,exports){
 'use strict'
 
 exports.create   = defaultTicks
@@ -24758,7 +25918,7 @@ i_loop:
   return ranges
 }
 
-},{"./lib/cube.js":94,"extract-frustum-planes":86,"gl-mat4/multiply":119,"gl-mat4/transpose":127,"gl-vec4/transformMat4":160,"split-polygon":246}],100:[function(require,module,exports){
+},{"./lib/cube.js":94,"extract-frustum-planes":86,"gl-mat4/multiply":119,"gl-mat4/transpose":127,"gl-vec4/transformMat4":160,"split-polygon":245}],100:[function(require,module,exports){
 "use strict"
 
 var pool = require("typedarray-pool")
@@ -24912,7 +26072,7 @@ function createBuffer(gl, data, type, usage) {
 
 module.exports = createBuffer
 
-},{"ndarray":201,"ndarray-ops":195,"typedarray-pool":256}],101:[function(require,module,exports){
+},{"ndarray":200,"ndarray-ops":194,"typedarray-pool":255}],101:[function(require,module,exports){
 module.exports = {
   0: 'NONE',
   1: 'ONE',
@@ -25995,7 +27155,7 @@ function formatCompilerError(errLog, src, type) {
 }
 
 
-},{"add-line-numbers":11,"gl-constants/lookup":102,"glsl-shader-name":162,"sprintf-js":247}],107:[function(require,module,exports){
+},{"add-line-numbers":11,"gl-constants/lookup":102,"glsl-shader-name":162,"sprintf-js":246}],107:[function(require,module,exports){
 
 var createShader  = require('gl-shader')
 
@@ -26389,7 +27549,7 @@ function createLinePlot (options) {
   return linePlot
 }
 
-},{"./lib/shaders":107,"binary-search-bounds":34,"gl-buffer":100,"gl-texture2d":150,"gl-vao":154,"glsl-read-float":161,"ndarray":201}],109:[function(require,module,exports){
+},{"./lib/shaders":107,"binary-search-bounds":34,"gl-buffer":100,"gl-texture2d":150,"gl-vao":154,"glsl-read-float":161,"ndarray":200}],109:[function(require,module,exports){
 module.exports = invert
 
 /**
@@ -27349,7 +28509,7 @@ function closestPointToPickLocation(simplex, pixelCoord, model, view, projection
   }
   return [closestIndex, interpolate(simplex, weights), weights]
 }
-},{"barycentric":17,"polytope-closest-point/lib/closest_point_2d.js":214}],130:[function(require,module,exports){
+},{"barycentric":17,"polytope-closest-point/lib/closest_point_2d.js":213}],130:[function(require,module,exports){
 
 
 var triVertSrc = "precision mediump float;\n#define GLSLIFY 1\n\nattribute vec3 position, normal;\nattribute vec4 color;\nattribute vec2 uv;\n\nuniform mat4 model\n           , view\n           , projection;\nuniform vec3 eyePosition\n           , lightPosition;\n\nvarying vec3 f_normal\n           , f_lightDirection\n           , f_eyeDirection\n           , f_data;\nvarying vec4 f_color;\nvarying vec2 f_uv;\n\nvoid main() {\n  vec4 m_position  = model * vec4(position, 1.0);\n  vec4 t_position  = view * m_position;\n  gl_Position      = projection * t_position;\n  f_color          = color;\n  f_normal         = normal;\n  f_data           = position;\n  f_eyeDirection   = eyePosition   - position;\n  f_lightDirection = lightPosition - position;\n  f_uv             = uv;\n}"
@@ -28433,7 +29593,7 @@ function createSimplicialMesh(params) {
 
 module.exports = createSimplicialMesh
 
-},{"./lib/closest-point":129,"./lib/shaders":130,"colormap":66,"gl-buffer":100,"gl-mat4/invert":117,"gl-mat4/multiply":119,"gl-shader":139,"gl-texture2d":150,"gl-vao":154,"ndarray":201,"normals":203,"simplicial-complex-contour":237,"typedarray-pool":256}],132:[function(require,module,exports){
+},{"./lib/closest-point":129,"./lib/shaders":130,"colormap":66,"gl-buffer":100,"gl-mat4/invert":117,"gl-mat4/multiply":119,"gl-shader":139,"gl-texture2d":150,"gl-vao":154,"ndarray":200,"normals":202,"simplicial-complex-contour":236,"typedarray-pool":255}],132:[function(require,module,exports){
 
 var createShader = require('gl-shader')
 
@@ -29308,7 +30468,7 @@ function getGlyph(symbol, font) {
   //Save cached symbol
   return fontCache[symbol] = [triSymbol, lineSymbol, bounds]
 }
-},{"vectorize-text":259}],136:[function(require,module,exports){
+},{"vectorize-text":258}],136:[function(require,module,exports){
 var createShaderWrapper = require('gl-shader')
 
 
@@ -30145,7 +31305,7 @@ function createPointCloud(options) {
   return pointCloud
 }
 
-},{"./lib/glyphs":135,"./lib/shaders":136,"gl-buffer":100,"gl-mat4/multiply":119,"gl-vao":154,"typedarray-pool":256}],138:[function(require,module,exports){
+},{"./lib/glyphs":135,"./lib/shaders":136,"gl-buffer":100,"gl-mat4/multiply":119,"gl-vao":154,"typedarray-pool":255}],138:[function(require,module,exports){
 'use strict'
 
 module.exports = createSelectBuffer
@@ -30300,7 +31460,7 @@ function createSelectBuffer(gl, shape) {
   return new SelectBuffer(gl, fbo, buffer)
 }
 
-},{"bit-twiddle":35,"cwise/lib/wrapper":78,"gl-fbo":105,"ndarray":201,"typedarray-pool":256}],139:[function(require,module,exports){
+},{"bit-twiddle":35,"cwise/lib/wrapper":78,"gl-fbo":105,"ndarray":200,"typedarray-pool":255}],139:[function(require,module,exports){
 'use strict'
 
 var createUniformWrapper   = require('./lib/create-uniforms')
@@ -31285,7 +32445,7 @@ function createProgram(gl, vref, fref, attribs, locations) {
   return getCache(gl).getProgram(vref, fref, attribs, locations)
 }
 
-},{"./GLError":140,"gl-format-compiler-error":106,"weakmap-shim":264}],146:[function(require,module,exports){
+},{"./GLError":140,"gl-format-compiler-error":106,"weakmap-shim":263}],146:[function(require,module,exports){
 'use strict'
 
 
@@ -32873,7 +34033,7 @@ function createSurfacePlot (params) {
   return surface
 }
 
-},{"./lib/shaders":148,"binary-search-bounds":34,"bit-twiddle":35,"colormap":66,"gl-buffer":100,"gl-mat4/invert":117,"gl-mat4/multiply":119,"gl-texture2d":150,"gl-vao":154,"ndarray":201,"ndarray-gradient":192,"ndarray-ops":195,"ndarray-pack":196,"surface-nets":249,"typedarray-pool":256}],150:[function(require,module,exports){
+},{"./lib/shaders":148,"binary-search-bounds":34,"bit-twiddle":35,"colormap":66,"gl-buffer":100,"gl-mat4/invert":117,"gl-mat4/multiply":119,"gl-texture2d":150,"gl-vao":154,"ndarray":200,"ndarray-gradient":191,"ndarray-ops":194,"ndarray-pack":195,"surface-nets":248,"typedarray-pool":255}],150:[function(require,module,exports){
 'use strict'
 
 var ndarray = require('ndarray')
@@ -33179,13 +34339,14 @@ proto.setPixels = function(data, x_off, y_off, mip_level) {
     y_off = y_off || 0
   }
   mip_level = mip_level || 0
-  if(acceptTextureDOM(data)) {
+  var directData = acceptTextureDOM(data) ? data : data.raw
+  if(directData) {
     var needsMip = this._mipLevels.indexOf(mip_level) < 0
     if(needsMip) {
-      gl.texImage2D(gl.TEXTURE_2D, 0, this.format, this.format, this.type, data)
+      gl.texImage2D(gl.TEXTURE_2D, 0, this.format, this.format, this.type, directData)
       this._mipLevels.push(mip_level)
     } else {
-      gl.texSubImage2D(gl.TEXTURE_2D, mip_level, x_off, y_off, this.format, this.type, data)
+      gl.texSubImage2D(gl.TEXTURE_2D, mip_level, x_off, y_off, this.format, this.type, directData)
     }
   } else if(data.shape && data.stride && data.data) {
     if(data.shape.length < 2 ||
@@ -33332,10 +34493,10 @@ function createTextureShape(gl, width, height, format, type) {
   return new Texture2D(gl, tex, width, height, format, type)
 }
 
-function createTextureDOM(gl, element, format, type) {
+function createTextureDOM(gl, directData, width, height, format, type) {
   var tex = initTexture(gl)
-  gl.texImage2D(gl.TEXTURE_2D, 0, format, format, type, element)
-  return new Texture2D(gl, tex, element.width|0, element.height|0, format, type)
+  gl.texImage2D(gl.TEXTURE_2D, 0, format, format, type, directData)
+  return new Texture2D(gl, tex, width, height, format, type)
 }
 
 //Creates a texture from an ndarray
@@ -33425,8 +34586,9 @@ function createTexture2D(gl) {
   }
   if(typeof arguments[1] === 'object') {
     var obj = arguments[1]
-    if (acceptTextureDOM(obj)) {
-      return createTextureDOM(gl, obj, arguments[2]||gl.RGBA, arguments[3]||gl.UNSIGNED_BYTE)
+    var directData = acceptTextureDOM(obj) ? obj : obj.raw
+    if (directData) {
+      return createTextureDOM(gl, directData, obj.width|0, obj.height|0, arguments[2]||gl.RGBA, arguments[3]||gl.UNSIGNED_BYTE)
     } else if(obj.shape && obj.data && obj.stride) {
       return createTextureArray(gl, obj)
     }
@@ -33434,7 +34596,7 @@ function createTexture2D(gl) {
   throw new Error('gl-texture2d: Invalid arguments for texture2d constructor')
 }
 
-},{"ndarray":201,"ndarray-ops":195,"typedarray-pool":256}],151:[function(require,module,exports){
+},{"ndarray":200,"ndarray-ops":194,"typedarray-pool":255}],151:[function(require,module,exports){
 "use strict"
 
 function doBind(gl, elements, attributes) {
@@ -35167,7 +36329,7 @@ function incrementalConvexHull(points, randomSearch) {
   //Extract boundary cells
   return triangles.boundary()
 }
-},{"robust-orientation":229,"simplicial-complex":239}],172:[function(require,module,exports){
+},{"robust-orientation":228,"simplicial-complex":238}],172:[function(require,module,exports){
 "use strict"
 
 var bounds = require("binary-search-bounds")
@@ -35914,7 +37076,7 @@ function vec3(n) {
 function vec4() {
     return [0,0,0,1]
 }
-},{"gl-mat4/determinant":113,"gl-vec3/lerp":158,"mat4-decompose":179,"mat4-recompose":182,"quat-slerp":216}],182:[function(require,module,exports){
+},{"gl-mat4/determinant":113,"gl-vec3/lerp":158,"mat4-decompose":179,"mat4-recompose":182,"quat-slerp":215}],182:[function(require,module,exports){
 /*
 Input:  translation ; a 3 component vector
         scale       ; a 3 component vector
@@ -36257,7 +37419,7 @@ function monotoneConvexHull2D(points) {
   //Return result
   return result
 }
-},{"robust-orientation":229}],185:[function(require,module,exports){
+},{"robust-orientation":228}],185:[function(require,module,exports){
 'use strict'
 
 module.exports = mouseListen
@@ -36595,7 +37757,7 @@ function mouseWheelListen(element, callback, noScroll) {
   return listener
 }
 
-},{"to-px":251}],189:[function(require,module,exports){
+},{"to-px":250}],189:[function(require,module,exports){
 "use strict"
 
 var pool = require("typedarray-pool")
@@ -37011,21 +38173,19 @@ function createSurfaceExtractor(args) {
     order,
     typesig)
 }
-},{"typedarray-pool":256}],190:[function(require,module,exports){
+},{"typedarray-pool":255}],190:[function(require,module,exports){
 "use strict"
 
 
 
-var fill = require('cwise/lib/wrapper')({"args":["index","array","scalar"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{_inline_4_arg1_=_inline_4_arg2_.apply(void 0,_inline_4_arg0_)}","args":[{"name":"_inline_4_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_4_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_4_arg2_","lvalue":false,"rvalue":true,"count":1}],"thisVars":[],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"cwise","blockSize":64})
+var fill = require('cwise/lib/wrapper')({"args":["index","array","scalar"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{_inline_7_arg1_=_inline_7_arg2_.apply(void 0,_inline_7_arg0_)}","args":[{"name":"_inline_7_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_7_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_7_arg2_","lvalue":false,"rvalue":true,"count":1}],"thisVars":[],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"cwise","blockSize":64})
 
 module.exports = function(array, f) {
   fill(array, f)
   return array
 }
 
-},{"cwise/lib/wrapper":191}],191:[function(require,module,exports){
-arguments[4][78][0].apply(exports,arguments)
-},{"cwise-compiler":75,"dup":78}],192:[function(require,module,exports){
+},{"cwise/lib/wrapper":78}],191:[function(require,module,exports){
 'use strict'
 
 module.exports      = gradient
@@ -37323,7 +38483,7 @@ function gradient(out, inp, bc) {
   var cached = generateGradient(bc)
   return cached(out, inp)
 }
-},{"cwise-compiler":75,"dup":82}],193:[function(require,module,exports){
+},{"cwise-compiler":75,"dup":82}],192:[function(require,module,exports){
 'use strict'
 
 var warp = require('ndarray-warp')
@@ -37353,7 +38513,7 @@ function applyHomography(dest, src, Xi) {
   })
   return dest
 }
-},{"gl-matrix-invert":128,"ndarray-warp":200}],194:[function(require,module,exports){
+},{"gl-matrix-invert":128,"ndarray-warp":199}],193:[function(require,module,exports){
 "use strict"
 
 function interp1d(arr, x) {
@@ -37464,7 +38624,7 @@ module.exports.d1 = interp1d
 module.exports.d2 = interp2d
 module.exports.d3 = interp3d
 
-},{}],195:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 "use strict"
 
 var compile = require("cwise-compiler")
@@ -37927,7 +39087,7 @@ exports.equals = compile({
 
 
 
-},{"cwise-compiler":75}],196:[function(require,module,exports){
+},{"cwise-compiler":75}],195:[function(require,module,exports){
 "use strict"
 
 var ndarray = require("ndarray")
@@ -37950,10 +39110,10 @@ module.exports = function convert(arr, result) {
   return result
 }
 
-},{"./doConvert.js":197,"ndarray":201}],197:[function(require,module,exports){
+},{"./doConvert.js":196,"ndarray":200}],196:[function(require,module,exports){
 module.exports=require('cwise-compiler')({"args":["array","scalar","index"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{\nvar _inline_1_v=_inline_1_arg1_,_inline_1_i\nfor(_inline_1_i=0;_inline_1_i<_inline_1_arg2_.length-1;++_inline_1_i) {\n_inline_1_v=_inline_1_v[_inline_1_arg2_[_inline_1_i]]\n}\n_inline_1_arg0_=_inline_1_v[_inline_1_arg2_[_inline_1_arg2_.length-1]]\n}","args":[{"name":"_inline_1_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg1_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":4}],"thisVars":[],"localVars":["_inline_1_i","_inline_1_v"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"funcName":"convert","blockSize":64})
 
-},{"cwise-compiler":75}],198:[function(require,module,exports){
+},{"cwise-compiler":75}],197:[function(require,module,exports){
 "use strict"
 
 var pool = require("typedarray-pool")
@@ -38682,7 +39842,7 @@ function compileSort(order, dtype) {
 }
 
 module.exports = compileSort
-},{"typedarray-pool":256}],199:[function(require,module,exports){
+},{"typedarray-pool":255}],198:[function(require,module,exports){
 "use strict"
 
 var compile = require("./lib/compile_sort.js")
@@ -38702,19 +39862,19 @@ function sort(array) {
 }
 
 module.exports = sort
-},{"./lib/compile_sort.js":198}],200:[function(require,module,exports){
+},{"./lib/compile_sort.js":197}],199:[function(require,module,exports){
 'use strict'
 
 var interp  = require('ndarray-linear-interpolate')
 
 
-var do_warp = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=new Array(_inline_21_arg4_)}","args":[{"name":"_inline_21_arg0_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_21_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_21_arg2_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_21_arg3_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_21_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_22_arg2_(this_warped,_inline_22_arg0_),_inline_22_arg3_.apply(void 0,this_warped)}","args":[{"name":"_inline_22_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_22_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_22_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_22_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_22_arg4_","lvalue":false,"rvalue":false,"count":0}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warpND","blockSize":64})
+var do_warp = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=new Array(_inline_33_arg4_)}","args":[{"name":"_inline_33_arg0_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_33_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_33_arg2_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_33_arg3_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_33_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_34_arg2_(this_warped,_inline_34_arg0_),_inline_34_arg1_=_inline_34_arg3_.apply(void 0,this_warped)}","args":[{"name":"_inline_34_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_34_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_34_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_34_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_34_arg4_","lvalue":false,"rvalue":false,"count":0}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warpND","blockSize":64})
 
-var do_warp_1 = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=[0]}","args":[],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_25_arg2_(this_warped,_inline_25_arg0_),_inline_25_arg3_(_inline_25_arg4_,this_warped[0])}","args":[{"name":"_inline_25_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_25_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warp1D","blockSize":64})
+var do_warp_1 = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=[0]}","args":[],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_37_arg2_(this_warped,_inline_37_arg0_),_inline_37_arg1_=_inline_37_arg3_(_inline_37_arg4_,this_warped[0])}","args":[{"name":"_inline_37_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_37_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_37_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_37_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_37_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warp1D","blockSize":64})
 
-var do_warp_2 = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=[0,0]}","args":[],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_28_arg2_(this_warped,_inline_28_arg0_),_inline_28_arg3_(_inline_28_arg4_,this_warped[0],this_warped[1])}","args":[{"name":"_inline_28_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_28_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warp2D","blockSize":64})
+var do_warp_2 = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=[0,0]}","args":[],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_40_arg2_(this_warped,_inline_40_arg0_),_inline_40_arg1_=_inline_40_arg3_(_inline_40_arg4_,this_warped[0],this_warped[1])}","args":[{"name":"_inline_40_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_40_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_40_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_40_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_40_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warp2D","blockSize":64})
 
-var do_warp_3 = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=[0,0,0]}","args":[],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_31_arg2_(this_warped,_inline_31_arg0_),_inline_31_arg3_(_inline_31_arg4_,this_warped[0],this_warped[1],this_warped[2])}","args":[{"name":"_inline_31_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_31_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_31_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_31_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_31_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warp3D","blockSize":64})
+var do_warp_3 = require('cwise/lib/wrapper')({"args":["index","array","scalar","scalar","scalar"],"pre":{"body":"{this_warped=[0,0,0]}","args":[],"thisVars":["this_warped"],"localVars":[]},"body":{"body":"{_inline_43_arg2_(this_warped,_inline_43_arg0_),_inline_43_arg1_=_inline_43_arg3_(_inline_43_arg4_,this_warped[0],this_warped[1],this_warped[2])}","args":[{"name":"_inline_43_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_43_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_43_arg2_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_43_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_43_arg4_","lvalue":false,"rvalue":true,"count":1}],"thisVars":["this_warped"],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"warp3D","blockSize":64})
 
 module.exports = function warp(dest, src, func) {
   switch(src.shape.length) {
@@ -38734,7 +39894,7 @@ module.exports = function warp(dest, src, func) {
   return dest
 }
 
-},{"cwise/lib/wrapper":78,"ndarray-linear-interpolate":194}],201:[function(require,module,exports){
+},{"cwise/lib/wrapper":78,"ndarray-linear-interpolate":193}],200:[function(require,module,exports){
 var iota = require("iota-array")
 var isBuffer = require("is-buffer")
 
@@ -39079,7 +40239,7 @@ function wrappedNDArrayCtor(data, shape, stride, offset) {
 
 module.exports = wrappedNDArrayCtor
 
-},{"iota-array":174,"is-buffer":175}],202:[function(require,module,exports){
+},{"iota-array":174,"is-buffer":175}],201:[function(require,module,exports){
 "use strict"
 
 var doubleBits = require("double-bits")
@@ -39122,7 +40282,7 @@ function nextafter(x, y) {
   }
   return doubleBits.pack(lo, hi)
 }
-},{"double-bits":81}],203:[function(require,module,exports){
+},{"double-bits":81}],202:[function(require,module,exports){
 var DEFAULT_NORMALS_EPSILON = 1e-6;
 var DEFAULT_FACE_EPSILON = 1e-6;
 
@@ -39247,7 +40407,7 @@ exports.faceNormals = function(faces, positions, specifiedEpsilon) {
 
 
 
-},{}],204:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 'use strict'
 
 module.exports = quatFromFrame
@@ -39289,7 +40449,7 @@ function quatFromFrame(
   }
   return out
 }
-},{}],205:[function(require,module,exports){
+},{}],204:[function(require,module,exports){
 'use strict'
 
 module.exports = createOrbitController
@@ -39683,7 +40843,7 @@ function createOrbitController(options) {
 
   return result
 }
-},{"./lib/quatFromFrame":204,"filtered-vector":88,"gl-mat4/fromQuat":114,"gl-mat4/invert":117,"gl-mat4/lookAt":118}],206:[function(require,module,exports){
+},{"./lib/quatFromFrame":203,"filtered-vector":88,"gl-mat4/fromQuat":114,"gl-mat4/invert":117,"gl-mat4/lookAt":118}],205:[function(require,module,exports){
 /*!
  * pad-left <https://github.com/jonschlinkert/pad-left>
  *
@@ -39699,7 +40859,7 @@ module.exports = function padLeft(str, num, ch) {
   ch = typeof ch !== 'undefined' ? (ch + '') : ' ';
   return repeat(ch, num) + str;
 };
-},{"repeat-string":222}],207:[function(require,module,exports){
+},{"repeat-string":221}],206:[function(require,module,exports){
 module.exports = function parseUnit(str, out) {
     if (!out)
         out = [ 0, '' ]
@@ -39710,7 +40870,7 @@ module.exports = function parseUnit(str, out) {
     out[1] = str.match(/[\d.\-\+]*\s*(.*)/)[1] || ''
     return out
 }
-},{}],208:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 "use strict"
 
 module.exports = permutationSign
@@ -39762,7 +40922,7 @@ function permutationSign(p) {
     return sgn
   }
 }
-},{"typedarray-pool":256}],209:[function(require,module,exports){
+},{"typedarray-pool":255}],208:[function(require,module,exports){
 "use strict"
 
 var pool = require("typedarray-pool")
@@ -39849,7 +41009,7 @@ function unrank(n, r, p) {
 exports.rank = rank
 exports.unrank = unrank
 
-},{"invert-permutation":173,"typedarray-pool":256}],210:[function(require,module,exports){
+},{"invert-permutation":173,"typedarray-pool":255}],209:[function(require,module,exports){
 "use strict"
 
 module.exports = planarDual
@@ -39980,7 +41140,7 @@ function planarDual(cells, positions) {
   //Combine paths and loops together
   return cycles
 }
-},{"compare-angle":67}],211:[function(require,module,exports){
+},{"compare-angle":67}],210:[function(require,module,exports){
 'use strict'
 
 module.exports = trimLeaves
@@ -40036,7 +41196,7 @@ function trimLeaves(edges, positions) {
   
   return [ nedges, npositions ]
 }
-},{"edges-to-adjacency-list":83}],212:[function(require,module,exports){
+},{"edges-to-adjacency-list":83}],211:[function(require,module,exports){
 'use strict'
 
 module.exports = planarGraphToPolyline
@@ -40241,7 +41401,7 @@ function planarGraphToPolyline(edges, positions) {
 
   return result
 }
-},{"./lib/trim-leaves":211,"edges-to-adjacency-list":83,"planar-dual":210,"point-in-big-polygon":213,"robust-sum":234,"two-product":254,"uniq":258}],213:[function(require,module,exports){
+},{"./lib/trim-leaves":210,"edges-to-adjacency-list":83,"planar-dual":209,"point-in-big-polygon":212,"robust-sum":233,"two-product":253,"uniq":257}],212:[function(require,module,exports){
 module.exports = preprocessPolygon
 
 var orient = require('robust-orientation')[3]
@@ -40393,7 +41553,7 @@ function preprocessPolygon(loops) {
       testSlab)
   }
 }
-},{"binary-search-bounds":34,"interval-tree-1d":172,"robust-orientation":229,"slab-decomposition":245}],214:[function(require,module,exports){
+},{"binary-search-bounds":34,"interval-tree-1d":172,"robust-orientation":228,"slab-decomposition":244}],213:[function(require,module,exports){
 //Optimized version for triangle closest point
 // Based on Eberly's WildMagick codes
 // http://www.geometrictools.com/LibMathematics/Distance/Distance.html
@@ -40591,7 +41751,7 @@ function closestPoint2d(V0, V1, V2, point, result) {
 
 module.exports = closestPoint2d;
 
-},{}],215:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -40762,6 +41922,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -40773,25 +41937,25 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],216:[function(require,module,exports){
+},{}],215:[function(require,module,exports){
 module.exports = require('gl-quat/slerp')
-},{"gl-quat/slerp":134}],217:[function(require,module,exports){
+},{"gl-quat/slerp":134}],216:[function(require,module,exports){
 'use strict'
 
 var bnadd = require('big-rat/add')
 
 module.exports = add
 
-function add(a, b) {
+function add (a, b) {
   var n = a.length
   var r = new Array(n)
-    for(var i=0; i<n; ++i) {
+  for (var i=0; i<n; ++i) {
     r[i] = bnadd(a[i], b[i])
   }
   return r
 }
 
-},{"big-rat/add":18}],218:[function(require,module,exports){
+},{"big-rat/add":18}],217:[function(require,module,exports){
 'use strict'
 
 module.exports = float2rat
@@ -40806,7 +41970,7 @@ function float2rat(v) {
   return result
 }
 
-},{"big-rat":21}],219:[function(require,module,exports){
+},{"big-rat":21}],218:[function(require,module,exports){
 'use strict'
 
 var rat = require('big-rat')
@@ -40824,7 +41988,7 @@ function muls(a, x) {
   return r
 }
 
-},{"big-rat":21,"big-rat/mul":30}],220:[function(require,module,exports){
+},{"big-rat":21,"big-rat/mul":30}],219:[function(require,module,exports){
 'use strict'
 
 var bnsub = require('big-rat/sub')
@@ -40840,7 +42004,7 @@ function sub(a, b) {
   return r
 }
 
-},{"big-rat/sub":32}],221:[function(require,module,exports){
+},{"big-rat/sub":32}],220:[function(require,module,exports){
 'use strict'
 
 var compareCell = require('compare-cell')
@@ -40873,7 +42037,7 @@ function reduceCellComplex(cells) {
   return cells
 }
 
-},{"cell-orientation":53,"compare-cell":68,"compare-oriented-cell":69}],222:[function(require,module,exports){
+},{"cell-orientation":53,"compare-cell":68,"compare-oriented-cell":69}],221:[function(require,module,exports){
 /*!
  * repeat-string <https://github.com/jonschlinkert/repeat-string>
  *
@@ -40945,7 +42109,7 @@ function repeat(str, num) {
   return res;
 }
 
-},{}],223:[function(require,module,exports){
+},{}],222:[function(require,module,exports){
 (function (global){
 module.exports =
   global.performance &&
@@ -40956,7 +42120,7 @@ module.exports =
   }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],224:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
 "use strict"
 
 module.exports = compressExpansion
@@ -40991,7 +42155,7 @@ function compressExpansion(e) {
   e.length = top
   return e
 }
-},{}],225:[function(require,module,exports){
+},{}],224:[function(require,module,exports){
 "use strict"
 
 var twoProduct = require("two-product")
@@ -41095,7 +42259,7 @@ return robustDeterminant")
 }
 
 generateDispatch()
-},{"robust-compress":224,"robust-scale":231,"robust-sum":234,"two-product":254}],226:[function(require,module,exports){
+},{"robust-compress":223,"robust-scale":230,"robust-sum":233,"two-product":253}],225:[function(require,module,exports){
 "use strict"
 
 var twoProduct = require("two-product")
@@ -41110,7 +42274,7 @@ function robustDotProduct(a, b) {
   }
   return r
 }
-},{"robust-sum":234,"two-product":254}],227:[function(require,module,exports){
+},{"robust-sum":233,"two-product":253}],226:[function(require,module,exports){
 "use strict"
 
 var twoProduct = require("two-product")
@@ -41278,7 +42442,7 @@ function generateInSphereTest() {
 }
 
 generateInSphereTest()
-},{"robust-scale":231,"robust-subtract":233,"robust-sum":234,"two-product":254}],228:[function(require,module,exports){
+},{"robust-scale":230,"robust-subtract":232,"robust-sum":233,"two-product":253}],227:[function(require,module,exports){
 "use strict"
 
 var determinant = require("robust-determinant")
@@ -41350,7 +42514,7 @@ function generateDispatch() {
 }
 
 generateDispatch()
-},{"robust-determinant":225}],229:[function(require,module,exports){
+},{"robust-determinant":224}],228:[function(require,module,exports){
 "use strict"
 
 var twoProduct = require("two-product")
@@ -41541,7 +42705,7 @@ function generateOrientationProc() {
 }
 
 generateOrientationProc()
-},{"robust-scale":231,"robust-subtract":233,"robust-sum":234,"two-product":254}],230:[function(require,module,exports){
+},{"robust-scale":230,"robust-subtract":232,"robust-sum":233,"two-product":253}],229:[function(require,module,exports){
 "use strict"
 
 var robustSum = require("robust-sum")
@@ -41571,7 +42735,7 @@ function robustProduct(a, b) {
   }
   return r
 }
-},{"robust-scale":231,"robust-sum":234}],231:[function(require,module,exports){
+},{"robust-scale":230,"robust-sum":233}],230:[function(require,module,exports){
 "use strict"
 
 var twoProduct = require("two-product")
@@ -41622,7 +42786,7 @@ function scaleLinearExpansion(e, scale) {
   g.length = count
   return g
 }
-},{"two-product":254,"two-sum":255}],232:[function(require,module,exports){
+},{"two-product":253,"two-sum":254}],231:[function(require,module,exports){
 "use strict"
 
 module.exports = segmentsIntersect
@@ -41670,7 +42834,7 @@ function segmentsIntersect(a0, a1, b0, b1) {
 
   return true
 }
-},{"robust-orientation":229}],233:[function(require,module,exports){
+},{"robust-orientation":228}],232:[function(require,module,exports){
 "use strict"
 
 module.exports = robustSubtract
@@ -41827,7 +42991,7 @@ function robustSubtract(e, f) {
   g.length = count
   return g
 }
-},{}],234:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 "use strict"
 
 module.exports = linearExpansionSum
@@ -41984,7 +43148,7 @@ function linearExpansionSum(e, f) {
   g.length = count
   return g
 }
-},{}],235:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 "use strict"
 
 module.exports = function signum(x) {
@@ -41992,7 +43156,7 @@ module.exports = function signum(x) {
   if(x > 0) { return 1 }
   return 0.0
 }
-},{}],236:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 'use strict'
 
 module.exports = boundary
@@ -42004,7 +43168,7 @@ function boundary(cells) {
   return reduce(bnd(cells))
 }
 
-},{"boundary-cells":37,"reduce-simplicial-complex":221}],237:[function(require,module,exports){
+},{"boundary-cells":37,"reduce-simplicial-complex":220}],236:[function(require,module,exports){
 'use strict'
 
 module.exports = extractContour
@@ -42167,7 +43331,7 @@ function extractContour(cells, values, level, d) {
     vertexWeights: uweights
   }
 }
-},{"./lib/codegen":238,"ndarray":201,"ndarray-sort":199,"typedarray-pool":256}],238:[function(require,module,exports){
+},{"./lib/codegen":237,"ndarray":200,"ndarray-sort":198,"typedarray-pool":255}],237:[function(require,module,exports){
 'use strict'
 
 module.exports = getPolygonizer
@@ -42264,7 +43428,7 @@ function getPolygonizer(d) {
   }
   return alg
 }
-},{"marching-simplex-table":178,"typedarray-pool":256}],239:[function(require,module,exports){
+},{"marching-simplex-table":178,"typedarray-pool":255}],238:[function(require,module,exports){
 "use strict"; "use restrict";
 
 var bits      = require("bit-twiddle")
@@ -42608,11 +43772,11 @@ function connectedComponents(cells, vertex_count) {
 }
 exports.connectedComponents = connectedComponents
 
-},{"bit-twiddle":35,"union-find":257}],240:[function(require,module,exports){
+},{"bit-twiddle":35,"union-find":256}],239:[function(require,module,exports){
 arguments[4][35][0].apply(exports,arguments)
-},{"dup":35}],241:[function(require,module,exports){
-arguments[4][239][0].apply(exports,arguments)
-},{"bit-twiddle":240,"dup":239,"union-find":242}],242:[function(require,module,exports){
+},{"dup":35}],240:[function(require,module,exports){
+arguments[4][238][0].apply(exports,arguments)
+},{"bit-twiddle":239,"dup":238,"union-find":241}],241:[function(require,module,exports){
 "use strict"; "use restrict";
 
 module.exports = UnionFind;
@@ -42669,7 +43833,7 @@ UnionFind.prototype.link = function(x, y) {
 }
 
 
-},{}],243:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 "use strict"
 
 module.exports = simplifyPolygon
@@ -42941,7 +44105,7 @@ function simplifyPolygon(cells, positions, minArea) {
     edges: ncells
   }
 }
-},{"robust-orientation":229,"simplicial-complex":241}],244:[function(require,module,exports){
+},{"robust-orientation":228,"simplicial-complex":240}],243:[function(require,module,exports){
 "use strict"
 
 module.exports = orderSegments
@@ -43037,7 +44201,7 @@ function orderSegments(b, a) {
   }
   return ar[0] - br[0]
 }
-},{"robust-orientation":229}],245:[function(require,module,exports){
+},{"robust-orientation":228}],244:[function(require,module,exports){
 "use strict"
 
 module.exports = createSlabDecomposition
@@ -43268,7 +44432,7 @@ function createSlabDecomposition(segments) {
   }
   return new SlabDecomposition(slabs, lines, horizontal)
 }
-},{"./lib/order-segments":244,"binary-search-bounds":34,"functional-red-black-tree":89,"robust-orientation":229}],246:[function(require,module,exports){
+},{"./lib/order-segments":243,"binary-search-bounds":34,"functional-red-black-tree":89,"robust-orientation":228}],245:[function(require,module,exports){
 "use strict"
 
 var robustDot = require("robust-dot-product")
@@ -43360,7 +44524,7 @@ function negative(points, plane) {
   }
   return neg
 }
-},{"robust-dot-product":226,"robust-sum":234}],247:[function(require,module,exports){
+},{"robust-dot-product":225,"robust-sum":233}],246:[function(require,module,exports){
 (function(window) {
     var re = {
         not_string: /[^s]/,
@@ -43570,7 +44734,7 @@ function negative(points, plane) {
     }
 })(typeof window === "undefined" ? this : window);
 
-},{}],248:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 'use strict'
 
 module.exports = toSuperScript
@@ -43625,7 +44789,7 @@ function toSuperScript(x) {
   }).join('')
 }
 
-},{}],249:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 "use strict"
 
 module.exports = surfaceNets
@@ -43833,7 +44997,7 @@ function surfaceNets(array,level) {
   }
   return proc(array,level)
 }
-},{"ndarray-extract-contour":189,"triangulate-hypercube":252,"zero-crossings":267}],250:[function(require,module,exports){
+},{"ndarray-extract-contour":189,"triangulate-hypercube":251,"zero-crossings":266}],249:[function(require,module,exports){
 // TinyColor v1.4.1
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
@@ -45030,7 +46194,7 @@ else {
 
 })(Math);
 
-},{}],251:[function(require,module,exports){
+},{}],250:[function(require,module,exports){
 'use strict'
 
 var parseUnit = require('parse-unit')
@@ -45091,7 +46255,7 @@ function toPX(str, element) {
   }
   return 1
 }
-},{"parse-unit":207}],252:[function(require,module,exports){
+},{"parse-unit":206}],251:[function(require,module,exports){
 "use strict"
 
 module.exports = triangulateCube
@@ -45125,7 +46289,7 @@ function triangulateCube(dimension) {
   }
   return result
 }
-},{"gamma":90,"permutation-parity":208,"permutation-rank":209}],253:[function(require,module,exports){
+},{"gamma":90,"permutation-parity":207,"permutation-rank":208}],252:[function(require,module,exports){
 'use strict'
 
 module.exports = createTurntableController
@@ -45698,7 +46862,7 @@ function createTurntableController(options) {
     theta,
     phi)
 }
-},{"filtered-vector":88,"gl-mat4/invert":117,"gl-mat4/rotate":121,"gl-vec3/cross":155,"gl-vec3/dot":156,"gl-vec3/normalize":159}],254:[function(require,module,exports){
+},{"filtered-vector":88,"gl-mat4/invert":117,"gl-mat4/rotate":121,"gl-vec3/cross":155,"gl-vec3/dot":156,"gl-vec3/normalize":159}],253:[function(require,module,exports){
 "use strict"
 
 module.exports = twoProduct
@@ -45732,7 +46896,7 @@ function twoProduct(a, b, result) {
 
   return [ y, x ]
 }
-},{}],255:[function(require,module,exports){
+},{}],254:[function(require,module,exports){
 "use strict"
 
 module.exports = fastTwoSum
@@ -45750,7 +46914,7 @@ function fastTwoSum(a, b, result) {
 	}
 	return [ar+br, x]
 }
-},{}],256:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 (function (global,Buffer){
 'use strict'
 
@@ -45967,7 +47131,7 @@ exports.clearCache = function clearCache() {
   }
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"bit-twiddle":35,"buffer":45,"dup":82}],257:[function(require,module,exports){
+},{"bit-twiddle":35,"buffer":45,"dup":82}],256:[function(require,module,exports){
 "use strict"; "use restrict";
 
 module.exports = UnionFind;
@@ -46030,7 +47194,7 @@ proto.link = function(x, y) {
     ++ranks[xr];
   }
 }
-},{}],258:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 "use strict"
 
 function unique_pred(list, compare) {
@@ -46089,7 +47253,7 @@ function unique(list, compare, sorted) {
 
 module.exports = unique
 
-},{}],259:[function(require,module,exports){
+},{}],258:[function(require,module,exports){
 "use strict"
 
 module.exports = createText
@@ -46116,7 +47280,7 @@ function createText(str, options) {
     options)
 }
 
-},{"./lib/vtext":260}],260:[function(require,module,exports){
+},{"./lib/vtext":259}],259:[function(require,module,exports){
 "use strict"
 
 module.exports = vectorizeText
@@ -46322,7 +47486,7 @@ function vectorizeText(str, canvas, context, options) {
   return processPixels(pixels, options, size)
 }
 
-},{"cdt2d":47,"clean-pslg":57,"ndarray":201,"planar-graph-to-polyline":212,"simplify-planar-graph":243,"surface-nets":249}],261:[function(require,module,exports){
+},{"cdt2d":47,"clean-pslg":57,"ndarray":200,"planar-graph-to-polyline":211,"simplify-planar-graph":242,"surface-nets":248}],260:[function(require,module,exports){
 // Copyright (C) 2011 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -47009,7 +48173,7 @@ function vectorizeText(str, canvas, context, options) {
   }
 })();
 
-},{}],262:[function(require,module,exports){
+},{}],261:[function(require,module,exports){
 var hiddenStore = require('./hidden-store.js');
 
 module.exports = createStore;
@@ -47030,7 +48194,7 @@ function createStore() {
     };
 }
 
-},{"./hidden-store.js":263}],263:[function(require,module,exports){
+},{"./hidden-store.js":262}],262:[function(require,module,exports){
 module.exports = hiddenStore;
 
 function hiddenStore(obj, key) {
@@ -47048,7 +48212,7 @@ function hiddenStore(obj, key) {
     return store;
 }
 
-},{}],264:[function(require,module,exports){
+},{}],263:[function(require,module,exports){
 // Original - @Gozola.
 // https://gist.github.com/Gozala/1269991
 // This is a reimplemented version (with a few bug fixes).
@@ -47079,14 +48243,14 @@ function weakMap() {
     }
 }
 
-},{"./create-store.js":262}],265:[function(require,module,exports){
+},{"./create-store.js":261}],264:[function(require,module,exports){
 var getContext = require('get-canvas-context')
 
 module.exports = function getWebGLContext (opt) {
   return getContext('webgl', opt)
 }
 
-},{"get-canvas-context":91}],266:[function(require,module,exports){
+},{"get-canvas-context":91}],265:[function(require,module,exports){
 module.exports = require('cwise-compiler')({
     args: ['array', {
         offset: [1],
@@ -47138,7 +48302,7 @@ module.exports = require('cwise-compiler')({
     funcName: 'zeroCrossings'
 })
 
-},{"cwise-compiler":75}],267:[function(require,module,exports){
+},{"cwise-compiler":75}],266:[function(require,module,exports){
 "use strict"
 
 module.exports = findZeroCrossings
@@ -47151,7 +48315,7 @@ function findZeroCrossings(array, level) {
   core(array.hi(array.shape[0]-1), cross, level)
   return cross
 }
-},{"./lib/zc-core":266}],268:[function(require,module,exports){
+},{"./lib/zc-core":265}],267:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47282,7 +48446,7 @@ module.exports = function handleAnnotationDefaults(annIn, annOut, fullLayout, op
     return annOut;
 };
 
-},{"../../lib":382,"../../plots/cartesian/axes":419,"../../plots/cartesian/constants":424,"../color":279,"./attributes":270}],269:[function(require,module,exports){
+},{"../../lib":381,"../../plots/cartesian/axes":418,"../../plots/cartesian/constants":423,"../color":278,"./attributes":269}],268:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47347,7 +48511,7 @@ module.exports = [
     }
 ];
 
-},{}],270:[function(require,module,exports){
+},{}],269:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47627,7 +48791,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../../plots/cartesian/constants":424,"../../plots/font_attributes":443,"./arrow_paths":269}],271:[function(require,module,exports){
+},{"../../lib/extend":375,"../../plots/cartesian/constants":423,"../../plots/font_attributes":442,"./arrow_paths":268}],270:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47730,7 +48894,7 @@ function annAutorange(gd) {
     });
 }
 
-},{"../../lib":382,"../../plots/cartesian/axes":419,"./draw":275}],272:[function(require,module,exports){
+},{"../../lib":381,"../../plots/cartesian/axes":418,"./draw":274}],271:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47855,7 +49019,7 @@ function getToggleSets(gd, hoverData) {
     return {on: onSet, off: offSet, explicitOff: explicitOffSet};
 }
 
-},{"../../plotly":414}],273:[function(require,module,exports){
+},{"../../plotly":413}],272:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47918,7 +49082,7 @@ module.exports = function convertCoords(gd, ax, newType, doExtra) {
     }
 };
 
-},{"../../lib/to_log_range":402,"fast-isnumeric":87}],274:[function(require,module,exports){
+},{"../../lib/to_log_range":401,"fast-isnumeric":87}],273:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -47943,7 +49107,7 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
     handleArrayContainerDefaults(layoutIn, layoutOut, opts);
 };
 
-},{"../../plots/array_container_defaults":416,"./annotation_defaults":268}],275:[function(require,module,exports){
+},{"../../plots/array_container_defaults":415,"./annotation_defaults":267}],274:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -48629,7 +49793,7 @@ function lineIntersect(x1, y1, x2, y2, x3, y3, x4, y4) {
     return {x: x1 + a * t, y: y1 + d * t};
 }
 
-},{"../../lib":382,"../../lib/setcursor":397,"../../lib/svg_text_utils":401,"../../plotly":414,"../../plots/cartesian/axes":419,"../../plots/cartesian/graph_interact":428,"../../plots/plots":459,"../color":279,"../dragelement":300,"../drawing":303,"./draw_arrow_head":276,"d3":79}],276:[function(require,module,exports){
+},{"../../lib":381,"../../lib/setcursor":396,"../../lib/svg_text_utils":400,"../../plotly":413,"../../plots/cartesian/axes":418,"../../plots/cartesian/graph_interact":427,"../../plots/plots":458,"../color":278,"../dragelement":299,"../drawing":302,"./draw_arrow_head":275,"d3":79}],275:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -48763,7 +49927,7 @@ module.exports = function drawArrowHead(el3, style, ends, mag, standoff) {
     if(doEnd) drawhead(end, endRot);
 };
 
-},{"../color":279,"../drawing":303,"./arrow_paths":269,"d3":79,"fast-isnumeric":87}],277:[function(require,module,exports){
+},{"../color":278,"../drawing":302,"./arrow_paths":268,"d3":79,"fast-isnumeric":87}],276:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -48795,7 +49959,7 @@ module.exports = {
     convertCoords: require('./convert_coords')
 };
 
-},{"./attributes":270,"./calc_autorange":271,"./click":272,"./convert_coords":273,"./defaults":274,"./draw":275}],278:[function(require,module,exports){
+},{"./attributes":269,"./calc_autorange":270,"./click":271,"./convert_coords":272,"./defaults":273,"./draw":274}],277:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -48835,7 +49999,7 @@ exports.borderLine = '#BEC8D9';
 // gives back exactly lightLine if the other colors are defaults.
 exports.lightFraction = 100 * (0xe - 0x4) / (0xf - 0x4);
 
-},{}],279:[function(require,module,exports){
+},{}],278:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -49006,7 +50170,7 @@ function cleanOne(val) {
     return 'rgb(' + rgbStr + ')';
 }
 
-},{"./attributes":278,"fast-isnumeric":87,"tinycolor2":250}],280:[function(require,module,exports){
+},{"./attributes":277,"fast-isnumeric":87,"tinycolor2":249}],279:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -49162,7 +50326,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../../plots/cartesian/layout_attributes":430,"../../plots/font_attributes":443}],281:[function(require,module,exports){
+},{"../../lib/extend":375,"../../plots/cartesian/layout_attributes":429,"../../plots/font_attributes":442}],280:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -49229,7 +50393,7 @@ module.exports = function colorbarDefaults(containerIn, containerOut, layout) {
     coerce('titleside');
 };
 
-},{"../../lib":382,"../../plots/cartesian/tick_label_defaults":437,"../../plots/cartesian/tick_mark_defaults":438,"../../plots/cartesian/tick_value_defaults":439,"./attributes":280}],282:[function(require,module,exports){
+},{"../../lib":381,"../../plots/cartesian/tick_label_defaults":436,"../../plots/cartesian/tick_mark_defaults":437,"../../plots/cartesian/tick_value_defaults":438,"./attributes":279}],281:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -49862,7 +51026,7 @@ module.exports = function draw(gd, id) {
     return component;
 };
 
-},{"../../lib":382,"../../lib/extend":376,"../../lib/setcursor":397,"../../plotly":414,"../../plots/cartesian/axes":419,"../../plots/cartesian/axis_defaults":421,"../../plots/cartesian/layout_attributes":430,"../../plots/cartesian/position_defaults":433,"../../plots/plots":459,"../../registry":467,"../color":279,"../dragelement":300,"../drawing":303,"../titles":356,"./attributes":280,"d3":79,"tinycolor2":250}],283:[function(require,module,exports){
+},{"../../lib":381,"../../lib/extend":375,"../../lib/setcursor":396,"../../plotly":413,"../../plots/cartesian/axes":418,"../../plots/cartesian/axis_defaults":420,"../../plots/cartesian/layout_attributes":429,"../../plots/cartesian/position_defaults":432,"../../plots/plots":458,"../../registry":466,"../color":278,"../dragelement":299,"../drawing":302,"../titles":355,"./attributes":279,"d3":79,"tinycolor2":249}],282:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -49881,7 +51045,7 @@ module.exports = function hasColorbar(container) {
     return Lib.isPlainObject(container.colorbar);
 };
 
-},{"../../lib":382}],284:[function(require,module,exports){
+},{"../../lib":381}],283:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -49936,7 +51100,7 @@ module.exports = {
     }
 };
 
-},{}],285:[function(require,module,exports){
+},{}],284:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50015,7 +51179,7 @@ module.exports = function calc(trace, vals, containerStr, cLetter) {
     }
 };
 
-},{"../../lib":382,"./flip_scale":290,"./scales":297}],286:[function(require,module,exports){
+},{"../../lib":381,"./flip_scale":289,"./scales":296}],285:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50059,7 +51223,7 @@ module.exports = function makeColorScaleAttributes(context) {
     };
 };
 
-},{"../../lib/extend":376,"./attributes":284,"./scales.js":297}],287:[function(require,module,exports){
+},{"../../lib/extend":375,"./attributes":283,"./scales.js":296}],286:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50075,7 +51239,7 @@ var scales = require('./scales');
 
 module.exports = scales.RdBu;
 
-},{"./scales":297}],288:[function(require,module,exports){
+},{"./scales":296}],287:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50139,7 +51303,7 @@ module.exports = function colorScaleDefaults(traceIn, traceOut, layout, coerce, 
     if(showScale) colorbarDefaults(containerIn, containerOut, layout);
 };
 
-},{"../../lib":382,"../colorbar/defaults":281,"../colorbar/has_colorbar":283,"./flip_scale":290,"./is_valid_scale":294,"fast-isnumeric":87}],289:[function(require,module,exports){
+},{"../../lib":381,"../colorbar/defaults":280,"../colorbar/has_colorbar":282,"./flip_scale":289,"./is_valid_scale":293,"fast-isnumeric":87}],288:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50176,7 +51340,7 @@ module.exports = function extractScale(scl, cmin, cmax) {
     };
 };
 
-},{}],290:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50201,7 +51365,7 @@ module.exports = function flipScale(scl) {
     return sclNew;
 };
 
-},{}],291:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50241,7 +51405,7 @@ module.exports = function getScale(scl, dflt) {
     return scl;
 };
 
-},{"./default_scale":287,"./is_valid_scale_array":295,"./scales":297}],292:[function(require,module,exports){
+},{"./default_scale":286,"./is_valid_scale_array":294,"./scales":296}],291:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50287,7 +51451,7 @@ module.exports = function hasColorscale(trace, containerStr) {
     );
 };
 
-},{"../../lib":382,"./is_valid_scale":294,"fast-isnumeric":87}],293:[function(require,module,exports){
+},{"../../lib":381,"./is_valid_scale":293,"fast-isnumeric":87}],292:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50321,7 +51485,7 @@ exports.extractScale = require('./extract_scale');
 
 exports.makeColorScaleFunc = require('./make_color_scale_func');
 
-},{"./attributes":284,"./calc":285,"./default_scale":287,"./defaults":288,"./extract_scale":289,"./flip_scale":290,"./get_scale":291,"./has_colorscale":292,"./is_valid_scale":294,"./make_color_scale_func":296,"./scales":297}],294:[function(require,module,exports){
+},{"./attributes":283,"./calc":284,"./default_scale":286,"./defaults":287,"./extract_scale":288,"./flip_scale":289,"./get_scale":290,"./has_colorscale":291,"./is_valid_scale":293,"./make_color_scale_func":295,"./scales":296}],293:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50342,7 +51506,7 @@ module.exports = function isValidScale(scl) {
     else return isValidScaleArray(scl);
 };
 
-},{"./is_valid_scale_array":295,"./scales":297}],295:[function(require,module,exports){
+},{"./is_valid_scale_array":294,"./scales":296}],294:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50379,7 +51543,7 @@ module.exports = function isValidScaleArray(scl) {
     return true;
 };
 
-},{"tinycolor2":250}],296:[function(require,module,exports){
+},{"tinycolor2":249}],295:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50475,7 +51639,7 @@ function colorArray2rbga(colorArray) {
     return tinycolor(colorObj).toRgbString();
 }
 
-},{"../color":279,"d3":79,"fast-isnumeric":87,"tinycolor2":250}],297:[function(require,module,exports){
+},{"../color":278,"d3":79,"fast-isnumeric":87,"tinycolor2":249}],296:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50606,7 +51770,7 @@ module.exports = {
     ]
 };
 
-},{}],298:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50639,7 +51803,7 @@ module.exports = function align(v, dv, v0, v1, anchor) {
     return vc;
 };
 
-},{}],299:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50677,7 +51841,7 @@ module.exports = function getCursor(x, y, xanchor, yanchor) {
     return cursorset[y][x];
 };
 
-},{"../../lib":382}],300:[function(require,module,exports){
+},{"../../lib":381}],299:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50879,7 +52043,7 @@ function finishDrag(gd) {
     if(gd._replotPending) Plotly.plot(gd);
 }
 
-},{"../../constants/interactions":365,"../../lib":382,"../../plotly":414,"../../plots/cartesian/constants":424,"./align":298,"./cursor":299,"./unhover":301}],301:[function(require,module,exports){
+},{"../../constants/interactions":364,"../../lib":381,"../../plotly":413,"../../plots/cartesian/constants":423,"./align":297,"./cursor":298,"./unhover":300}],300:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50935,7 +52099,7 @@ unhover.raw = function unhoverRaw(gd, evt) {
     }
 };
 
-},{"../../lib/events":375}],302:[function(require,module,exports){
+},{"../../lib/events":374}],301:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -50959,7 +52123,7 @@ exports.dash = {
     
 };
 
-},{}],303:[function(require,module,exports){
+},{}],302:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -51664,7 +52828,7 @@ drawing.measureText = function(tester, text, font) {
     return bbox;
 };
 
-},{"../../constants/xmlns_namespaces":368,"../../lib":382,"../../lib/svg_text_utils":401,"../../registry":467,"../../traces/scatter/make_bubble_size_func":498,"../../traces/scatter/subtypes":503,"../color":279,"../colorscale":293,"./symbol_defs":304,"d3":79,"fast-isnumeric":87}],304:[function(require,module,exports){
+},{"../../constants/xmlns_namespaces":367,"../../lib":381,"../../lib/svg_text_utils":400,"../../registry":466,"../../traces/scatter/make_bubble_size_func":497,"../../traces/scatter/subtypes":502,"../color":278,"../colorscale":292,"./symbol_defs":303,"d3":79,"fast-isnumeric":87}],303:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52140,7 +53304,7 @@ module.exports = {
     }
 };
 
-},{"d3":79}],305:[function(require,module,exports){
+},{"d3":79}],304:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52239,7 +53403,7 @@ module.exports = {
     }
 };
 
-},{}],306:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52302,7 +53466,7 @@ function calcOneAxis(calcTrace, trace, axis, coord) {
     Axes.expand(axis, vals, {padded: true});
 }
 
-},{"../../plots/cartesian/axes":419,"../../registry":467,"./compute_error":307,"fast-isnumeric":87}],307:[function(require,module,exports){
+},{"../../plots/cartesian/axes":418,"../../registry":466,"./compute_error":306,"fast-isnumeric":87}],306:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52398,7 +53562,7 @@ function makeComputeErrorValue(type, value) {
     }
 }
 
-},{}],308:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52475,7 +53639,7 @@ module.exports = function(traceIn, traceOut, defaultColor, opts) {
     }
 };
 
-},{"../../lib":382,"../../registry":467,"./attributes":305,"fast-isnumeric":87}],309:[function(require,module,exports){
+},{"../../lib":381,"../../registry":466,"./attributes":304,"fast-isnumeric":87}],308:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52534,7 +53698,7 @@ errorBars.hoverInfo = function(calcPoint, trace, hoverPoint) {
     }
 };
 
-},{"./attributes":305,"./calc":306,"./defaults":308,"./plot":310,"./style":311}],310:[function(require,module,exports){
+},{"./attributes":304,"./calc":305,"./defaults":307,"./plot":309,"./style":310}],309:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52698,7 +53862,7 @@ function errorCoords(d, xa, ya) {
     return out;
 }
 
-},{"../../traces/scatter/subtypes":503,"d3":79,"fast-isnumeric":87}],311:[function(require,module,exports){
+},{"../../traces/scatter/subtypes":502,"d3":79,"fast-isnumeric":87}],310:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52735,7 +53899,7 @@ module.exports = function style(traces) {
     });
 };
 
-},{"../color":279,"d3":79}],312:[function(require,module,exports){
+},{"../color":278,"d3":79}],311:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52857,7 +54021,7 @@ module.exports = {
     }
 };
 
-},{"../../plots/cartesian/constants":424}],313:[function(require,module,exports){
+},{"../../plots/cartesian/constants":423}],312:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -52940,7 +54104,7 @@ module.exports = function convertCoords(gd, ax, newType, doExtra) {
     }
 };
 
-},{"../../lib/to_log_range":402,"fast-isnumeric":87}],314:[function(require,module,exports){
+},{"../../lib/to_log_range":401,"fast-isnumeric":87}],313:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53001,7 +54165,7 @@ function imageDefaults(imageIn, imageOut, fullLayout) {
     return imageOut;
 }
 
-},{"../../lib":382,"../../plots/array_container_defaults":416,"../../plots/cartesian/axes":419,"./attributes":312}],315:[function(require,module,exports){
+},{"../../lib":381,"../../plots/array_container_defaults":415,"../../plots/cartesian/axes":418,"./attributes":311}],314:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53218,7 +54382,7 @@ module.exports = function draw(gd) {
     }
 };
 
-},{"../../constants/xmlns_namespaces":368,"../../plots/cartesian/axes":419,"../drawing":303,"d3":79}],316:[function(require,module,exports){
+},{"../../constants/xmlns_namespaces":367,"../../plots/cartesian/axes":418,"../drawing":302,"d3":79}],315:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53241,7 +54405,7 @@ module.exports = {
     convertCoords: require('./convert_coords')
 };
 
-},{"./attributes":312,"./convert_coords":313,"./defaults":314,"./draw":315}],317:[function(require,module,exports){
+},{"./attributes":311,"./convert_coords":312,"./defaults":313,"./draw":314}],316:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53290,7 +54454,7 @@ exports.isMiddleAnchor = function isMiddleAnchor(opts) {
     );
 };
 
-},{}],318:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53381,7 +54545,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../../plots/font_attributes":443,"../color/attributes":278}],319:[function(require,module,exports){
+},{"../../lib/extend":375,"../../plots/font_attributes":442,"../color/attributes":277}],318:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53399,7 +54563,7 @@ module.exports = {
     scrollBarMargin: 4
 };
 
-},{}],320:[function(require,module,exports){
+},{}],319:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -53492,7 +54656,7 @@ module.exports = function legendDefaults(layoutIn, layoutOut, fullData) {
     Lib.noneOrAll(containerIn, containerOut, ['x', 'y']);
 };
 
-},{"../../lib":382,"../../plots/layout_attributes":457,"../../registry":467,"./attributes":318,"./helpers":323}],321:[function(require,module,exports){
+},{"../../lib":381,"../../plots/layout_attributes":456,"../../registry":466,"./attributes":317,"./helpers":322}],320:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -54318,7 +55482,7 @@ function expandHorizontalMargin(gd) {
     });
 }
 
-},{"../../constants/interactions":365,"../../lib":382,"../../lib/svg_text_utils":401,"../../plotly":414,"../../plots/plots":459,"../../registry":467,"../color":279,"../dragelement":300,"../drawing":303,"./anchor_utils":317,"./constants":319,"./get_legend_data":322,"./helpers":323,"./style":325,"d3":79}],322:[function(require,module,exports){
+},{"../../constants/interactions":364,"../../lib":381,"../../lib/svg_text_utils":400,"../../plotly":413,"../../plots/plots":458,"../../registry":466,"../color":278,"../dragelement":299,"../drawing":302,"./anchor_utils":316,"./constants":318,"./get_legend_data":321,"./helpers":322,"./style":324,"d3":79}],321:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -54423,7 +55587,7 @@ module.exports = function getLegendData(calcdata, opts) {
     return legendData;
 };
 
-},{"../../registry":467,"./helpers":323}],323:[function(require,module,exports){
+},{"../../registry":466,"./helpers":322}],322:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -54454,7 +55618,7 @@ exports.isReversed = function isReversed(legendLayout) {
     return (legendLayout.traceorder || '').indexOf('reversed') !== -1;
 };
 
-},{"../../registry":467}],324:[function(require,module,exports){
+},{"../../registry":466}],323:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -54478,7 +55642,7 @@ module.exports = {
     style: require('./style')
 };
 
-},{"./attributes":318,"./defaults":320,"./draw":321,"./style":325}],325:[function(require,module,exports){
+},{"./attributes":317,"./defaults":319,"./draw":320,"./style":324}],324:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -54711,7 +55875,7 @@ function stylePies(d) {
     if(pts.size()) pts.call(stylePie, d[0], trace);
 }
 
-},{"../../lib":382,"../../registry":467,"../../traces/pie/style_one":481,"../../traces/scatter/subtypes":503,"../color":279,"../drawing":303,"d3":79}],326:[function(require,module,exports){
+},{"../../lib":381,"../../registry":466,"../../traces/pie/style_one":480,"../../traces/scatter/subtypes":502,"../color":278,"../drawing":302,"d3":79}],325:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -54761,24 +55925,24 @@ var modeBarButtons = module.exports = {};
 
 modeBarButtons.toImage = {
     name: 'toImage',
-    title: 'Download plot as a png',
+    title: _lang.print_png,
     icon: Icons.camera,
     click: function(gd) {
         var format = 'png';
 
-        Lib.notifier('Taking snapshot - this may take a few seconds', 'long');
+        Lib.notifier(_lang.taking_snapshot, 'long');
 
         if(Lib.isIE()) {
-            Lib.notifier('IE only supports svg.  Changing format to svg.', 'long');
+            Lib.notifier(_lang.png_impossible, 'long');
             format = 'svg';
         }
 
         downloadImage(gd, {'format': format})
           .then(function(filename) {
-              Lib.notifier('Snapshot succeeded - ' + filename, 'long');
+                    Lib.notifier(_lang.snapshot);
           })
           .catch(function() {
-              Lib.notifier('Sorry there was a problem downloading your snapshot!', 'long');
+                    Lib.notifier(_lang.snapshot_error, 'long');
           });
     }
 };
@@ -54788,13 +55952,13 @@ modeBarButtons.sendDataToCloud = {
     title: 'Save and edit plot in cloud',
     icon: Icons.disk,
     click: function(gd) {
-        Plots.sendDataToCloud(gd);
+        //Plotly.Plots.sendDataToCloud(gd);
     }
 };
 
 modeBarButtons.zoom2d = {
     name: 'zoom2d',
-    title: 'Zoom',
+    title: _lang.zoom,
     attr: 'dragmode',
     val: 'zoom',
     icon: Icons.zoombox,
@@ -54803,7 +55967,7 @@ modeBarButtons.zoom2d = {
 
 modeBarButtons.pan2d = {
     name: 'pan2d',
-    title: 'Pan',
+    title: _lang.pan,
     attr: 'dragmode',
     val: 'pan',
     icon: Icons.pan,
@@ -54812,7 +55976,7 @@ modeBarButtons.pan2d = {
 
 modeBarButtons.select2d = {
     name: 'select2d',
-    title: 'Box Select',
+    title: _lang.box_selected,
     attr: 'dragmode',
     val: 'select',
     icon: Icons.selectbox,
@@ -54821,7 +55985,7 @@ modeBarButtons.select2d = {
 
 modeBarButtons.lasso2d = {
     name: 'lasso2d',
-    title: 'Lasso Select',
+    title: _lang.lasso_select,
     attr: 'dragmode',
     val: 'lasso',
     icon: Icons.lasso,
@@ -54830,7 +55994,7 @@ modeBarButtons.lasso2d = {
 
 modeBarButtons.zoomIn2d = {
     name: 'zoomIn2d',
-    title: 'Zoom in',
+    title: _lang.zoom_in,
     attr: 'zoom',
     val: 'in',
     icon: Icons.zoom_plus,
@@ -54839,7 +56003,7 @@ modeBarButtons.zoomIn2d = {
 
 modeBarButtons.zoomOut2d = {
     name: 'zoomOut2d',
-    title: 'Zoom out',
+    title: _lang.zoom_out,
     attr: 'zoom',
     val: 'out',
     icon: Icons.zoom_minus,
@@ -54848,7 +56012,7 @@ modeBarButtons.zoomOut2d = {
 
 modeBarButtons.autoScale2d = {
     name: 'autoScale2d',
-    title: 'Autoscale',
+    title: _lang.autoscale,
     attr: 'zoom',
     val: 'auto',
     icon: Icons.autoscale,
@@ -54857,7 +56021,7 @@ modeBarButtons.autoScale2d = {
 
 modeBarButtons.resetScale2d = {
     name: 'resetScale2d',
-    title: 'Reset axes',
+    title: _lang.reset_axes,
     attr: 'zoom',
     val: 'reset',
     icon: Icons.home,
@@ -54866,7 +56030,7 @@ modeBarButtons.resetScale2d = {
 
 modeBarButtons.hoverClosestCartesian = {
     name: 'hoverClosestCartesian',
-    title: 'Show closest data on hover',
+    title: _lang.show_closest_data_on_hover,
     attr: 'hovermode',
     val: 'closest',
     icon: Icons.tooltip_basic,
@@ -54876,7 +56040,7 @@ modeBarButtons.hoverClosestCartesian = {
 
 modeBarButtons.hoverCompareCartesian = {
     name: 'hoverCompareCartesian',
-    title: 'Compare data on hover',
+    title: _lang.compare_data_on_hover,
     attr: 'hovermode',
     val: function(gd) {
         return gd._fullLayout._isHoriz ? 'y' : 'x';
@@ -55289,7 +56453,7 @@ function setSpikelineVisibility(gd) {
     return aobj;
 }
 
-},{"../../../build/ploticon":2,"../../lib":382,"../../plotly":414,"../../plots/cartesian/axes":419,"../../plots/plots":459,"../../snapshot/download":469}],327:[function(require,module,exports){
+},{"../../../build/ploticon":2,"../../lib":381,"../../plotly":413,"../../plots/cartesian/axes":418,"../../plots/plots":458,"../../snapshot/download":468}],326:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -55303,7 +56467,7 @@ function setSpikelineVisibility(gd) {
 
 exports.manage = require('./manage');
 
-},{"./manage":328}],328:[function(require,module,exports){
+},{"./manage":327}],327:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -55531,7 +56695,7 @@ function fillCustomButton(customButtons) {
     return customButtons;
 }
 
-},{"../../plots/cartesian/axes":419,"../../traces/scatter/subtypes":503,"./buttons":326,"./modebar":329}],329:[function(require,module,exports){
+},{"../../plots/cartesian/axes":418,"../../traces/scatter/subtypes":502,"./buttons":325,"./modebar":328}],328:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -55825,7 +56989,7 @@ function createModeBar(gd, buttons) {
 
 module.exports = createModeBar;
 
-},{"../../../build/ploticon":2,"../../lib":382,"d3":79}],330:[function(require,module,exports){
+},{"../../../build/ploticon":2,"../../lib":381,"d3":79}],329:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -55915,7 +57079,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../../plots/font_attributes":443,"../color/attributes":278,"./button_attributes":331}],331:[function(require,module,exports){
+},{"../../lib/extend":375,"../../plots/font_attributes":442,"../color/attributes":277,"./button_attributes":330}],330:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -55956,7 +57120,7 @@ module.exports = {
     }
 };
 
-},{}],332:[function(require,module,exports){
+},{}],331:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -55985,7 +57149,7 @@ module.exports = {
     darkAmount: 10
 };
 
-},{}],333:[function(require,module,exports){
+},{}],332:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56084,7 +57248,7 @@ function getPosDflt(containerOut, layout, counterAxes) {
     return [containerOut.domain[0], posY + constants.yPad];
 }
 
-},{"../../lib":382,"../color":279,"./attributes":330,"./button_attributes":331,"./constants":332}],334:[function(require,module,exports){
+},{"../../lib":381,"../color":278,"./attributes":329,"./button_attributes":330,"./constants":331}],333:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56359,7 +57523,7 @@ function reposition(gd, buttons, opts, axName) {
     });
 }
 
-},{"../../lib/svg_text_utils":401,"../../plotly":414,"../../plots/cartesian/axis_ids":422,"../../plots/plots":459,"../color":279,"../drawing":303,"../legend/anchor_utils":317,"./constants":332,"./get_update_object":335,"d3":79}],335:[function(require,module,exports){
+},{"../../lib/svg_text_utils":400,"../../plotly":413,"../../plots/cartesian/axis_ids":421,"../../plots/plots":458,"../color":278,"../drawing":302,"../legend/anchor_utils":316,"./constants":331,"./get_update_object":334,"d3":79}],334:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56416,7 +57580,7 @@ function getXRange(axisLayout, buttonLayout) {
     return [range0, range1];
 }
 
-},{"d3":79}],336:[function(require,module,exports){
+},{"d3":79}],335:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56443,7 +57607,7 @@ module.exports = {
     draw: require('./draw')
 };
 
-},{"./attributes":330,"./defaults":333,"./draw":334}],337:[function(require,module,exports){
+},{"./attributes":329,"./defaults":332,"./draw":333}],336:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56507,7 +57671,7 @@ module.exports = {
     }
 };
 
-},{"../color/attributes":278}],338:[function(require,module,exports){
+},{"../color/attributes":277}],337:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56543,7 +57707,7 @@ module.exports = function calcAutorange(gd) {
     }
 };
 
-},{"../../plots/cartesian/axes":419,"./constants":339}],339:[function(require,module,exports){
+},{"../../plots/cartesian/axes":418,"./constants":338}],338:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56595,7 +57759,7 @@ module.exports = {
     extraPad: 15
 };
 
-},{}],340:[function(require,module,exports){
+},{}],339:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -56652,7 +57816,7 @@ module.exports = function handleDefaults(layoutIn, layoutOut, axName) {
     containerOut._input = containerIn;
 };
 
-},{"../../lib":382,"./attributes":337}],341:[function(require,module,exports){
+},{"../../lib":381,"./attributes":336}],340:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57203,7 +58367,7 @@ function clearPushMargins(gd) {
     }
 }
 
-},{"../../lib":382,"../../lib/setcursor":397,"../../plotly":414,"../../plots/cartesian":429,"../../plots/cartesian/axes":419,"../../plots/plots":459,"../color":279,"../dragelement":300,"../drawing":303,"./constants":339,"d3":79}],342:[function(require,module,exports){
+},{"../../lib":381,"../../lib/setcursor":396,"../../plotly":413,"../../plots/cartesian":428,"../../plots/cartesian/axes":418,"../../plots/plots":458,"../color":278,"../dragelement":299,"../drawing":302,"./constants":338,"d3":79}],341:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57230,7 +58394,7 @@ module.exports = {
     draw: require('./draw')
 };
 
-},{"./attributes":337,"./calc_autorange":338,"./defaults":340,"./draw":341}],343:[function(require,module,exports){
+},{"./attributes":336,"./calc_autorange":337,"./defaults":339,"./draw":340}],342:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57327,7 +58491,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../../traces/scatter/attributes":483,"../annotations/attributes":270,"../drawing/attributes":302}],344:[function(require,module,exports){
+},{"../../lib/extend":375,"../../traces/scatter/attributes":482,"../annotations/attributes":269,"../drawing/attributes":301}],343:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57404,7 +58568,7 @@ function shapeBounds(ax, v0, v1, path, paramsToUse) {
     if(max >= min) return [min, max];
 }
 
-},{"../../lib":382,"../../plots/cartesian/axes":419,"./constants":345,"./helpers":348}],345:[function(require,module,exports){
+},{"../../lib":381,"../../plots/cartesian/axes":418,"./constants":344,"./helpers":347}],344:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57468,7 +58632,7 @@ module.exports = {
     }
 };
 
-},{}],346:[function(require,module,exports){
+},{}],345:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57493,7 +58657,7 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
     handleArrayContainerDefaults(layoutIn, layoutOut, opts);
 };
 
-},{"../../plots/array_container_defaults":416,"./shape_defaults":350}],347:[function(require,module,exports){
+},{"../../plots/array_container_defaults":415,"./shape_defaults":349}],346:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57868,7 +59032,7 @@ function movePath(pathIn, moveX, moveY) {
     });
 }
 
-},{"../../lib":382,"../../lib/setcursor":397,"../../plotly":414,"../../plots/cartesian/axes":419,"../color":279,"../dragelement":300,"../drawing":303,"./constants":345,"./helpers":348}],348:[function(require,module,exports){
+},{"../../lib":381,"../../lib/setcursor":396,"../../plotly":413,"../../plots/cartesian/axes":418,"../color":278,"../dragelement":299,"../drawing":302,"./constants":344,"./helpers":347}],347:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57949,7 +59113,7 @@ exports.getPixelToData = function(gd, axis, isVertical) {
     return pixelToData;
 };
 
-},{}],349:[function(require,module,exports){
+},{}],348:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -57975,7 +59139,7 @@ module.exports = {
     drawOne: drawModule.drawOne
 };
 
-},{"./attributes":343,"./calc_autorange":344,"./defaults":346,"./draw":347}],350:[function(require,module,exports){
+},{"./attributes":342,"./calc_autorange":343,"./defaults":345,"./draw":346}],349:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -58074,7 +59238,7 @@ module.exports = function handleShapeDefaults(shapeIn, shapeOut, fullLayout, opt
     return shapeOut;
 };
 
-},{"../../lib":382,"../../plots/cartesian/axes":419,"./attributes":343,"./helpers":348}],351:[function(require,module,exports){
+},{"../../lib":381,"../../plots/cartesian/axes":418,"./attributes":342,"./helpers":347}],350:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -58308,7 +59472,7 @@ module.exports = {
     },
 };
 
-},{"../../lib/extend":376,"../../plots/animation_attributes":415,"../../plots/font_attributes":443,"../../plots/pad_attributes":458,"./constants":352}],352:[function(require,module,exports){
+},{"../../lib/extend":375,"../../plots/animation_attributes":414,"../../plots/font_attributes":442,"../../plots/pad_attributes":457,"./constants":351}],351:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -58405,7 +59569,7 @@ module.exports = {
     currentValueInset: 0,
 };
 
-},{}],353:[function(require,module,exports){
+},{}],352:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -58518,7 +59682,7 @@ function stepsDefaults(sliderIn, sliderOut) {
     return valuesOut;
 }
 
-},{"../../lib":382,"../../plots/array_container_defaults":416,"./attributes":351,"./constants":352}],354:[function(require,module,exports){
+},{"../../lib":381,"../../plots/array_container_defaults":415,"./attributes":350,"./constants":351}],353:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -59120,7 +60284,7 @@ function clearPushMargins(gd) {
     }
 }
 
-},{"../../lib/svg_text_utils":401,"../../plots/plots":459,"../color":279,"../drawing":303,"../legend/anchor_utils":317,"./constants":352,"d3":79}],355:[function(require,module,exports){
+},{"../../lib/svg_text_utils":400,"../../plots/plots":458,"../color":278,"../drawing":302,"../legend/anchor_utils":316,"./constants":351,"d3":79}],354:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -59143,7 +60307,7 @@ module.exports = {
     draw: require('./draw')
 };
 
-},{"./attributes":351,"./constants":352,"./defaults":353,"./draw":354}],356:[function(require,module,exports){
+},{"./attributes":350,"./constants":351,"./defaults":352,"./draw":353}],355:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -59376,7 +60540,7 @@ Titles.draw = function(gd, titleClass, options) {
     el.classed('js-placeholder', isplaceholder);
 };
 
-},{"../../constants/interactions":365,"../../lib":382,"../../lib/svg_text_utils":401,"../../plotly":414,"../../plots/plots":459,"../color":279,"../drawing":303,"d3":79,"fast-isnumeric":87}],357:[function(require,module,exports){
+},{"../../constants/interactions":364,"../../lib":381,"../../lib/svg_text_utils":400,"../../plotly":413,"../../plots/plots":458,"../color":278,"../drawing":302,"d3":79,"fast-isnumeric":87}],356:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -59523,7 +60687,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../../plots/font_attributes":443,"../../plots/pad_attributes":458,"../color/attributes":278}],358:[function(require,module,exports){
+},{"../../lib/extend":375,"../../plots/font_attributes":442,"../../plots/pad_attributes":457,"../color/attributes":277}],357:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -59599,7 +60763,7 @@ module.exports = {
     hoverColor: '#F4FAFF'
 };
 
-},{}],359:[function(require,module,exports){
+},{}],358:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -59693,7 +60857,7 @@ function buttonsDefaults(menuIn, menuOut) {
     return buttonsOut;
 }
 
-},{"../../lib":382,"../../plots/array_container_defaults":416,"./attributes":357,"./constants":358}],360:[function(require,module,exports){
+},{"../../lib":381,"../../plots/array_container_defaults":415,"./attributes":356,"./constants":357}],359:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -60373,9 +61537,9 @@ function clearPushMargins(gd) {
     }
 }
 
-},{"../../lib/svg_text_utils":401,"../../plots/plots":459,"../color":279,"../drawing":303,"../legend/anchor_utils":317,"./constants":358,"./scrollbox":362,"d3":79}],361:[function(require,module,exports){
-arguments[4][355][0].apply(exports,arguments)
-},{"./attributes":357,"./constants":358,"./defaults":359,"./draw":360,"dup":355}],362:[function(require,module,exports){
+},{"../../lib/svg_text_utils":400,"../../plots/plots":458,"../color":278,"../drawing":302,"../legend/anchor_utils":316,"./constants":357,"./scrollbox":361,"d3":79}],360:[function(require,module,exports){
+arguments[4][354][0].apply(exports,arguments)
+},{"./attributes":356,"./constants":357,"./defaults":358,"./draw":359,"dup":354}],361:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -60846,7 +62010,7 @@ ScrollBox.prototype.setTranslate = function setTranslate(translateX, translateY)
     }
 };
 
-},{"../../lib":382,"../color":279,"../drawing":303,"d3":79}],363:[function(require,module,exports){
+},{"../../lib":381,"../color":278,"../drawing":302,"d3":79}],362:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -60867,7 +62031,7 @@ module.exports = {
     longdashdot: [[0.5, 0.7, 0.8, 1], 10]
 };
 
-},{}],364:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -60890,7 +62054,7 @@ module.exports = {
     x: '❌'
 };
 
-},{}],365:[function(require,module,exports){
+},{}],364:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -60914,7 +62078,7 @@ module.exports = {
     DBLCLICKDELAY: 300
 };
 
-},{}],366:[function(require,module,exports){
+},{}],365:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -60967,7 +62131,7 @@ module.exports = {
     ALMOST_EQUAL: 1 - 1e-6
 };
 
-},{}],367:[function(require,module,exports){
+},{}],366:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -61005,7 +62169,7 @@ module.exports = {
 
 };
 
-},{}],368:[function(require,module,exports){
+},{}],367:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -61029,7 +62193,7 @@ exports.svgAttrs = {
     'xmlns:xlink': exports.xlink
 };
 
-},{}],369:[function(require,module,exports){
+},{}],368:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -61108,7 +62272,7 @@ exports.Queue = require('./lib/queue');
 // export d3 used in the bundle
 exports.d3 = require('d3');
 
-},{"../build/plotcss":1,"../build/ploticon":2,"./components/annotations":277,"./components/images":316,"./components/legend":324,"./components/rangeselector":336,"./components/rangeslider":342,"./components/shapes":349,"./components/sliders":355,"./components/updatemenus":361,"./fonts/mathjax_config":370,"./lib/queue":394,"./plot_api/plot_schema":408,"./plot_api/register":409,"./plot_api/set_plot_config":410,"./plot_api/to_image":412,"./plot_api/validate":413,"./plotly":414,"./snapshot":472,"./snapshot/download":469,"./traces/scatter":493,"d3":79,"es6-promise":84}],370:[function(require,module,exports){
+},{"../build/plotcss":1,"../build/ploticon":2,"./components/annotations":276,"./components/images":315,"./components/legend":323,"./components/rangeselector":335,"./components/rangeslider":341,"./components/shapes":348,"./components/sliders":354,"./components/updatemenus":360,"./fonts/mathjax_config":369,"./lib/queue":393,"./plot_api/plot_schema":407,"./plot_api/register":408,"./plot_api/set_plot_config":409,"./plot_api/to_image":411,"./plot_api/validate":412,"./plotly":413,"./snapshot":471,"./snapshot/download":468,"./traces/scatter":492,"d3":79,"es6-promise":84}],369:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -61141,7 +62305,7 @@ if(typeof MathJax !== 'undefined') {
     exports.MathJax = false;
 }
 
-},{}],371:[function(require,module,exports){
+},{}],370:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -61174,7 +62338,7 @@ module.exports = function cleanNumber(v) {
     return BADNUM;
 };
 
-},{"../constants/numerical":366,"fast-isnumeric":87}],372:[function(require,module,exports){
+},{"../constants/numerical":365,"fast-isnumeric":87}],371:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -61485,7 +62649,7 @@ exports.validate = function(value, opts) {
     return out !== failed;
 };
 
-},{"../components/colorscale/get_scale":291,"../components/colorscale/scales":297,"./nested_property":388,"fast-isnumeric":87,"tinycolor2":250}],373:[function(require,module,exports){
+},{"../components/colorscale/get_scale":290,"../components/colorscale/scales":296,"./nested_property":387,"fast-isnumeric":87,"tinycolor2":249}],372:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62113,7 +63277,7 @@ exports.findExactDates = function(data, calendar) {
     };
 };
 
-},{"../constants/numerical":366,"../registry":467,"./loggers":385,"./mod":387,"d3":79,"fast-isnumeric":87}],374:[function(require,module,exports){
+},{"../constants/numerical":365,"../registry":466,"./loggers":384,"./mod":386,"d3":79,"fast-isnumeric":87}],373:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62142,7 +63306,7 @@ module.exports = function ensureArray(out, n) {
     return out;
 };
 
-},{}],375:[function(require,module,exports){
+},{}],374:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62308,7 +63472,7 @@ var Events = {
 
 module.exports = Events;
 
-},{"events":85}],376:[function(require,module,exports){
+},{"events":85}],375:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62422,7 +63586,7 @@ function _extend(inputs, isDeep, keepAllKeys, noArrayCopies) {
     return target;
 }
 
-},{"./is_plain_object.js":384}],377:[function(require,module,exports){
+},{"./is_plain_object.js":383}],376:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62473,7 +63637,7 @@ module.exports = function filterUnique(array) {
     return out;
 };
 
-},{}],378:[function(require,module,exports){
+},{}],377:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62504,7 +63668,7 @@ module.exports = function filterVisible(container) {
     return out;
 };
 
-},{}],379:[function(require,module,exports){
+},{}],378:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62592,7 +63756,7 @@ function formatColor(containerIn, opacityIn, len) {
 
 module.exports = formatColor;
 
-},{"../components/color/attributes":278,"../components/colorscale":293,"color-rgba":62,"fast-isnumeric":87}],380:[function(require,module,exports){
+},{"../components/color/attributes":277,"../components/colorscale":292,"color-rgba":62,"fast-isnumeric":87}],379:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62661,7 +63825,7 @@ function convertHTMLToUnicode(html) {
 
 module.exports = convertHTMLToUnicode;
 
-},{"../constants/string_mappings":367,"superscript-text":248}],381:[function(require,module,exports){
+},{"../constants/string_mappings":366,"superscript-text":247}],380:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -62677,7 +63841,7 @@ module.exports = convertHTMLToUnicode;
 
 module.exports = function identity(d) { return d; };
 
-},{}],382:[function(require,module,exports){
+},{}],381:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63318,7 +64482,7 @@ lib.numSeparate = function(value, separators, separatethousands) {
     return x1 + x2;
 };
 
-},{"./clean_number":371,"./coerce":372,"./dates":373,"./ensure_array":374,"./extend":376,"./filter_unique":377,"./filter_visible":378,"./identity":381,"./is_array":383,"./is_plain_object":384,"./loggers":385,"./matrix":386,"./mod":387,"./nested_property":388,"./noop":389,"./notifier":390,"./push_unique":393,"./relink_private":395,"./search":396,"./stats":399,"./to_log_range":402,"d3":79}],383:[function(require,module,exports){
+},{"./clean_number":370,"./coerce":371,"./dates":372,"./ensure_array":373,"./extend":375,"./filter_unique":376,"./filter_visible":377,"./identity":380,"./is_array":382,"./is_plain_object":383,"./loggers":384,"./matrix":385,"./mod":386,"./nested_property":387,"./noop":388,"./notifier":389,"./push_unique":392,"./relink_private":394,"./search":395,"./stats":398,"./to_log_range":401,"d3":79}],382:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63342,7 +64506,7 @@ module.exports = function isArray(a) {
     return Array.isArray(a) || ab.isView(a);
 };
 
-},{}],384:[function(require,module,exports){
+},{}],383:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63371,7 +64535,7 @@ module.exports = function isPlainObject(obj) {
     );
 };
 
-},{}],385:[function(require,module,exports){
+},{}],384:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63445,7 +64609,7 @@ function apply(f, args) {
     }
 }
 
-},{"../plot_api/plot_config":407}],386:[function(require,module,exports){
+},{"../plot_api/plot_config":406}],385:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63555,7 +64719,7 @@ exports.apply2DTransform2 = function(transform) {
     };
 };
 
-},{}],387:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63575,7 +64739,7 @@ module.exports = function mod(v, d) {
     return out < 0 ? out + d : out;
 };
 
-},{}],388:[function(require,module,exports){
+},{}],387:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63879,7 +65043,7 @@ function badContainer(container, propStr, propParts) {
     };
 }
 
-},{"../plot_api/container_array_match":403,"./is_array":383,"./is_plain_object":384,"fast-isnumeric":87}],389:[function(require,module,exports){
+},{"../plot_api/container_array_match":402,"./is_array":382,"./is_plain_object":383,"fast-isnumeric":87}],388:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63895,7 +65059,7 @@ function badContainer(container, propStr, propParts) {
 
 module.exports = function noop() {};
 
-},{}],390:[function(require,module,exports){
+},{}],389:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -63977,7 +65141,7 @@ module.exports = function(text, displayLength) {
         });
 };
 
-},{"d3":79,"fast-isnumeric":87}],391:[function(require,module,exports){
+},{"d3":79,"fast-isnumeric":87}],390:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64026,7 +65190,7 @@ module.exports = function overrideCursor(el3, csr) {
     }
 };
 
-},{"./setcursor":397}],392:[function(require,module,exports){
+},{"./setcursor":396}],391:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64266,7 +65430,7 @@ polygon.filter = function filter(pts, tolerance) {
     };
 };
 
-},{"./matrix":386}],393:[function(require,module,exports){
+},{"./matrix":385}],392:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64304,7 +65468,7 @@ module.exports = function pushUnique(array, item) {
     return array;
 };
 
-},{}],394:[function(require,module,exports){
+},{}],393:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64515,7 +65679,7 @@ queue.plotDo = function(gd, func, args) {
 
 module.exports = queue;
 
-},{"../lib":382,"../plot_api/plot_config":407}],395:[function(require,module,exports){
+},{"../lib":381,"../plot_api/plot_config":406}],394:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64572,7 +65736,7 @@ module.exports = function relinkPrivateKeys(toContainer, fromContainer) {
     }
 };
 
-},{"./is_array":383,"./is_plain_object":384}],396:[function(require,module,exports){
+},{"./is_array":382,"./is_plain_object":383}],395:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64683,7 +65847,7 @@ exports.roundUp = function(val, arrayIn, reverse) {
     return arrayIn[low];
 };
 
-},{"./loggers":385,"fast-isnumeric":87}],397:[function(require,module,exports){
+},{"./loggers":384,"fast-isnumeric":87}],396:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64706,7 +65870,7 @@ module.exports = function setCursor(el3, csr) {
     if(csr) el3.classed('cursor-' + csr, true);
 };
 
-},{}],398:[function(require,module,exports){
+},{}],397:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64755,7 +65919,7 @@ module.exports = function showWebGlMsg(scene) {
     return false;
 };
 
-},{"../components/color":279}],399:[function(require,module,exports){
+},{"../components/color":278}],398:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64851,7 +66015,7 @@ exports.interp = function(arr, n) {
     return frac * arr[Math.ceil(n)] + (1 - frac) * arr[Math.floor(n)];
 };
 
-},{"fast-isnumeric":87}],400:[function(require,module,exports){
+},{"fast-isnumeric":87}],399:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -64872,7 +66036,7 @@ function str2RgbaArray(color) {
 
 module.exports = str2RgbaArray;
 
-},{"color-rgba":62}],401:[function(require,module,exports){
+},{"color-rgba":62}],400:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -65415,7 +66579,7 @@ exports.makeEditable = function(context, _delegate, options) {
     return d3.rebind(this, dispatch, 'on');
 };
 
-},{"../constants/string_mappings":367,"../constants/xmlns_namespaces":368,"../lib":382,"d3":79}],402:[function(require,module,exports){
+},{"../constants/string_mappings":366,"../constants/xmlns_namespaces":367,"../lib":381,"d3":79}],401:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -65443,7 +66607,7 @@ module.exports = function toLogRange(val, range) {
     return newVal;
 };
 
-},{"fast-isnumeric":87}],403:[function(require,module,exports){
+},{"fast-isnumeric":87}],402:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -65501,7 +66665,7 @@ module.exports = function containerArrayMatch(astr) {
     return {array: arrayStr, index: Number(match[1]), property: match[3] || ''};
 };
 
-},{"../registry":467}],404:[function(require,module,exports){
+},{"../registry":466}],403:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -66022,7 +67186,7 @@ exports.hasParent = function(aobj, attr) {
     return false;
 };
 
-},{"../components/color":279,"../lib":382,"../plots/cartesian/axes":419,"../plots/plots":459,"../registry":467,"fast-isnumeric":87,"gl-mat4/fromQuat":114}],405:[function(require,module,exports){
+},{"../components/color":278,"../lib":381,"../plots/cartesian/axes":418,"../plots/plots":458,"../registry":466,"fast-isnumeric":87,"gl-mat4/fromQuat":114}],404:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -66236,7 +67400,7 @@ exports.applyContainerArrayChanges = function applyContainerArrayChanges(gd, np,
     return true;
 };
 
-},{"../lib/is_plain_object":384,"../lib/loggers":385,"../lib/nested_property":388,"../lib/noop":389,"../lib/search":396,"../registry":467,"./container_array_match":403}],406:[function(require,module,exports){
+},{"../lib/is_plain_object":383,"../lib/loggers":384,"../lib/nested_property":387,"../lib/noop":388,"../lib/search":395,"../registry":466,"./container_array_match":402}],405:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -69252,7 +70416,7 @@ function makePlotFramework(gd) {
     gd.emit('plotly_framework');
 }
 
-},{"../components/drawing":303,"../components/errorbars":309,"../constants/xmlns_namespaces":368,"../lib":382,"../lib/events":375,"../lib/queue":394,"../lib/svg_text_utils":401,"../plotly":414,"../plots/cartesian/axis_ids":422,"../plots/cartesian/constants":424,"../plots/cartesian/constraints":426,"../plots/cartesian/graph_interact":428,"../plots/plots":459,"../plots/polar":462,"../registry":467,"./helpers":404,"./manage_arrays":405,"./subroutines":411,"d3":79,"fast-isnumeric":87}],407:[function(require,module,exports){
+},{"../components/drawing":302,"../components/errorbars":308,"../constants/xmlns_namespaces":367,"../lib":381,"../lib/events":374,"../lib/queue":393,"../lib/svg_text_utils":400,"../plotly":413,"../plots/cartesian/axis_ids":421,"../plots/cartesian/constants":423,"../plots/cartesian/constraints":425,"../plots/cartesian/graph_interact":427,"../plots/plots":458,"../plots/polar":461,"../registry":466,"./helpers":403,"./manage_arrays":404,"./subroutines":410,"d3":79,"fast-isnumeric":87}],406:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -69378,7 +70542,7 @@ function defaultSetBackground(gd, bgColor) {
     }
 }
 
-},{}],408:[function(require,module,exports){
+},{}],407:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -69784,7 +70948,7 @@ function insertAttrs(baseAttrs, newAttrs, astr) {
     np.set(extendDeep(np.get() || {}, newAttrs));
 }
 
-},{"../lib":382,"../plots/animation_attributes":415,"../plots/attributes":417,"../plots/frame_attributes":444,"../plots/layout_attributes":457,"../plots/polar/area_attributes":460,"../plots/polar/axis_attributes":461,"../registry":467}],409:[function(require,module,exports){
+},{"../lib":381,"../plots/animation_attributes":414,"../plots/attributes":416,"../plots/frame_attributes":443,"../plots/layout_attributes":456,"../plots/polar/area_attributes":459,"../plots/polar/axis_attributes":460,"../registry":466}],408:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -69883,7 +71047,7 @@ function registerComponentModule(newModule) {
     Registry.registerComponent(newModule);
 }
 
-},{"../lib":382,"../registry":467}],410:[function(require,module,exports){
+},{"../lib":381,"../registry":466}],409:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -69909,7 +71073,7 @@ module.exports = function setPlotConfig(configObj) {
     return Lib.extendFlat(Plotly.defaultConfig, configObj);
 };
 
-},{"../lib":382,"../plotly":414}],411:[function(require,module,exports){
+},{"../lib":381,"../plotly":413}],410:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -70316,7 +71480,7 @@ exports.doCamera = function(gd) {
     }
 };
 
-},{"../components/color":279,"../components/drawing":303,"../components/modebar":327,"../components/titles":356,"../lib":382,"../plotly":414,"../plots/plots":459,"../registry":467,"d3":79}],412:[function(require,module,exports){
+},{"../components/color":278,"../components/drawing":302,"../components/modebar":326,"../components/titles":355,"../lib":381,"../plotly":413,"../plots/plots":458,"../registry":466,"d3":79}],411:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -70426,7 +71590,7 @@ function toImage(gd, opts) {
 
 module.exports = toImage;
 
-},{"../lib":382,"../plotly":414,"../snapshot/cloneplot":468,"../snapshot/helpers":471,"../snapshot/svgtoimg":473,"../snapshot/tosvg":475,"fast-isnumeric":87}],413:[function(require,module,exports){
+},{"../lib":381,"../plotly":413,"../snapshot/cloneplot":467,"../snapshot/helpers":470,"../snapshot/svgtoimg":472,"../snapshot/tosvg":474,"fast-isnumeric":87}],412:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -70797,7 +71961,7 @@ function convertPathToAttributeString(path) {
     return astr;
 }
 
-},{"../lib":382,"../plots/plots":459,"./plot_schema":408}],414:[function(require,module,exports){
+},{"../lib":381,"../plots/plots":458,"./plot_schema":407}],413:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -70830,7 +71994,7 @@ exports.ModeBar = require('./components/modebar');
 // plot api
 require('./plot_api/plot_api');
 
-},{"./components/modebar":327,"./plot_api/plot_api":406,"./plot_api/plot_config":407,"./plots/cartesian/axes":419,"./plots/cartesian/graph_interact":428,"./plots/plots":459}],415:[function(require,module,exports){
+},{"./components/modebar":326,"./plot_api/plot_api":405,"./plot_api/plot_config":406,"./plots/cartesian/axes":418,"./plots/cartesian/graph_interact":427,"./plots/plots":458}],414:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -70932,7 +72096,7 @@ module.exports = {
     }
 };
 
-},{}],416:[function(require,module,exports){
+},{}],415:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -71013,7 +72177,7 @@ module.exports = function handleArrayContainerDefaults(parentObjIn, parentObjOut
     }
 };
 
-},{"../lib":382}],417:[function(require,module,exports){
+},{"../lib":381}],416:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -71096,7 +72260,7 @@ module.exports = {
     }
 };
 
-},{}],418:[function(require,module,exports){
+},{}],417:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -71123,7 +72287,7 @@ module.exports = {
     }
 };
 
-},{}],419:[function(require,module,exports){
+},{}],418:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73131,13 +74295,13 @@ axes.doTicks = function(gd, axid, skipTitle) {
                 {_offset: gs.l + (ax.position || 0) * gs.w, _length: 0} :
                 axisIds.getFromId(gd, ax.anchor);
 
-            y = ax._offset + ax._length / 2;
+            y = ax._offset + ax._length / 2 + 10; //added +10 for shift the label downside
             x = counterAxis._offset + ((ax.side === 'right') ?
                 counterAxis._length + 10 +
                     fontSize * (offsetBase + (ax.showticklabels ? 1 : 0.5)) :
                 -10 - fontSize * (offsetBase + (ax.showticklabels ? 0.5 : 0)));
 
-            transform = {rotate: '-90', offset: 0};
+            transform = {rotate: '0', offset: 0}; //rotate changed from -90 to 0
             if(!avoid.side) avoid.side = 'left';
         }
 
@@ -73410,7 +74574,7 @@ function swapAxisAttrs(layout, key, xFullAxes, yFullAxes) {
     }
 }
 
-},{"../../components/color":279,"../../components/drawing":303,"../../components/titles":356,"../../constants/numerical":366,"../../lib":382,"../../lib/svg_text_utils":401,"../../registry":467,"./axis_ids":422,"./layout_attributes":430,"./layout_defaults":431,"./set_convert":436,"d3":79,"fast-isnumeric":87}],420:[function(require,module,exports){
+},{"../../components/color":278,"../../components/drawing":302,"../../components/titles":355,"../../constants/numerical":365,"../../lib":381,"../../lib/svg_text_utils":400,"../../registry":466,"./axis_ids":421,"./layout_attributes":429,"./layout_defaults":430,"./set_convert":435,"d3":79,"fast-isnumeric":87}],419:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73485,7 +74649,7 @@ function category(a) {
     return curvecats > curvenums * 2;
 }
 
-},{"../../constants/numerical":366,"../../lib":382,"fast-isnumeric":87}],421:[function(require,module,exports){
+},{"../../constants/numerical":365,"../../lib":381,"fast-isnumeric":87}],420:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73608,7 +74772,7 @@ module.exports = function handleAxisDefaults(containerIn, containerOut, coerce, 
     return containerOut;
 };
 
-},{"../../components/color/attributes":278,"../../lib":382,"../../registry":467,"./category_order_defaults":423,"./layout_attributes":430,"./ordered_categories":432,"./set_convert":436,"./tick_label_defaults":437,"./tick_mark_defaults":438,"./tick_value_defaults":439,"tinycolor2":250}],422:[function(require,module,exports){
+},{"../../components/color/attributes":277,"../../lib":381,"../../registry":466,"./category_order_defaults":422,"./layout_attributes":429,"./ordered_categories":431,"./set_convert":435,"./tick_label_defaults":436,"./tick_mark_defaults":437,"./tick_value_defaults":438,"tinycolor2":249}],421:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73730,7 +74894,7 @@ exports.getFromTrace = function(gd, fullTrace, type) {
     return ax;
 };
 
-},{"../../lib":382,"../../registry":467,"../plots":459,"./constants":424}],423:[function(require,module,exports){
+},{"../../lib":381,"../../registry":466,"../plots":458,"./constants":423}],422:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73764,7 +74928,7 @@ module.exports = function handleCategoryOrderDefaults(containerIn, containerOut,
     }
 };
 
-},{}],424:[function(require,module,exports){
+},{}],423:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73834,7 +74998,7 @@ module.exports = {
     DFLTRANGEY: [-1, 4]
 };
 
-},{}],425:[function(require,module,exports){
+},{}],424:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -73973,7 +75137,7 @@ function updateConstraintGroups(constraintGroups, thisGroup, thisID, scaleanchor
     thisGroup[scaleanchor] = 1;
 }
 
-},{"../../lib":382,"./axis_ids":422}],426:[function(require,module,exports){
+},{"../../lib":381,"./axis_ids":421}],425:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -74049,7 +75213,7 @@ module.exports = function enforceAxisConstraints(gd) {
     }
 };
 
-},{"../../constants/numerical":366,"./axis_ids":422,"./scale_zoom":434}],427:[function(require,module,exports){
+},{"../../constants/numerical":365,"./axis_ids":421,"./scale_zoom":433}],426:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -74398,7 +75562,7 @@ module.exports = function dragBox(gd, plotinfo, x, y, w, h, ns, ew) {
         // deactivate mousewheel scrolling on embedded graphs
         // devs can override this with layout._enablescrollzoom,
         // but _ ensures this setting won't leave their page
-        if(!gd._context.scrollZoom && !fullLayout._enablescrollzoom) {
+        if(!gd._context.scrollZoom && !fullLayout._enablescrollzoom && !e.ctrlKey) { //added && !e.ctrlKey zoom only on cntrl+wheel
             return;
         }
 
@@ -75047,7 +76211,7 @@ function calcLinks(constraintGroups, xIDs, yIDs) {
     };
 }
 
-},{"../../components/color":279,"../../components/dragelement":300,"../../components/drawing":303,"../../lib":382,"../../lib/setcursor":397,"../../lib/svg_text_utils":401,"../../plotly":414,"../../registry":467,"./axes":419,"./axis_ids":422,"./constants":424,"./scale_zoom":434,"./select":435,"d3":79,"tinycolor2":250}],428:[function(require,module,exports){
+},{"../../components/color":278,"../../components/dragelement":299,"../../components/drawing":302,"../../lib":381,"../../lib/setcursor":396,"../../lib/svg_text_utils":400,"../../plotly":413,"../../registry":466,"./axes":418,"./axis_ids":421,"./constants":423,"./scale_zoom":433,"./select":434,"d3":79,"tinycolor2":249}],427:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -76608,7 +77772,7 @@ fx.inbox = function(v0, v1) {
     return Infinity;
 };
 
-},{"../../components/color":279,"../../components/dragelement":300,"../../components/drawing":303,"../../lib":382,"../../lib/events":375,"../../lib/override_cursor":391,"../../lib/svg_text_utils":401,"../../registry":467,"../layout_attributes":457,"./axes":419,"./constants":424,"./dragbox":427,"d3":79,"fast-isnumeric":87,"tinycolor2":250}],429:[function(require,module,exports){
+},{"../../components/color":278,"../../components/dragelement":299,"../../components/drawing":302,"../../lib":381,"../../lib/events":374,"../../lib/override_cursor":390,"../../lib/svg_text_utils":400,"../../registry":466,"../layout_attributes":456,"./axes":418,"./constants":423,"./dragbox":426,"d3":79,"fast-isnumeric":87,"tinycolor2":249}],428:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -76997,7 +78161,7 @@ function joinLayer(parent, nodeType, className) {
     return layer;
 }
 
-},{"../../lib":382,"../plots":459,"./attributes":418,"./axis_ids":422,"./constants":424,"./layout_attributes":430,"./transition_axes":440,"d3":79}],430:[function(require,module,exports){
+},{"../../lib":381,"../plots":458,"./attributes":417,"./axis_ids":421,"./constants":423,"./layout_attributes":429,"./transition_axes":439,"d3":79}],429:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -77389,7 +78553,7 @@ module.exports = {
     }
 };
 
-},{"../../components/color/attributes":278,"../../components/drawing/attributes":302,"../../lib/extend":376,"../font_attributes":443,"./constants":424}],431:[function(require,module,exports){
+},{"../../components/color/attributes":277,"../../components/drawing/attributes":301,"../../lib/extend":375,"../font_attributes":442,"./constants":423}],430:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -77662,7 +78826,7 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut, fullData) {
     }
 };
 
-},{"../../components/color":279,"../../lib":382,"../../registry":467,"../layout_attributes":457,"./axis_defaults":421,"./axis_ids":422,"./constants":424,"./constraint_defaults":425,"./layout_attributes":430,"./position_defaults":433,"./type_defaults":441}],432:[function(require,module,exports){
+},{"../../components/color":278,"../../lib":381,"../../registry":466,"../layout_attributes":456,"./axis_defaults":420,"./axis_ids":421,"./constants":423,"./constraint_defaults":424,"./layout_attributes":429,"./position_defaults":432,"./type_defaults":440}],431:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -77741,7 +78905,7 @@ module.exports = function orderedCategories(axisLetter, categoryorder, categorya
     }
 };
 
-},{"d3":79}],433:[function(require,module,exports){
+},{"d3":79}],432:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -77806,7 +78970,7 @@ module.exports = function handlePositionDefaults(containerIn, containerOut, coer
     return containerOut;
 };
 
-},{"../../lib":382,"fast-isnumeric":87}],434:[function(require,module,exports){
+},{"../../lib":381,"fast-isnumeric":87}],433:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -77831,7 +78995,7 @@ module.exports = function scaleZoom(ax, factor, centerFraction) {
     ];
 };
 
-},{}],435:[function(require,module,exports){
+},{}],434:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -78031,7 +79195,7 @@ module.exports = function prepSelect(e, startX, startY, dragOptions, mode) {
     };
 };
 
-},{"../../components/color":279,"../../lib/polygon":392,"./axes":419,"./constants":424}],436:[function(require,module,exports){
+},{"../../components/color":278,"../../lib/polygon":391,"./axes":418,"./constants":423}],435:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -78474,7 +79638,7 @@ module.exports = function setConvert(ax, fullLayout) {
     delete ax._forceTick0;
 };
 
-},{"../../constants/numerical":366,"../../lib":382,"./axis_ids":422,"./constants":424,"d3":79,"fast-isnumeric":87}],437:[function(require,module,exports){
+},{"../../constants/numerical":365,"../../lib":381,"./axis_ids":421,"./constants":423,"d3":79,"fast-isnumeric":87}],436:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -78558,7 +79722,7 @@ function getShowAttrDflt(containerIn) {
     }
 }
 
-},{"../../lib":382}],438:[function(require,module,exports){
+},{"../../lib":381}],437:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -78591,7 +79755,7 @@ module.exports = function handleTickDefaults(containerIn, containerOut, coerce, 
     }
 };
 
-},{"../../lib":382,"./layout_attributes":430}],439:[function(require,module,exports){
+},{"../../lib":381,"./layout_attributes":429}],438:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -78675,7 +79839,7 @@ module.exports = function handleTickValueDefaults(containerIn, containerOut, coe
     }
 };
 
-},{"../../constants/numerical":366,"../../lib":382,"fast-isnumeric":87}],440:[function(require,module,exports){
+},{"../../constants/numerical":365,"../../lib":381,"fast-isnumeric":87}],439:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -78987,7 +80151,7 @@ module.exports = function transitionAxes(gd, newLayout, transitionOpts, makeOnCo
     return Promise.resolve();
 };
 
-},{"../../components/drawing":303,"../../plotly":414,"../../registry":467,"./axes":419,"d3":79}],441:[function(require,module,exports){
+},{"../../components/drawing":302,"../../plotly":413,"../../registry":466,"./axes":418,"d3":79}],440:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -79115,7 +80279,7 @@ function isBoxWithoutPositionCoords(trace, axLetter) {
     );
 }
 
-},{"../../registry":467,"./axis_autotype":420,"./axis_ids":422}],442:[function(require,module,exports){
+},{"../../registry":466,"./axis_autotype":419,"./axis_ids":421}],441:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -79540,7 +80704,7 @@ function crawl(attrs, callback, path, depth) {
     });
 }
 
-},{"../lib":382,"../plotly":414}],443:[function(require,module,exports){
+},{"../lib":381,"../plotly":413}],442:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -79571,7 +80735,7 @@ module.exports = {
     }
 };
 
-},{}],444:[function(require,module,exports){
+},{}],443:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -79617,7 +80781,7 @@ module.exports = {
     }
 };
 
-},{}],445:[function(require,module,exports){
+},{}],444:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -79866,7 +81030,7 @@ function createCamera(element, options) {
     return camera;
 }
 
-},{"3d-view":9,"mouse-change":185,"mouse-wheel":188,"right-now":223}],446:[function(require,module,exports){
+},{"3d-view":9,"mouse-change":185,"mouse-wheel":188,"right-now":222}],445:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -79983,7 +81147,7 @@ exports.cleanId = function cleanId(id) {
     return 'scene' + sceneNum;
 };
 
-},{"../../constants/xmlns_namespaces":368,"../../lib":382,"../plots":459,"./layout/attributes":447,"./layout/defaults":451,"./layout/layout_attributes":452,"./scene":456}],447:[function(require,module,exports){
+},{"../../constants/xmlns_namespaces":367,"../../lib":381,"../plots":458,"./layout/attributes":446,"./layout/defaults":450,"./layout/layout_attributes":451,"./scene":455}],446:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80004,7 +81168,7 @@ module.exports = {
     }
 };
 
-},{}],448:[function(require,module,exports){
+},{}],447:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80111,7 +81275,7 @@ module.exports = {
     zerolinewidth: axesAttrs.zerolinewidth
 };
 
-},{"../../../components/color":279,"../../../lib/extend":376,"../../cartesian/layout_attributes":430}],449:[function(require,module,exports){
+},{"../../../components/color":278,"../../../lib/extend":375,"../../cartesian/layout_attributes":429}],448:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80183,7 +81347,7 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut, options) {
     }
 };
 
-},{"../../../lib":382,"../../cartesian/axis_defaults":421,"../../cartesian/type_defaults":441,"./axis_attributes":448,"tinycolor2":250}],450:[function(require,module,exports){
+},{"../../../lib":381,"../../cartesian/axis_defaults":420,"../../cartesian/type_defaults":440,"./axis_attributes":447,"tinycolor2":249}],449:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80346,7 +81510,7 @@ function createAxesOptions(plotlyOptions) {
 
 module.exports = createAxesOptions;
 
-},{"../../../lib/html2unicode":380,"../../../lib/str2rgbarray":400}],451:[function(require,module,exports){
+},{"../../../lib/html2unicode":379,"../../../lib/str2rgbarray":399}],450:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80450,7 +81614,7 @@ function handleGl3dDefaults(sceneLayoutIn, sceneLayoutOut, coerce, opts) {
     coerce('hovermode', opts.getDfltFromLayout('hovermode'));
 }
 
-},{"../../../components/color":279,"../../../lib":382,"../../subplot_defaults":466,"./axis_defaults":449,"./layout_attributes":452}],452:[function(require,module,exports){
+},{"../../../components/color":278,"../../../lib":381,"../../subplot_defaults":465,"./axis_defaults":448,"./layout_attributes":451}],451:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80578,7 +81742,7 @@ module.exports = {
     }
 };
 
-},{"../../../lib/extend":376,"./axis_attributes":448}],453:[function(require,module,exports){
+},{"../../../lib/extend":375,"./axis_attributes":447}],452:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80630,7 +81794,7 @@ function createSpikeOptions(layout) {
 
 module.exports = createSpikeOptions;
 
-},{"../../../lib/str2rgbarray":400}],454:[function(require,module,exports){
+},{"../../../lib/str2rgbarray":399}],453:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80726,7 +81890,7 @@ function computeTickMarks(scene) {
     scene.contourLevels = contourLevelsFromTicks(ticks);
 }
 
-},{"../../../lib":382,"../../../lib/html2unicode":380,"../../cartesian/axes":419}],455:[function(require,module,exports){
+},{"../../../lib":381,"../../../lib/html2unicode":379,"../../cartesian/axes":418}],454:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -80760,7 +81924,7 @@ function project(camera, v) {
 
 module.exports = project;
 
-},{}],456:[function(require,module,exports){
+},{}],455:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -81483,7 +82647,7 @@ proto.setConvert = function() {
 
 module.exports = Scene;
 
-},{"../../lib":382,"../../lib/show_no_webgl_msg":398,"../../lib/str2rgbarray":400,"../../plots/cartesian/axes":419,"../../plots/cartesian/graph_interact":428,"./camera":445,"./layout/convert":450,"./layout/spikes":453,"./layout/tick_marks":454,"./project":455,"gl-plot3d":133,"webgl-context":265}],457:[function(require,module,exports){
+},{"../../lib":381,"../../lib/show_no_webgl_msg":397,"../../lib/str2rgbarray":399,"../../plots/cartesian/axes":418,"../../plots/cartesian/graph_interact":427,"./camera":444,"./layout/convert":449,"./layout/spikes":452,"./layout/tick_marks":453,"./project":454,"gl-plot3d":133,"webgl-context":264}],456:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -81639,7 +82803,7 @@ module.exports = {
     }
 };
 
-},{"../components/color/attributes":278,"../lib":382,"./font_attributes":443}],458:[function(require,module,exports){
+},{"../components/color/attributes":277,"../lib":381,"./font_attributes":442}],457:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -81677,7 +82841,7 @@ module.exports = {
     }
 };
 
-},{}],459:[function(require,module,exports){
+},{}],458:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -83838,7 +85002,7 @@ plots.generalUpdatePerTraceModule = function(subplot, subplotCalcData, subplotLa
     subplot.traceHash = traceHash;
 };
 
-},{"../components/color":279,"../components/errorbars":309,"../constants/numerical":366,"../lib":382,"../plotly":414,"../registry":467,"./animation_attributes":415,"./attributes":417,"./command":442,"./font_attributes":443,"./frame_attributes":444,"./layout_attributes":457,"d3":79,"fast-isnumeric":87}],460:[function(require,module,exports){
+},{"../components/color":278,"../components/errorbars":308,"../constants/numerical":365,"../lib":381,"../plotly":413,"../registry":466,"./animation_attributes":414,"./attributes":416,"./command":441,"./font_attributes":442,"./frame_attributes":443,"./layout_attributes":456,"d3":79,"fast-isnumeric":87}],459:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -83863,7 +85027,7 @@ module.exports = {
     }
 };
 
-},{"../../traces/scatter/attributes":483}],461:[function(require,module,exports){
+},{"../../traces/scatter/attributes":482}],460:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -83978,7 +85142,7 @@ module.exports = {
     }
 };
 
-},{"../../lib/extend":376,"../cartesian/layout_attributes":430}],462:[function(require,module,exports){
+},{"../../lib/extend":375,"../cartesian/layout_attributes":429}],461:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -83993,7 +85157,7 @@ var Polar = module.exports = require('./micropolar');
 
 Polar.manager = require('./micropolar_manager');
 
-},{"./micropolar":463,"./micropolar_manager":464}],463:[function(require,module,exports){
+},{"./micropolar":462,"./micropolar_manager":463}],462:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -85412,7 +86576,7 @@ var µ = module.exports = { version: '0.2.2' };
     return exports;
 };
 
-},{"../../lib":382,"d3":79}],464:[function(require,module,exports){
+},{"../../lib":381,"d3":79}],463:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -85498,7 +86662,7 @@ manager.fillLayout = function(_gd) {
     _gd._fullLayout = extendDeepAll(dflts, _gd.layout);
 };
 
-},{"../../components/color":279,"../../lib":382,"./micropolar":463,"./undo_manager":465,"d3":79}],465:[function(require,module,exports){
+},{"../../components/color":278,"../../lib":381,"./micropolar":462,"./undo_manager":464,"d3":79}],464:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -85564,7 +86728,7 @@ module.exports = function UndoManager() {
     };
 };
 
-},{}],466:[function(require,module,exports){
+},{}],465:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -85639,7 +86803,7 @@ module.exports = function handleSubplotDefaults(layoutIn, layoutOut, fullData, o
     }
 };
 
-},{"../lib":382,"./plots":459}],467:[function(require,module,exports){
+},{"../lib":381,"./plots":458}],466:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -85830,7 +86994,7 @@ function getTraceType(traceType) {
     return traceType;
 }
 
-},{"./lib/loggers":385,"./lib/noop":389,"./lib/push_unique":393,"./plots/attributes":417}],468:[function(require,module,exports){
+},{"./lib/loggers":384,"./lib/noop":388,"./lib/push_unique":392,"./plots/attributes":416}],467:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86002,7 +87166,7 @@ module.exports = function clonePlot(graphObj, options) {
     return plotTile;
 };
 
-},{"../lib":382,"../plots/plots":459}],469:[function(require,module,exports){
+},{"../lib":381,"../plots/plots":458}],468:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86068,7 +87232,7 @@ function downloadImage(gd, opts) {
 
 module.exports = downloadImage;
 
-},{"../lib":382,"../plot_api/to_image":412,"./filesaver":470}],470:[function(require,module,exports){
+},{"../lib":381,"../plot_api/to_image":411,"./filesaver":469}],469:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86136,7 +87300,7 @@ var fileSaver = function(url, name) {
 
 module.exports = fileSaver;
 
-},{}],471:[function(require,module,exports){
+},{}],470:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86169,7 +87333,7 @@ exports.getRedrawFunc = function(gd) {
     };
 };
 
-},{}],472:[function(require,module,exports){
+},{}],471:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86195,7 +87359,7 @@ var Snapshot = {
 
 module.exports = Snapshot;
 
-},{"./cloneplot":468,"./download":469,"./helpers":471,"./svgtoimg":473,"./toimage":474,"./tosvg":475}],473:[function(require,module,exports){
+},{"./cloneplot":467,"./download":468,"./helpers":470,"./svgtoimg":472,"./toimage":473,"./tosvg":474}],472:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86326,7 +87490,7 @@ function svgToImg(opts) {
 
 module.exports = svgToImg;
 
-},{"../lib":382,"events":85}],474:[function(require,module,exports){
+},{"../lib":381,"events":85}],473:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86406,7 +87570,7 @@ function toImage(gd, opts) {
 
 module.exports = toImage;
 
-},{"../lib":382,"../plotly":414,"./cloneplot":468,"./helpers":471,"./svgtoimg":473,"./tosvg":475,"events":85}],475:[function(require,module,exports){
+},{"../lib":381,"../plotly":413,"./cloneplot":467,"./helpers":470,"./svgtoimg":472,"./tosvg":474,"events":85}],474:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86525,7 +87689,7 @@ module.exports = function toSVG(gd, format) {
     return s;
 };
 
-},{"../components/color":279,"../components/drawing":303,"../constants/xmlns_namespaces":368,"../lib/svg_text_utils":401,"d3":79}],476:[function(require,module,exports){
+},{"../components/color":278,"../components/drawing":302,"../constants/xmlns_namespaces":367,"../lib/svg_text_utils":400,"d3":79}],475:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86576,7 +87740,7 @@ module.exports = function colorbar(gd, cd) {
         .options(trace.colorbar)();
 };
 
-},{"../../components/colorbar/draw":282,"../../components/colorscale":293,"../../lib":382,"../../plots/plots":459,"fast-isnumeric":87}],477:[function(require,module,exports){
+},{"../../components/colorbar/draw":281,"../../components/colorscale":292,"../../lib":381,"../../plots/plots":458,"fast-isnumeric":87}],476:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86709,7 +87873,7 @@ module.exports = {
     }, surfaceAtts.lighting)
 };
 
-},{"../../components/colorbar/attributes":280,"../../components/colorscale/attributes":284,"../../lib/extend":376,"../surface/attributes":512}],478:[function(require,module,exports){
+},{"../../components/colorbar/attributes":279,"../../components/colorscale/attributes":283,"../../lib/extend":375,"../surface/attributes":511}],477:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86872,7 +88036,7 @@ function createMesh3DTrace(scene, data) {
 
 module.exports = createMesh3DTrace;
 
-},{"../../lib/str2rgbarray":400,"alpha-shape":14,"convex-hull":70,"delaunay-triangulate":80,"gl-mesh3d":131,"tinycolor2":250}],479:[function(require,module,exports){
+},{"../../lib/str2rgbarray":399,"alpha-shape":14,"convex-hull":70,"delaunay-triangulate":80,"gl-mesh3d":131,"tinycolor2":249}],478:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -86973,7 +88137,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     }
 };
 
-},{"../../components/colorbar/defaults":281,"../../lib":382,"../../registry":467,"./attributes":477}],480:[function(require,module,exports){
+},{"../../components/colorbar/defaults":280,"../../lib":381,"../../registry":466,"./attributes":476}],479:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87002,7 +88166,7 @@ Mesh3D.meta = {
 
 module.exports = Mesh3D;
 
-},{"../../plots/gl3d":446,"../heatmap/colorbar":476,"./attributes":477,"./convert":478,"./defaults":479}],481:[function(require,module,exports){
+},{"../../plots/gl3d":445,"../heatmap/colorbar":475,"./attributes":476,"./convert":477,"./defaults":478}],480:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87027,7 +88191,7 @@ module.exports = function styleOne(s, pt, trace) {
     .call(Color.stroke, lineColor);
 };
 
-},{"../../components/color":279}],482:[function(require,module,exports){
+},{"../../components/color":278}],481:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87070,7 +88234,7 @@ module.exports = function arraysToCalcdata(cd, trace) {
     }
 };
 
-},{"../../lib":382}],483:[function(require,module,exports){
+},{"../../lib":381}],482:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87334,7 +88498,7 @@ module.exports = {
     error_x: errorBarAttrs
 };
 
-},{"../../components/colorbar/attributes":280,"../../components/colorscale/color_attributes":286,"../../components/drawing":303,"../../components/drawing/attributes":302,"../../components/errorbars/attributes":305,"../../lib/extend":376,"./constants":488}],484:[function(require,module,exports){
+},{"../../components/colorbar/attributes":279,"../../components/colorscale/color_attributes":285,"../../components/drawing":302,"../../components/drawing/attributes":301,"../../components/errorbars/attributes":304,"../../lib/extend":375,"./constants":487}],483:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87464,7 +88628,7 @@ module.exports = function calc(gd, trace) {
     return cd;
 };
 
-},{"../../plots/cartesian/axes":419,"./arrays_to_calcdata":482,"./colorscale_calc":487,"./subtypes":503,"fast-isnumeric":87}],485:[function(require,module,exports){
+},{"../../plots/cartesian/axes":418,"./arrays_to_calcdata":481,"./colorscale_calc":486,"./subtypes":502,"fast-isnumeric":87}],484:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87503,7 +88667,7 @@ module.exports = function cleanData(fullData) {
     }
 };
 
-},{}],486:[function(require,module,exports){
+},{}],485:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87559,7 +88723,7 @@ module.exports = function colorbar(gd, cd) {
         .options(marker.colorbar)();
 };
 
-},{"../../components/colorbar/draw":282,"../../components/colorscale":293,"../../lib":382,"../../plots/plots":459,"fast-isnumeric":87}],487:[function(require,module,exports){
+},{"../../components/colorbar/draw":281,"../../components/colorscale":292,"../../lib":381,"../../plots/plots":458,"fast-isnumeric":87}],486:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87592,7 +88756,7 @@ module.exports = function calcMarkerColorscale(trace) {
     }
 };
 
-},{"../../components/colorscale/calc":285,"../../components/colorscale/has_colorscale":292,"./subtypes":503}],488:[function(require,module,exports){
+},{"../../components/colorscale/calc":284,"../../components/colorscale/has_colorscale":291,"./subtypes":502}],487:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87608,7 +88772,7 @@ module.exports = {
     PTS_LINESONLY: 20
 };
 
-},{}],489:[function(require,module,exports){
+},{}],488:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87690,7 +88854,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     errorBarsSupplyDefaults(traceIn, traceOut, defaultColor, {axis: 'x', inherit: 'y'});
 };
 
-},{"../../components/errorbars/defaults":308,"../../lib":382,"./attributes":483,"./constants":488,"./fillcolor_defaults":490,"./line_defaults":494,"./line_shape_defaults":496,"./marker_defaults":499,"./subtypes":503,"./text_defaults":504,"./xy_defaults":505}],490:[function(require,module,exports){
+},{"../../components/errorbars/defaults":307,"../../lib":381,"./attributes":482,"./constants":487,"./fillcolor_defaults":489,"./line_defaults":493,"./line_shape_defaults":495,"./marker_defaults":498,"./subtypes":502,"./text_defaults":503,"./xy_defaults":504}],489:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87728,7 +88892,7 @@ module.exports = function fillColorDefaults(traceIn, traceOut, defaultColor, coe
     ));
 };
 
-},{"../../components/color":279}],491:[function(require,module,exports){
+},{"../../components/color":278}],490:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87781,7 +88945,7 @@ module.exports = function getTraceColor(trace, di) {
     }
 };
 
-},{"../../components/color":279,"./subtypes":503}],492:[function(require,module,exports){
+},{"../../components/color":278,"./subtypes":502}],491:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87952,7 +89116,7 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode) {
     }
 };
 
-},{"../../components/color":279,"../../components/errorbars":309,"../../lib":382,"../../plots/cartesian/constants":424,"../../plots/cartesian/graph_interact":428,"./get_trace_color":491}],493:[function(require,module,exports){
+},{"../../components/color":278,"../../components/errorbars":308,"../../lib":381,"../../plots/cartesian/constants":423,"../../plots/cartesian/graph_interact":427,"./get_trace_color":490}],492:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -87996,7 +89160,7 @@ Scatter.meta = {
 
 module.exports = Scatter;
 
-},{"../../plots/cartesian":429,"./arrays_to_calcdata":482,"./attributes":483,"./calc":484,"./clean_data":485,"./colorbar":486,"./defaults":489,"./hover":492,"./plot":500,"./select":501,"./style":502,"./subtypes":503}],494:[function(require,module,exports){
+},{"../../plots/cartesian":428,"./arrays_to_calcdata":481,"./attributes":482,"./calc":483,"./clean_data":484,"./colorbar":485,"./defaults":488,"./hover":491,"./plot":499,"./select":500,"./style":501,"./subtypes":502}],493:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88029,7 +89193,7 @@ module.exports = function lineDefaults(traceIn, traceOut, defaultColor, layout, 
     if(!(opts || {}).noDash) coerce('line.dash');
 };
 
-},{"../../components/colorscale/defaults":288,"../../components/colorscale/has_colorscale":292}],495:[function(require,module,exports){
+},{"../../components/colorscale/defaults":287,"../../components/colorscale/has_colorscale":291}],494:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88202,7 +89366,7 @@ module.exports = function linePoints(d, opts) {
     return segments;
 };
 
-},{"../../constants/numerical":366}],496:[function(require,module,exports){
+},{"../../constants/numerical":365}],495:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88221,7 +89385,7 @@ module.exports = function handleLineShapeDefaults(traceIn, traceOut, coerce) {
     if(shape === 'spline') coerce('line.smoothing');
 };
 
-},{}],497:[function(require,module,exports){
+},{}],496:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88262,7 +89426,7 @@ module.exports = function linkTraces(gd, plotinfo, cdscatter) {
     }
 };
 
-},{}],498:[function(require,module,exports){
+},{}],497:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88304,7 +89468,7 @@ module.exports = function makeBubbleSizeFn(trace) {
     };
 };
 
-},{"fast-isnumeric":87}],499:[function(require,module,exports){
+},{"fast-isnumeric":87}],498:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88366,7 +89530,7 @@ module.exports = function markerDefaults(traceIn, traceOut, defaultColor, layout
     }
 };
 
-},{"../../components/color":279,"../../components/colorscale/defaults":288,"../../components/colorscale/has_colorscale":292,"./subtypes":503}],500:[function(require,module,exports){
+},{"../../components/color":278,"../../components/colorscale/defaults":287,"../../components/colorscale/has_colorscale":291,"./subtypes":502}],499:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88907,7 +90071,7 @@ function selectMarkers(gd, idx, plotinfo, cdscatter, cdscatterAll) {
     });
 }
 
-},{"../../components/drawing":303,"../../components/errorbars":309,"../../lib":382,"../../lib/polygon":392,"./line_points":495,"./link_traces":497,"./subtypes":503,"d3":79}],501:[function(require,module,exports){
+},{"../../components/drawing":302,"../../components/errorbars":308,"../../lib":381,"../../lib/polygon":391,"./line_points":494,"./link_traces":496,"./subtypes":502,"d3":79}],500:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -88979,7 +90143,7 @@ module.exports = function selectPoints(searchInfo, polygon) {
     return selection;
 };
 
-},{"./subtypes":503}],502:[function(require,module,exports){
+},{"./subtypes":502}],501:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89025,7 +90189,7 @@ module.exports = function style(gd) {
     s.call(ErrorBars.style);
 };
 
-},{"../../components/drawing":303,"../../components/errorbars":309,"d3":79}],503:[function(require,module,exports){
+},{"../../components/drawing":302,"../../components/errorbars":308,"d3":79}],502:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89061,7 +90225,7 @@ module.exports = {
     }
 };
 
-},{"../../lib":382}],504:[function(require,module,exports){
+},{"../../lib":381}],503:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89082,7 +90246,7 @@ module.exports = function(traceIn, traceOut, layout, coerce) {
     Lib.coerceFont(coerce, 'textfont', layout.font);
 };
 
-},{"../../lib":382}],505:[function(require,module,exports){
+},{"../../lib":381}],504:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89132,7 +90296,7 @@ module.exports = function handleXYDefaults(traceIn, traceOut, layout, coerce) {
     return len;
 };
 
-},{"../../registry":467}],506:[function(require,module,exports){
+},{"../../registry":466}],505:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89277,7 +90441,7 @@ module.exports = {
     error_z: errorBarAttrs,
 };
 
-},{"../../components/colorscale/color_attributes":286,"../../components/errorbars/attributes":305,"../../constants/gl3d_dashes":363,"../../constants/gl_markers":364,"../../lib/extend":376,"../scatter/attributes":483}],507:[function(require,module,exports){
+},{"../../components/colorscale/color_attributes":285,"../../components/errorbars/attributes":304,"../../constants/gl3d_dashes":362,"../../constants/gl_markers":363,"../../lib/extend":375,"../scatter/attributes":482}],506:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89306,7 +90470,7 @@ module.exports = function calc(gd, trace) {
     return cd;
 };
 
-},{"../scatter/arrays_to_calcdata":482,"../scatter/colorscale_calc":487}],508:[function(require,module,exports){
+},{"../scatter/arrays_to_calcdata":481,"../scatter/colorscale_calc":486}],507:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89377,7 +90541,7 @@ function calculateErrors(data, scaleFactor) {
 
 module.exports = calculateErrors;
 
-},{"../../components/errorbars/compute_error":307}],509:[function(require,module,exports){
+},{"../../components/errorbars/compute_error":306}],508:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89848,7 +91012,7 @@ function createLineWithMarkers(scene, data) {
 
 module.exports = createLineWithMarkers;
 
-},{"../../constants/gl3d_dashes":363,"../../constants/gl_markers":364,"../../lib":382,"../../lib/gl_format_color":379,"../../lib/str2rgbarray":400,"../scatter/make_bubble_size_func":498,"./calc_errors":508,"delaunay-triangulate":80,"gl-error3d":103,"gl-line3d":108,"gl-mesh3d":131,"gl-scatter3d":137}],510:[function(require,module,exports){
+},{"../../constants/gl3d_dashes":362,"../../constants/gl_markers":363,"../../lib":381,"../../lib/gl_format_color":378,"../../lib/str2rgbarray":399,"../scatter/make_bubble_size_func":497,"./calc_errors":507,"delaunay-triangulate":80,"gl-error3d":103,"gl-line3d":108,"gl-mesh3d":131,"gl-scatter3d":137}],509:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89938,7 +91102,7 @@ function handleXYZDefaults(traceIn, traceOut, coerce, layout) {
     return len;
 }
 
-},{"../../components/errorbars/defaults":308,"../../lib":382,"../../registry":467,"../scatter/line_defaults":494,"../scatter/marker_defaults":499,"../scatter/subtypes":503,"../scatter/text_defaults":504,"./attributes":506}],511:[function(require,module,exports){
+},{"../../components/errorbars/defaults":307,"../../lib":381,"../../registry":466,"../scatter/line_defaults":493,"../scatter/marker_defaults":498,"../scatter/subtypes":502,"../scatter/text_defaults":503,"./attributes":505}],510:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -89969,7 +91133,7 @@ Scatter3D.meta = {
 
 module.exports = Scatter3D;
 
-},{"../../constants/gl_markers":364,"../../plots/gl3d":446,"../scatter/colorbar":486,"./attributes":506,"./calc":507,"./convert":509,"./defaults":510}],512:[function(require,module,exports){
+},{"../../constants/gl_markers":363,"../../plots/gl3d":445,"../scatter/colorbar":485,"./attributes":505,"./calc":506,"./convert":508,"./defaults":509}],511:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -90189,7 +91353,7 @@ module.exports = {
     }
 };
 
-},{"../../components/color":279,"../../components/colorbar/attributes":280,"../../components/colorscale/attributes":284,"../../lib/extend":376}],513:[function(require,module,exports){
+},{"../../components/color":278,"../../components/colorbar/attributes":279,"../../components/colorscale/attributes":283,"../../lib/extend":375}],512:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -90213,7 +91377,7 @@ module.exports = function calc(gd, trace) {
     }
 };
 
-},{"../../components/colorscale/calc":285}],514:[function(require,module,exports){
+},{"../../components/colorscale/calc":284}],513:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -90265,7 +91429,7 @@ module.exports = function colorbar(gd, cd) {
         .options(trace.colorbar)();
 };
 
-},{"../../components/colorbar/draw":282,"../../components/colorscale":293,"../../lib":382,"../../plots/plots":459,"fast-isnumeric":87}],515:[function(require,module,exports){
+},{"../../components/colorbar/draw":281,"../../components/colorscale":292,"../../lib":381,"../../plots/plots":458,"fast-isnumeric":87}],514:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -90644,7 +91808,7 @@ function createSurfaceTrace(scene, data) {
 
 module.exports = createSurfaceTrace;
 
-},{"../../lib/str2rgbarray":400,"gl-surface3d":149,"ndarray":201,"ndarray-fill":190,"ndarray-homography":193,"ndarray-ops":195,"tinycolor2":250}],516:[function(require,module,exports){
+},{"../../lib/str2rgbarray":399,"gl-surface3d":149,"ndarray":200,"ndarray-fill":190,"ndarray-homography":192,"ndarray-ops":194,"tinycolor2":249}],515:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -90765,7 +91929,7 @@ function mapLegacy(traceIn, oldAttr, newAttr) {
     }
 }
 
-},{"../../components/colorscale/defaults":288,"../../lib":382,"../../registry":467,"./attributes":512}],517:[function(require,module,exports){
+},{"../../components/colorscale/defaults":287,"../../lib":381,"../../registry":466,"./attributes":511}],516:[function(require,module,exports){
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -90795,5 +91959,5 @@ Surface.meta = {
 
 module.exports = Surface;
 
-},{"../../plots/gl3d":446,"./attributes":512,"./calc":513,"./colorbar":514,"./convert":515,"./defaults":516}]},{},[4])(4)
+},{"../../plots/gl3d":445,"./attributes":511,"./calc":512,"./colorbar":513,"./convert":514,"./defaults":515}]},{},[4])(4)
 });

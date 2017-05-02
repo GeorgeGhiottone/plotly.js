@@ -192,6 +192,42 @@ module.exports = {
         'path': 'M512 409c0-57-46-104-103-104-57 0-104 47-104 104 0 57 47 103 104 103 57 0 103-46 103-103z m-327-39l92 0 0 92-92 0z m-185 0l92 0 0 92-92 0z m370-186l92 0 0 93-92 0z m0-184l92 0 0 92-92 0z',
         'ascent': 850,
         'descent': -150
+    },
+    'toPDF': {
+        'width': 1078,
+        'path': 'M136.054 836h793.946q59.5508 0 99.833 -63.8574q40.2793 -63.8574 40.2793 -158.266v-518.276q0 -94.4014 -40.2793 -158.258q-40.2822 -63.8574 -99.833 -63.8574h-793.946q-59.5508 0 -99.8281 63.8574q-40.2822 63.8564 -40.2822 158.258v518.276\nq0 46.4629 10.8086 87.6934q10.8018 41.2217 29.3936 70.6982q18.5977 29.4727 44.5967 46.5986q26.0068 17.1318 55.3115 17.1328zM136.054 613.879v-148.081v-370.196h46.7012v222.124h93.4102q25.1504 -0.0517578 46.792 19.8838q21.3584 20.0645 34.0693 54.0156\nq12.2891 34.0488 12.541 74.1729q-0.251953 60.876 -27.8633 99.4834q-33.5303 48.5977 -65.5391 48.5977h-140.111zM416.27 613.879v-518.277h140.113q38.5283 0 65.9688 43.502q27.4346 43.5039 27.4346 104.583v222.111q0 61.0898 -27.4346 104.587\nq-27.4404 43.4932 -65.9688 43.4932zM696.492 613.879v-518.277h46.7002v222.124h140.11v74.04h-140.11v148.078h186.81v74.0352h-233.51zM182.755 539.844h93.4102q13.8672 0 24.4805 -9.19922q10.6182 -9.19824 16.4199 -26.0244q5.80078 -16.833 5.80078 -38.8223\nq0 -21.9814 -5.80078 -38.8086q-5.80273 -16.8281 -16.4199 -26.0234q-10.6113 -9.2002 -24.4805 -9.2002h-93.4102v148.078zM462.975 539.844h93.4082q13.8652 0 24.4795 -9.19922q10.6172 -9.19824 16.4189 -26.0244q5.80371 -16.833 5.80371 -38.8223v-222.111\nq0 -21.9902 -5.80371 -38.8203q-5.80176 -16.8213 -16.4189 -26.0244q-10.6143 -9.19336 -24.4795 -9.19336h-93.4082v370.195z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'forward': {
+        'width': 944,
+        'path': 'M471.001 -82.8945v833.781l463.091 -416.887zM8.01953 -82.8945v833.781l462.98 -416.887z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'backward': {
+        'width': 966,
+        'path': 'M487.999 760.895v-833.781l-463.091 416.887zM950.979 760.895v-833.781l-462.979 416.887z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'forwardWin': {
+        'width': 1000,
+        'path': 'M957.229 795.323h-118.493v-882.751h118.493v882.751zM424 -87.4277v882.751l414.735 -441.323zM9.29199 -87.4277v882.751l414.708 -441.323z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'backwardWin': {
+        'width': 1000,
+        'path': 'M11.5732 -116.555l118.493 0.204102l-1.52637 882.751l-118.492 -0.205078zM543.275 767.117l1.52539 -882.75l-415.497 440.605zM957.982 767.833l1.52637 -882.749l-415.47 440.605z',
+        'ascent': 850,
+        'descent': -150
+    },
+    'toHelp': {
+        'width': 1000,
+        'path': 'M 500,990 C 229.8,990 10,770.2 10,500 10,229.8 229.8,10 500,10 770.2,10 990,229.8 990,500 990,770.2 770.2,990 500,990 Z m 0,-78.69922 C 726.8,911.30078 911.30078,726.8 911.30078,500 911.30078,273.2 726.8,88.69922 500,88.69922 273.2,88.69922 88.699219,273.2 88.699219,500 88.699219,726.8 273.1,911.30078 500,911.30078 Z m 2,-134 c -35.2,0 -65.79922,-4.20156 -91.69922,-13.10156 -25.1,-8.6 -47.50156,-19.6 -67.10156,-33 L 334,724.90039 382.30078,632.09961 394,640.19922 c 5.9,4 12.60078,8 20.30078,12 7.5,4 15.49883,7.40039 23.79883,10.40039 8.1,3 16.3,5.30039 24.5,6.90039 8.1,1.6 15.6,2.30078 22.5,2.30078 22.9,0.1 36.30078,-5.10078 41.80078,-11.30078 7.1,-7.7 10.9,-17.6 11,-32.5 0,-11.3 -2.60039,-19.89922 -7.40039,-27.19922 -5.7,-8.6 -13.00039,-17.00117 -21.90039,-25.20117 -9.5,-8.7 -19.6,-17.69922 -30.5,-27.19922 -11.9,-10.3 -22.49961,-22.50078 -31.59961,-36.30078 -9.4,-14.3 -16.70078,-30.89883 -21.80078,-49.79883 -3.6,-13.2 -5.29883,-27.9 -5.29883,-44 0,-8 0.49883,-16.50078 1.29883,-25.30078 l 1.10156,-11.30078 11.39844,0 93.80078,0 0,12.5 c 0,19.2 3.30039,34.10078 8.90039,44.80078 6.3,12.1 13.89883,22.70039 22.79883,31.90039 9.3,9.4 19.50078,18.50039 30.80078,26.90039 12.5,9.3 23.90078,20.09883 34.30078,32.29883 10.8,12.6 19.59922,27.80117 26.69922,45.20117 7.4,18.4 10.79961,40.49883 10.59961,66.29883 0.2,40.4 -14.49922,74.90078 -43.19922,99.30078 -28.8,24.7 -68.10039,36.40039 -115.90039,36.40039 z M 477.19922,348.90039 c -19.9,0.1 -37.89961,-6.00039 -51.09961,-18.40039 C 412.59961,318.1 405.8,300.39922 406,280.69922 c -0.1,-19.7 6.6,-37.39961 20,-50.09961 13.1,-12.7 30.99922,-18.90039 50.69922,-18.90039 l 0.5,0 c 20.8,0 39.20156,6.00039 52.60156,18.90039 13.5,12.6 20.2,30.39961 20,50.09961 0.1,19.6 -6.60156,37.40078 -20.10156,49.80078 -13.4,12.6 -31.8,18.50039 -52.5,18.40039 z',
+        'ascent': 850,
+        'descent': -150
     }
 };
 
@@ -11546,6 +11582,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -20364,24 +20404,24 @@ var modeBarButtons = module.exports = {};
 
 modeBarButtons.toImage = {
     name: 'toImage',
-    title: 'Download plot as a png',
+    title: _lang.print_png,
     icon: Icons.camera,
     click: function(gd) {
         var format = 'png';
 
-        Lib.notifier('Taking snapshot - this may take a few seconds', 'long');
+        Lib.notifier(_lang.taking_snapshot, 'long');
 
         if(Lib.isIE()) {
-            Lib.notifier('IE only supports svg.  Changing format to svg.', 'long');
+            Lib.notifier(_lang.png_impossible, 'long');
             format = 'svg';
         }
 
         downloadImage(gd, {'format': format})
           .then(function(filename) {
-              Lib.notifier('Snapshot succeeded - ' + filename, 'long');
+                    Lib.notifier(_lang.snapshot);
           })
           .catch(function() {
-              Lib.notifier('Sorry there was a problem downloading your snapshot!', 'long');
+                    Lib.notifier(_lang.snapshot_error, 'long');
           });
     }
 };
@@ -20391,13 +20431,13 @@ modeBarButtons.sendDataToCloud = {
     title: 'Save and edit plot in cloud',
     icon: Icons.disk,
     click: function(gd) {
-        Plots.sendDataToCloud(gd);
+        //Plotly.Plots.sendDataToCloud(gd);
     }
 };
 
 modeBarButtons.zoom2d = {
     name: 'zoom2d',
-    title: 'Zoom',
+    title: _lang.zoom,
     attr: 'dragmode',
     val: 'zoom',
     icon: Icons.zoombox,
@@ -20406,7 +20446,7 @@ modeBarButtons.zoom2d = {
 
 modeBarButtons.pan2d = {
     name: 'pan2d',
-    title: 'Pan',
+    title: _lang.pan,
     attr: 'dragmode',
     val: 'pan',
     icon: Icons.pan,
@@ -20415,7 +20455,7 @@ modeBarButtons.pan2d = {
 
 modeBarButtons.select2d = {
     name: 'select2d',
-    title: 'Box Select',
+    title: _lang.box_selected,
     attr: 'dragmode',
     val: 'select',
     icon: Icons.selectbox,
@@ -20424,7 +20464,7 @@ modeBarButtons.select2d = {
 
 modeBarButtons.lasso2d = {
     name: 'lasso2d',
-    title: 'Lasso Select',
+    title: _lang.lasso_select,
     attr: 'dragmode',
     val: 'lasso',
     icon: Icons.lasso,
@@ -20433,7 +20473,7 @@ modeBarButtons.lasso2d = {
 
 modeBarButtons.zoomIn2d = {
     name: 'zoomIn2d',
-    title: 'Zoom in',
+    title: _lang.zoom_in,
     attr: 'zoom',
     val: 'in',
     icon: Icons.zoom_plus,
@@ -20442,7 +20482,7 @@ modeBarButtons.zoomIn2d = {
 
 modeBarButtons.zoomOut2d = {
     name: 'zoomOut2d',
-    title: 'Zoom out',
+    title: _lang.zoom_out,
     attr: 'zoom',
     val: 'out',
     icon: Icons.zoom_minus,
@@ -20451,7 +20491,7 @@ modeBarButtons.zoomOut2d = {
 
 modeBarButtons.autoScale2d = {
     name: 'autoScale2d',
-    title: 'Autoscale',
+    title: _lang.autoscale,
     attr: 'zoom',
     val: 'auto',
     icon: Icons.autoscale,
@@ -20460,7 +20500,7 @@ modeBarButtons.autoScale2d = {
 
 modeBarButtons.resetScale2d = {
     name: 'resetScale2d',
-    title: 'Reset axes',
+    title: _lang.reset_axes,
     attr: 'zoom',
     val: 'reset',
     icon: Icons.home,
@@ -20469,7 +20509,7 @@ modeBarButtons.resetScale2d = {
 
 modeBarButtons.hoverClosestCartesian = {
     name: 'hoverClosestCartesian',
-    title: 'Show closest data on hover',
+    title: _lang.show_closest_data_on_hover,
     attr: 'hovermode',
     val: 'closest',
     icon: Icons.tooltip_basic,
@@ -20479,7 +20519,7 @@ modeBarButtons.hoverClosestCartesian = {
 
 modeBarButtons.hoverCompareCartesian = {
     name: 'hoverCompareCartesian',
-    title: 'Compare data on hover',
+    title: _lang.compare_data_on_hover,
     attr: 'hovermode',
     val: function(gd) {
         return gd._fullLayout._isHoriz ? 'y' : 'x';
@@ -38463,13 +38503,13 @@ axes.doTicks = function(gd, axid, skipTitle) {
                 {_offset: gs.l + (ax.position || 0) * gs.w, _length: 0} :
                 axisIds.getFromId(gd, ax.anchor);
 
-            y = ax._offset + ax._length / 2;
+            y = ax._offset + ax._length / 2 + 10; //added +10 for shift the label downside
             x = counterAxis._offset + ((ax.side === 'right') ?
                 counterAxis._length + 10 +
                     fontSize * (offsetBase + (ax.showticklabels ? 1 : 0.5)) :
                 -10 - fontSize * (offsetBase + (ax.showticklabels ? 0.5 : 0)));
 
-            transform = {rotate: '-90', offset: 0};
+            transform = {rotate: '0', offset: 0}; //rotate changed from -90 to 0
             if(!avoid.side) avoid.side = 'left';
         }
 
@@ -39730,7 +39770,7 @@ module.exports = function dragBox(gd, plotinfo, x, y, w, h, ns, ew) {
         // deactivate mousewheel scrolling on embedded graphs
         // devs can override this with layout._enablescrollzoom,
         // but _ ensures this setting won't leave their page
-        if(!gd._context.scrollZoom && !fullLayout._enablescrollzoom) {
+        if(!gd._context.scrollZoom && !fullLayout._enablescrollzoom && !e.ctrlKey) { //added && !e.ctrlKey zoom only on cntrl+wheel
             return;
         }
 
