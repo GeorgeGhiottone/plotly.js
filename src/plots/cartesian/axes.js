@@ -2108,7 +2108,7 @@ axes.doTicks = function(gd, axid, skipTitle) {
                 {_offset: gs.l + (ax.position || 0) * gs.w, _length: 0} :
                 axisIds.getFromId(gd, ax.anchor);
 
-            y = ax._offset + ax._length / 2;
+            y = ax._offset + ax._length / 2 + 10;
             if(ax.side === 'right') {
                 x = counterAxis._length + titleStandoff +
                     fontSize * (ax.showticklabels ? 1 : 0.5);
