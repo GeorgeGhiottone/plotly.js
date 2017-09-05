@@ -11,6 +11,7 @@
 
 var scatterPlot = require('../scatter/plot');
 var Axes = require('../../plots/cartesian/axes');
+var Drawing = require('../../components/drawing');
 
 module.exports = function plot(gd, plotinfoproxy, data) {
     var i, trace, node;
@@ -24,7 +25,7 @@ module.exports = function plot(gd, plotinfoproxy, data) {
         plot: plotinfoproxy.plot
     };
 
-    scatterPlot(plotinfo.graphDiv, plotinfo, data);
+    scatterPlot(gd, plotinfo, data);
 
     for(i = 0; i < data.length; i++) {
         trace = data[i][0].trace;
@@ -37,6 +38,6 @@ module.exports = function plot(gd, plotinfoproxy, data) {
         // separately to all scattercarpet traces, but that would require
         // lots of reorganization of scatter traces that is otherwise not
         // necessary. That makes this a potential optimization.
-        node.attr('clip-path', 'url(#clip' + carpet.uid + 'carpet)');
+        Drawing.setClipUrl(node, carpet._clipPathId);
     }
 };

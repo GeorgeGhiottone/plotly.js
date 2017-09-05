@@ -8,8 +8,10 @@ var Legend = require('@src/components/legend');
 var pkg = require('../../../package.json');
 var subroutines = require('@src/plot_api/subroutines');
 var helpers = require('@src/plot_api/helpers');
+var editTypes = require('@src/plot_api/edit_types');
 
 var d3 = require('d3');
+var customMatchers = require('../assets/custom_matchers');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var fail = require('../assets/fail_test');
@@ -104,6 +106,10 @@ describe('Test plot api', function() {
 
     describe('Plotly.relayout', function() {
         var gd;
+
+        beforeAll(function() {
+            jasmine.addMatchers(customMatchers);
+        });
 
         beforeEach(function() {
             gd = createGraphDiv();
@@ -252,9 +258,152 @@ describe('Test plot api', function() {
             .catch(fail)
             .then(done);
         });
+
+        it('annotations, shapes and images linked to category axes should update properly on zoom/pan', function(done) {
+            var jsLogo = 'https://images.plot.ly/language-icons/api-home/js-logo.png';
+
+            function getPos(sel) {
+                var rect = sel.node().getBoundingClientRect();
+                return [rect.left, rect.bottom];
+            }
+
+            function getAnnotationPos() {
+                return getPos(d3.select('.annotation'));
+            }
+
+            function getShapePos() {
+                return getPos(d3.select('.layer-above').select('.shapelayer').select('path'));
+            }
+
+            function getImagePos() {
+                return getPos(d3.select('.layer-above').select('.imagelayer').select('image'));
+            }
+
+            Plotly.plot(gd, [{
+                x: ['a', 'b', 'c'],
+                y: [1, 2, 1]
+            }], {
+                xaxis: {range: [-1, 5]},
+                annotations: [{
+                    xref: 'x',
+                    yref: 'y',
+                    x: 'b',
+                    y: 2
+                }],
+                shapes: [{
+                    xref: 'x',
+                    yref: 'y',
+                    type: 'line',
+                    x0: 'c',
+                    x1: 'c',
+                    y0: -1,
+                    y1: 4
+                }],
+                images: [{
+                    xref: 'x',
+                    yref: 'y',
+                    source: jsLogo,
+                    x: 'a',
+                    y: 1,
+                    sizex: 0.2,
+                    sizey: 0.2
+                }]
+            })
+            .then(function() {
+                expect(getAnnotationPos()).toBeCloseToArray([247.5, 210.1], -0.5);
+                expect(getShapePos()).toBeCloseToArray([350, 369]);
+                expect(getImagePos()).toBeCloseToArray([170, 272.52]);
+
+                return Plotly.relayout(gd, 'xaxis.range', [0, 2]);
+            })
+            .then(function() {
+                expect(getAnnotationPos()).toBeCloseToArray([337.5, 210.1], -0.5);
+                expect(getShapePos()).toBeCloseToArray([620, 369]);
+                expect(getImagePos()).toBeCloseToArray([80, 272.52]);
+
+                return Plotly.relayout(gd, 'xaxis.range', [-1, 5]);
+            })
+            .then(function() {
+                expect(getAnnotationPos()).toBeCloseToArray([247.5, 210.1], -0.5);
+                expect(getShapePos()).toBeCloseToArray([350, 369]);
+                expect(getImagePos()).toBeCloseToArray([170, 272.52]);
+            })
+            .catch(fail)
+            .then(done);
+        });
     });
 
-    describe('Plotly.restyle', function() {
+    describe('Plotly.relayout subroutines switchboard', function() {
+        var mockedMethods = [
+            'layoutReplot',
+            'doLegend',
+            'layoutStyles',
+            'doTicksRelayout',
+            'doModeBar',
+            'doCamera'
+        ];
+
+        beforeAll(function() {
+            mockedMethods.forEach(function(m) {
+                spyOn(subroutines, m);
+            });
+        });
+
+        function mock(gd) {
+            mockedMethods.forEach(function(m) {
+                subroutines[m].calls.reset();
+            });
+
+            Plots.supplyDefaults(gd);
+            Plots.doCalcdata(gd);
+            return gd;
+        }
+
+        it('should trigger recalc when switching into select or lasso dragmode', function() {
+            var gd = mock({
+                data: [{
+                    type: 'scattergl',
+                    x: [1, 2, 3],
+                    y: [1, 2, 3]
+                }],
+                layout: {
+                    dragmode: 'zoom'
+                }
+            });
+
+            function expectModeBarOnly() {
+                expect(gd.calcdata).toBeDefined();
+                expect(subroutines.doModeBar).toHaveBeenCalled();
+                expect(subroutines.layoutReplot).not.toHaveBeenCalled();
+            }
+
+            function expectRecalc() {
+                expect(gd.calcdata).toBeUndefined();
+                expect(subroutines.doModeBar).not.toHaveBeenCalled();
+                expect(subroutines.layoutReplot).toHaveBeenCalled();
+            }
+
+            Plotly.relayout(gd, 'dragmode', 'pan');
+            expectModeBarOnly();
+
+            Plotly.relayout(mock(gd), 'dragmode', 'lasso');
+            expectRecalc();
+
+            Plotly.relayout(mock(gd), 'dragmode', 'select');
+            expectModeBarOnly();
+
+            Plotly.relayout(mock(gd), 'dragmode', 'lasso');
+            expectModeBarOnly();
+
+            Plotly.relayout(mock(gd), 'dragmode', 'zoom');
+            expectModeBarOnly();
+
+            Plotly.relayout(mock(gd), 'dragmode', 'select');
+            expectRecalc();
+        });
+    });
+
+    describe('Plotly.restyle subroutines switchboard', function() {
         beforeEach(function() {
             spyOn(PlotlyInternal, 'plot');
             spyOn(Plots, 'previousPromises');
@@ -330,6 +479,36 @@ describe('Test plot api', function() {
             expect(PlotlyInternal.plot).toHaveBeenCalled();
         });
 
+        it('should do full replot when arrayOk base attributes are updated', function() {
+            var gd = {
+                data: [{x: [1, 2, 3], y: [1, 2, 3]}],
+                layout: {}
+            };
+
+            mockDefaultsAndCalc(gd);
+            Plotly.restyle(gd, 'hoverlabel.bgcolor', [['red', 'green', 'blue']]);
+            expect(gd.calcdata).toBeUndefined();
+            expect(PlotlyInternal.plot).toHaveBeenCalled();
+
+            mockDefaultsAndCalc(gd);
+            PlotlyInternal.plot.calls.reset();
+            Plotly.restyle(gd, 'hoverlabel.bgcolor', 'yellow');
+            expect(gd.calcdata).toBeUndefined();
+            expect(PlotlyInternal.plot).toHaveBeenCalled();
+
+            mockDefaultsAndCalc(gd);
+            PlotlyInternal.plot.calls.reset();
+            Plotly.restyle(gd, 'hoverlabel.bgcolor', 'blue');
+            expect(gd.calcdata).toBeDefined();
+            expect(PlotlyInternal.plot).not.toHaveBeenCalled();
+
+            mockDefaultsAndCalc(gd);
+            PlotlyInternal.plot.calls.reset();
+            Plotly.restyle(gd, 'hoverlabel.bgcolor', [['red', 'blue', 'green']]);
+            expect(gd.calcdata).toBeUndefined();
+            expect(PlotlyInternal.plot).toHaveBeenCalled();
+        });
+
         it('should do full replot when attribute container are updated', function() {
             var gd = {
                 data: [{x: [1, 2, 3], y: [1, 2, 3]}],
@@ -361,6 +540,72 @@ describe('Test plot api', function() {
 
             Plotly.restyle(gd, {'ygap': 2});
             expect(PlotlyInternal.plot.calls.count()).toEqual(2);
+        });
+
+        it('should clear calcdata when restyling \'zmin\' and \'zmax\' on contour traces', function() {
+            var contour = {
+                data: [{
+                    type: 'contour',
+                    z: [[1, 2, 3], [1, 2, 1]]
+                }]
+            };
+
+            var histogram2dcontour = {
+                data: [{
+                    type: 'histogram2dcontour',
+                    x: [1, 1, 2, 2, 2, 3],
+                    y: [0, 0, 0, 0, 1, 3]
+                }]
+            };
+
+            var mocks = [contour, histogram2dcontour];
+
+            mocks.forEach(function(gd) {
+                mockDefaultsAndCalc(gd);
+                PlotlyInternal.plot.calls.reset();
+                Plotly.restyle(gd, 'zmin', 0);
+                expect(gd.calcdata).toBeUndefined();
+                expect(PlotlyInternal.plot).toHaveBeenCalled();
+
+                mockDefaultsAndCalc(gd);
+                PlotlyInternal.plot.calls.reset();
+                Plotly.restyle(gd, 'zmax', 10);
+                expect(gd.calcdata).toBeUndefined();
+                expect(PlotlyInternal.plot).toHaveBeenCalled();
+            });
+        });
+
+        it('should not clear calcdata when restyling \'zmin\' and \'zmax\' on heatmap traces', function() {
+            var heatmap = {
+                data: [{
+                    type: 'heatmap',
+                    z: [[1, 2, 3], [1, 2, 1]]
+                }]
+            };
+
+            var histogram2d = {
+                data: [{
+                    type: 'histogram2d',
+                    x: [1, 1, 2, 2, 2, 3],
+                    y: [0, 0, 0, 0, 1, 3]
+                }]
+            };
+
+            var mocks = [heatmap, histogram2d];
+
+            mocks.forEach(function(gd) {
+                mockDefaultsAndCalc(gd);
+                PlotlyInternal.plot.calls.reset();
+                Plotly.restyle(gd, 'zmin', 0);
+                expect(gd.calcdata).toBeDefined();
+                expect(PlotlyInternal.plot).toHaveBeenCalled();
+
+                mockDefaultsAndCalc(gd);
+                PlotlyInternal.plot.calls.reset();
+                Plotly.restyle(gd, 'zmax', 10);
+                expect(gd.calcdata).toBeDefined();
+                expect(PlotlyInternal.plot).toHaveBeenCalled();
+            });
         });
 
         it('ignores undefined values', function() {
@@ -1495,5 +1740,49 @@ describe('plot_api helpers', function() {
             // but hasParent doesn't look at the values in aobj, just its keys.
             expect(helpers.hasParent({'marker.line': 1}, attr2)).toBe(true);
         });
+    });
+});
+
+describe('plot_api edit_types', function() {
+    it('initializes flags with all false', function() {
+        ['traces', 'layout'].forEach(function(container) {
+            var initFlags = editTypes[container]();
+            Object.keys(initFlags).forEach(function(key) {
+                expect(initFlags[key]).toBe(false, container + '.' + key);
+            });
+        });
+    });
+
+    it('makes no changes if editType is not included', function() {
+        var flags = {docalc: false, dostyle: true};
+
+        editTypes.update(flags, {
+            valType: 'boolean',
+            dflt: true,
+            role: 'style'
+        });
+
+        expect(flags).toEqual({docalc: false, dostyle: true});
+
+        editTypes.update(flags, {
+            family: {valType: 'string', dflt: 'Comic sans'},
+            size: {valType: 'number', dflt: 96},
+            color: {valType: 'color', dflt: 'red'}
+        });
+
+        expect(flags).toEqual({docalc: false, dostyle: true});
+    });
+
+    it('gets updates from the outer object and ignores nested items', function() {
+        var flags = {docalc: false, dolegend: true};
+
+        editTypes.update(flags, {
+            editType: 'docalc+dostyle',
+            valType: 'number',
+            dflt: 1,
+            role: 'style'
+        });
+
+        expect(flags).toEqual({docalc: true, dolegend: true, dostyle: true});
     });
 });

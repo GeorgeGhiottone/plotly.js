@@ -5,7 +5,7 @@ var Plots = require('@src/plots/plots');
 var Lib = require('@src/lib');
 var Loggers = require('@src/lib/loggers');
 var Axes = require('@src/plots/cartesian/axes');
-var HOVERMINTIME = require('@src/plots/cartesian/constants').HOVERMINTIME;
+var HOVERMINTIME = require('@src/components/fx').constants.HOVERMINTIME;
 var DBLCLICKDELAY = require('@src/constants/interactions').DBLCLICKDELAY;
 
 var d3 = require('d3');
@@ -98,39 +98,48 @@ describe('Test annotations', function() {
             expect(layoutOut.annotations[0].ax).toEqual('2004-07-01');
         });
 
-        it('should convert ax/ay category coordinates to linear coords', function() {
+        it('should clean *xclick* and *yclick* values', function() {
             var layoutIn = {
                 annotations: [{
-                    showarrow: true,
-                    axref: 'x',
-                    ayref: 'y',
-                    x: 'c',
-                    ax: 1,
-                    y: 'A',
-                    ay: 3
+                    clicktoshow: 'onoff',
+                    xref: 'paper',
+                    yref: 'paper',
+                    xclick: '10',
+                    yclick: '30'
+                }, {
+                    clicktoshow: 'onoff',
+                    xref: 'x',
+                    yref: 'y',
+                    xclick: '1',
+                    yclick: '2017-13-50'
+                }, {
+                    clicktoshow: 'onoff',
+                    xref: 'x2',
+                    yref: 'y2',
+                    xclick: '2',
+                    yclick: 'A'
                 }]
             };
 
             var layoutOut = {
-                xaxis: {
-                    type: 'category',
-                    _categories: ['a', 'b', 'c'],
-                    range: [-0.5, 2.5] },
-                yaxis: {
-                    type: 'category',
-                    _categories: ['A', 'B', 'C'],
-                    range: [-0.5, 3]
-                }
+                xaxis: {type: 'linear', range: [0, 1]},
+                yaxis: {type: 'date', range: ['2000-01-01', '2018-01-01']},
+                xaxis2: {type: 'log', range: [1, 2]},
+                yaxis2: {type: 'category', range: [0, 1]}
             };
-            Axes.setConvert(layoutOut.xaxis);
-            Axes.setConvert(layoutOut.yaxis);
+
+            ['xaxis', 'xaxis2', 'yaxis', 'yaxis2'].forEach(function(k) {
+                Axes.setConvert(layoutOut[k]);
+            });
 
             _supply(layoutIn, layoutOut);
 
-            expect(layoutOut.annotations[0].x).toEqual(2);
-            expect(layoutOut.annotations[0].ax).toEqual(1);
-            expect(layoutOut.annotations[0].y).toEqual(0);
-            expect(layoutOut.annotations[0].ay).toEqual(3);
+            expect(layoutOut.annotations[0]._xclick).toBe(10, 'paper x');
+            expect(layoutOut.annotations[0]._yclick).toBe(30, 'paper y');
+            expect(layoutOut.annotations[1]._xclick).toBe(1, 'linear');
+            expect(layoutOut.annotations[1]._yclick).toBe(undefined, 'invalid date');
+            expect(layoutOut.annotations[2]._xclick).toBe(2, 'log');
+            expect(layoutOut.annotations[2]._yclick).toBe('A', 'category');
         });
     });
 });
@@ -149,6 +158,12 @@ describe('annotations relayout', function() {
 
         var mockData = Lib.extendDeep([], mock.data),
             mockLayout = Lib.extendDeep({}, mock.layout);
+
+        // insert some MathJax text - to make sure we fall back correctly
+        // when MathJax is not provided (as is the case in our normal
+        // jasmine test suite)
+        expect(typeof MathJax).toBe('undefined');
+        mockLayout.annotations[14].text = '$x+y+z$';
 
         Plotly.plot(gd, mockData, mockLayout).then(done);
 
@@ -543,13 +558,16 @@ describe('annotations log/linear axis changes', function() {
 describe('annotations autorange', function() {
     'use strict';
 
-    var mock = Lib.extendDeep({}, require('@mocks/annotations-autorange.json'));
+    var mock;
     var gd;
 
     beforeAll(function() {
         jasmine.addMatchers(customMatchers);
+    });
 
+    beforeEach(function() {
         gd = createGraphDiv();
+        mock = Lib.extendDeep({}, require('@mocks/annotations-autorange.json'));
     });
 
     afterEach(destroyGraphDiv);
@@ -579,6 +597,22 @@ describe('annotations autorange', function() {
         expect(fullLayout.yaxis3.range).toBeCloseToArray(y3, PREC, 'yaxis3');
     }
 
+    function assertVisible(indices) {
+        // right now we keep the annotation groups around when they're invisible,
+        // they just don't have any graphical elements in them. Might be better
+        // to get rid of the groups even, but this test will produce the right
+        // results either way, showing that the annotation is or isn't drawn.
+        for(var i = 0; i < gd.layout.annotations.length; i++) {
+            var selectorBase = '.annotation[data-index="' + i + '"]';
+            var annotationGraphicalItems = d3.selectAll(
+                selectorBase + ' text,' +
+                selectorBase + ' rect,' +
+                selectorBase + ' path');
+            expect(annotationGraphicalItems.size() > 0)
+                .toBe(indices.indexOf(i) !== -1, selectorBase);
+        }
+    }
+
     it('should adapt to relayout calls', function(done) {
         Plotly.plot(gd, mock).then(function() {
             assertRanges(
@@ -586,6 +620,7 @@ describe('annotations autorange', function() {
                 ['2000-11-13', '2001-04-21'], [-0.069, 3.917],
                 [0.88, 2.05], [0.92, 2.08]
             );
+            assertVisible([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
 
             return Plotly.relayout(gd, {
                 'annotations[0].visible': false,
@@ -599,6 +634,7 @@ describe('annotations autorange', function() {
                 ['2001-01-18', '2001-03-27'], [-0.069, 3.917],
                 [1.44, 2.1], [0.92, 2.08]
             );
+            assertVisible([1, 2, 3, 5, 6, 7, 9, 10, 11, 12, 13]);
 
             return Plotly.relayout(gd, {
                 'annotations[2].visible': false,
@@ -612,6 +648,7 @@ describe('annotations autorange', function() {
                 ['2001-01-31 23:59:59.999', '2001-02-01 00:00:00.001'], [-0.069, 3.917],
                 [0.5, 2.5], [0.92, 2.08]
             );
+            assertVisible([1, 3, 6, 7, 10, 11, 12, 13]);
 
             return Plotly.relayout(gd, {
                 'annotations[0].visible': true,
@@ -628,6 +665,27 @@ describe('annotations autorange', function() {
                 ['2000-11-13', '2001-04-21'], [-0.069, 3.917],
                 [0.88, 2.05], [0.92, 2.08]
             );
+            assertVisible([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+
+            // check that off-plot annotations are hidden - zoom in to
+            // only one of the four on each subplot
+            return Plotly.relayout(gd, {
+                'xaxis.range': [1.4, 1.6],
+                'yaxis.range': [0.9, 1.1],
+                'xaxis2.range': ['2001-01-15', '2001-02-15'],
+                'yaxis2.range': [0.9, 1.1],
+                'xaxis3.range': [1.9, 2.1],
+                'yaxis3.range': [1.4, 1.6]
+            });
+        })
+        .then(function() {
+            assertRanges([1.4, 1.6], [0.9, 1.1],
+                ['2001-01-15', '2001-02-15'], [0.9, 1.1],
+                [1.9, 2.1], [1.4, 1.6]
+            );
+            // only one annotation on each subplot, plus the two paper-referenced
+            // are visible after zooming in
+            assertVisible([3, 7, 9, 12, 13]);
         })
         .catch(failTest)
         .then(done);
@@ -1168,7 +1226,11 @@ describe('annotation effects', function() {
         ], {}) // turn off the default editable: true
         .then(function() {
             clickData = [];
-            gd.on('plotly_clickannotation', function(evt) { clickData.push(evt); });
+            gd.on('plotly_clickannotation', function(evt) {
+                expect(evt.event).toEqual(jasmine.objectContaining({type: 'click'}));
+                delete evt.event;
+                clickData.push(evt);
+            });
 
             gdBB = gd.getBoundingClientRect();
             pos0Head = [gdBB.left + 200, gdBB.top + 200];
@@ -1246,5 +1308,119 @@ describe('annotation effects', function() {
         })
         .catch(failTest)
         .then(done);
+    });
+
+    it('makes the whole text box a link if the link is the whole text', function(done) {
+        makePlot([
+            {x: 20, y: 20, text: '<a href="https://plot.ly">Plot</a>', showarrow: false},
+            {x: 50, y: 50, text: '<a href="https://plot.ly">or</a> not', showarrow: false},
+            {x: 80, y: 80, text: '<a href="https://plot.ly">arrow</a>'},
+            {x: 20, y: 80, text: 'nor <a href="https://plot.ly">this</a>'}
+        ])
+        .then(function() {
+            function checkBoxLink(index, isLink) {
+                var boxLink = d3.selectAll('.annotation[data-index="' + index + '"] g>a');
+                expect(boxLink.size()).toBe(isLink ? 1 : 0);
+
+                var textLink = d3.selectAll('.annotation[data-index="' + index + '"] text a');
+                expect(textLink.size()).toBe(1);
+                checkLink(textLink);
+
+                if(isLink) checkLink(boxLink);
+            }
+
+            function checkLink(link) {
+                expect(link.style('cursor')).toBe('pointer');
+                expect(link.attr('xlink:href')).toBe('https://plot.ly');
+                expect(link.attr('xlink:show')).toBe('new');
+            }
+
+            checkBoxLink(0, true);
+            checkBoxLink(1, false);
+            checkBoxLink(2, true);
+            checkBoxLink(3, false);
+        })
+        .catch(failTest)
+        .then(done);
+    });
+});
+
+describe('animating annotations', function() {
+    var gd;
+
+    // Two slightly different 1x1 pngs:
+    var img1 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2P4z/C/HgAGfgJ+p8YU1AAAAABJRU5ErkJggg==';
+    var img2 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2P4//9/PQAJewN9w0ic/wAAAABJRU5ErkJggg==';
+
+    beforeEach(function() {
+        gd = createGraphDiv();
+    });
+
+    afterEach(destroyGraphDiv);
+
+    it('updates annoations when no axis update present', function(done) {
+
+        function assertAnnotations(expected) {
+            var texts = Plotly.d3.select(gd).selectAll('.annotation .annotation-text');
+            expect(expected.length).toEqual(texts.size());
+
+            texts.each(function(d, i) {
+                expect(Plotly.d3.select(this).text()).toEqual(expected[i]);
+            });
+        }
+
+        function assertShapes(expected) {
+            var paths = Plotly.d3.select(gd).selectAll('.shapelayer path');
+
+            expect(expected.length).toEqual(paths.size());
+
+            paths.each(function(d, i) {
+                expect(Plotly.d3.select(this).style('fill')).toEqual(expected[i]);
+            });
+        }
+
+        function assertImages(expected) {
+            var imgs = Plotly.d3.select(gd).selectAll('.imagelayer image');
+
+            expect(expected.length).toEqual(imgs.size());
+
+            imgs.each(function(d, i) {
+                expect(Plotly.d3.select(this).attr('href')).toEqual(expected[i]);
+            });
+        }
+
+        Plotly.plot(gd,
+            [{y: [1, 2, 3]}],
+            {
+                annotations: [{text: 'hello'}],
+                shapes: [{fillcolor: 'rgb(170, 170, 170)'}],
+                images: [{source: img1}]
+            }
+        ).then(function() {
+            assertAnnotations(['hello']);
+            assertShapes(['rgb(170, 170, 170)']);
+            assertImages([img1]);
+
+            return Plotly.animate(gd, [{
+                layout: {
+                    annotations: [{text: 'hi'}],
+                    shapes: [
+                        {fillcolor: 'rgb(171, 171, 171)'},
+                        {fillcolor: 'rgb(172, 172, 172)'}
+                    ],
+                    images: [{source: img2}]
+                }
+            }], {
+                frame: {redraw: false, duration: 0}
+            });
+        }).then(function() {
+            assertAnnotations(['hi']);
+            assertShapes([
+                'rgb(171, 171, 171)',
+                'rgb(172, 172, 172)'
+            ]);
+            assertImages([img2]);
+
+        }).catch(failTest).then(done);
     });
 });

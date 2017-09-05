@@ -3,15 +3,14 @@ var Plotly = require('@lib/index');
 var Bar = require('@src/traces/bar');
 var Lib = require('@src/lib');
 var Plots = require('@src/plots/plots');
+var Drawing = require('@src/components/drawing');
 
-var PlotlyInternal = require('@src/plotly');
-var Axes = PlotlyInternal.Axes;
+var Axes = require('@src/plots/cartesian/axes');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var fail = require('../assets/fail_test');
 var customMatchers = require('../assets/custom_matchers');
-var failTest = require('../assets/fail_test');
 
 describe('Bar.supplyDefaults', function() {
     'use strict';
@@ -96,6 +95,7 @@ describe('Bar.supplyDefaults', function() {
         expect(traceOut.texfont).toBeUndefined();
         expect(traceOut.insidetexfont).toBeUndefined();
         expect(traceOut.outsidetexfont).toBeUndefined();
+        expect(traceOut.constraintext).toBeUndefined();
     });
 
     it('should default textfont to layout.font', function() {
@@ -117,6 +117,7 @@ describe('Bar.supplyDefaults', function() {
         expect(traceOut.insidetextfont).not.toBe(layout.font);
         expect(traceOut.insidetextfont).not.toBe(traceOut.textfont);
         expect(traceOut.outsidetexfont).toBeUndefined();
+        expect(traceOut.constraintext).toBe('both');
     });
 
     it('should inherit layout.calendar', function() {
@@ -855,9 +856,9 @@ describe('A bar plot', function() {
             }
 
             expect(foundTextNodes).toBe(true);
-
-            done();
-        });
+        })
+        .catch(fail)
+        .then(done);
     });
 
     it('should show bar texts (outside case)', function(done) {
@@ -889,9 +890,9 @@ describe('A bar plot', function() {
             }
 
             expect(foundTextNodes).toBe(true);
-
-            done();
-        });
+        })
+        .catch(fail)
+        .then(done);
     });
 
     it('should show bar texts (horizontal case)', function(done) {
@@ -922,9 +923,9 @@ describe('A bar plot', function() {
             }
 
             expect(foundTextNodes).toBe(true);
-
-            done();
-        });
+        })
+        .catch(fail)
+        .then(done);
     });
 
     it('should show bar texts (barnorm case)', function(done) {
@@ -957,9 +958,9 @@ describe('A bar plot', function() {
             }
 
             expect(foundTextNodes).toBe(true);
-
-            done();
-        });
+        })
+        .catch(fail)
+        .then(done);
     });
 
     it('should be able to restyle', function(done) {
@@ -1045,6 +1046,17 @@ describe('A bar plot', function() {
             assertTextIsInsidePath(text20, path20); // inside
             assertTextIsBelowPath(text30, path30); // outside
 
+            // clear bounding box cache - somehow when you cache
+            // text size too early sometimes it changes later...
+            // we've had this issue before, where we've had to
+            // redraw annotations to get final sizes, I wish we
+            // could get some signal that fonts are really ready
+            // and not start drawing until then (or invalidate
+            // the bbox cache when that happens?)
+            // without this change, we get an error at
+            // assertTextIsInsidePath(text30, path30);
+            Drawing.savedBBoxes = {};
+
             return Plotly.restyle(gd, 'textposition', 'inside');
         }).then(function() {
             var cd = gd.calcdata;
@@ -1096,9 +1108,9 @@ describe('A bar plot', function() {
             assertTextIsInsidePath(text12, path12); // inside
             assertTextIsInsidePath(text20, path20); // inside
             assertTextIsInsidePath(text30, path30); // inside
-
-            done();
-        });
+        })
+        .catch(fail)
+        .then(done);
     });
 
     it('should coerce text-related attributes', function(done) {
@@ -1178,9 +1190,9 @@ describe('A bar plot', function() {
             assertTextFont(textNodes[0], expected.insidetextfont, 0);
             assertTextFont(textNodes[1], expected.outsidetextfont, 1);
             assertTextFont(textNodes[2], expected.insidetextfont, 2);
-
-            done();
-        });
+        })
+        .catch(fail)
+        .then(done);
     });
 });
 
@@ -1237,7 +1249,9 @@ describe('bar hover', function() {
 
             var mock = Lib.extendDeep({}, require('@mocks/11.json'));
 
-            Plotly.plot(gd, mock.data, mock.layout).then(done);
+            Plotly.plot(gd, mock.data, mock.layout)
+            .catch(fail)
+            .then(done);
         });
 
         it('should return the correct hover point data (case x)', function() {
@@ -1261,7 +1275,9 @@ describe('bar hover', function() {
 
             var mock = Lib.extendDeep({}, require('@mocks/bar_attrs_group_norm.json'));
 
-            Plotly.plot(gd, mock.data, mock.layout).then(done);
+            Plotly.plot(gd, mock.data, mock.layout)
+            .catch(fail)
+            .then(done);
         });
 
         it('should return the correct hover point data (case y)', function() {
@@ -1376,7 +1392,7 @@ describe('bar hover', function() {
                     expect(out).toBe(false, hoverSpec);
                 });
             })
-            .catch(failTest)
+            .catch(fail)
             .then(done);
         });
 
@@ -1414,7 +1430,7 @@ describe('bar hover', function() {
                 expect(out.style).toEqual([1, 'red', 200, 1]);
                 assertPos(out.pos, [203, 304, 168, 168]);
             })
-            .catch(failTest)
+            .catch(fail)
             .then(done);
         });
     });

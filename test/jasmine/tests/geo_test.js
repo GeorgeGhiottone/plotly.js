@@ -17,8 +17,7 @@ var mouseEvent = require('../assets/mouse_event');
 var click = require('../assets/click');
 
 var DBLCLICKDELAY = require('@src/constants/interactions').DBLCLICKDELAY;
-var HOVERMINTIME = require('@src/plots/cartesian/constants').HOVERMINTIME;
-
+var HOVERMINTIME = require('@src/components/fx').constants.HOVERMINTIME;
 
 function move(fromX, fromY, toX, toY, delay) {
     return new Promise(function(resolve) {
@@ -503,6 +502,21 @@ describe('Test geo interactions', function() {
                 })
                 .then(done);
             });
+
+            it('should show custom \`hoverlabel\' settings', function(done) {
+                Plotly.restyle(gd, {
+                    'hoverlabel.bgcolor': 'red',
+                    'hoverlabel.bordercolor': [['blue', 'black', 'green']]
+                })
+                .then(function() {
+                    mouseEventScatterGeo('mousemove');
+
+                    var path = d3.selectAll('g.hovertext').select('path');
+                    expect(path.style('fill')).toEqual('rgb(255, 0, 0)', 'bgcolor');
+                    expect(path.style('stroke')).toEqual('rgb(0, 0, 255)', 'bordecolor[0]');
+                })
+                .then(done);
+            });
         });
 
         describe('scattergeo hover events', function() {
@@ -522,7 +536,7 @@ describe('Test geo interactions', function() {
             it('should contain the correct fields', function() {
                 expect(Object.keys(ptData)).toEqual([
                     'data', 'fullData', 'curveNumber', 'pointNumber',
-                    'lon', 'lat', 'location'
+                    'lon', 'lat', 'location', 'marker.size'
                 ]);
                 expect(cnt).toEqual(1);
             });
@@ -533,6 +547,7 @@ describe('Test geo interactions', function() {
                 expect(ptData.location).toBe(null);
                 expect(ptData.curveNumber).toEqual(0);
                 expect(ptData.pointNumber).toEqual(0);
+                expect(ptData['marker.size']).toEqual(20);
                 expect(cnt).toEqual(1);
             });
 
@@ -584,7 +599,7 @@ describe('Test geo interactions', function() {
             it('should contain the correct fields', function() {
                 expect(Object.keys(ptData)).toEqual([
                     'data', 'fullData', 'curveNumber', 'pointNumber',
-                    'lon', 'lat', 'location'
+                    'lon', 'lat', 'location', 'marker.size'
                 ]);
             });
 
@@ -594,6 +609,7 @@ describe('Test geo interactions', function() {
                 expect(ptData.location).toBe(null);
                 expect(ptData.curveNumber).toEqual(0);
                 expect(ptData.pointNumber).toEqual(0);
+                expect(ptData['marker.size']).toEqual(20);
             });
         });
 
@@ -615,7 +631,7 @@ describe('Test geo interactions', function() {
             it('should contain the correct fields', function() {
                 expect(Object.keys(ptData)).toEqual([
                     'data', 'fullData', 'curveNumber', 'pointNumber',
-                    'lon', 'lat', 'location'
+                    'lon', 'lat', 'location', 'marker.size'
                 ]);
             });
 
@@ -625,6 +641,7 @@ describe('Test geo interactions', function() {
                 expect(ptData.location).toBe(null);
                 expect(ptData.curveNumber).toEqual(0);
                 expect(ptData.pointNumber).toEqual(0);
+                expect(ptData['marker.size']).toEqual(20);
             });
         });
 
@@ -1086,16 +1103,18 @@ describe('Test event property of interactions on a geo plot:', function() {
 
             expect(Object.keys(pt)).toEqual([
                 'data', 'fullData', 'curveNumber', 'pointNumber', 'lon', 'lat',
-                'location'
+                'location', 'text', 'marker.size'
             ]);
 
             expect(pt.curveNumber).toEqual(0, 'points[0].curveNumber');
             expect(typeof pt.data).toEqual(typeof {}, 'points[0].data');
             expect(typeof pt.fullData).toEqual(typeof {}, 'points[0].fullData');
-            expect(pt.lat).toEqual(-101.57, 'points[0].lat');
-            expect(pt.lon).toEqual(57.75, 'points[0].lon');
-            expect(pt.location).toEqual(57.75, 'points[0].location');
+            expect(pt.lat).toEqual(57.75, 'points[0].lat');
+            expect(pt.lon).toEqual(-101.57, 'points[0].lon');
+            expect(pt.location).toEqual('CAN', 'points[0].location');
             expect(pt.pointNumber).toEqual(0, 'points[0].pointNumber');
+            expect(pt.text).toEqual(20, 'points[0].text');
+            expect(pt['marker.size']).toEqual(20, 'points[0][\'marker.size\']');
 
             expect(evt.clientX).toEqual(pointPos[0], 'event.clientX');
             expect(evt.clientY).toEqual(pointPos[1], 'event.clientY');
@@ -1132,16 +1151,18 @@ describe('Test event property of interactions on a geo plot:', function() {
 
             expect(Object.keys(pt)).toEqual([
                 'data', 'fullData', 'curveNumber', 'pointNumber', 'lon', 'lat',
-                'location'
+                'location', 'text', 'marker.size'
             ]);
 
             expect(pt.curveNumber).toEqual(0, 'points[0].curveNumber');
             expect(typeof pt.data).toEqual(typeof {}, 'points[0].data');
             expect(typeof pt.fullData).toEqual(typeof {}, 'points[0].fullData');
-            expect(pt.lat).toEqual(-101.57, 'points[0].lat');
-            expect(pt.lon).toEqual(57.75, 'points[0].lon');
-            expect(pt.location).toEqual(57.75, 'points[0].location');
+            expect(pt.lat).toEqual(57.75, 'points[0].lat');
+            expect(pt.lon).toEqual(-101.57, 'points[0].lon');
+            expect(pt.location).toEqual('CAN', 'points[0].location');
             expect(pt.pointNumber).toEqual(0, 'points[0].pointNumber');
+            expect(pt.text).toEqual(20, 'points[0].text');
+            expect(pt['marker.size']).toEqual(20, 'points[0][\'marker.size\']');
 
             expect(evt.clientX).toEqual(pointPos[0], 'event.clientX');
             expect(evt.clientY).toEqual(pointPos[1], 'event.clientY');
@@ -1171,16 +1192,18 @@ describe('Test event property of interactions on a geo plot:', function() {
 
             expect(Object.keys(pt)).toEqual([
                 'data', 'fullData', 'curveNumber', 'pointNumber', 'lon', 'lat',
-                'location'
+                'location', 'text', 'marker.size'
             ]);
 
             expect(pt.curveNumber).toEqual(0, 'points[0].curveNumber');
             expect(typeof pt.data).toEqual(typeof {}, 'points[0].data');
             expect(typeof pt.fullData).toEqual(typeof {}, 'points[0].fullData');
-            expect(pt.lat).toEqual(-101.57, 'points[0].lat');
-            expect(pt.lon).toEqual(57.75, 'points[0].lon');
-            expect(pt.location).toEqual(57.75, 'points[0].location');
+            expect(pt.lat).toEqual(57.75, 'points[0].lat');
+            expect(pt.lon).toEqual(-101.57, 'points[0].lon');
+            expect(pt.location).toEqual('CAN', 'points[0].location');
             expect(pt.pointNumber).toEqual(0, 'points[0].pointNumber');
+            expect(pt.text).toEqual(20, 'points[0].text');
+            expect(pt['marker.size']).toEqual(20, 'points[0][\'marker.size\']');
 
             expect(evt.clientX).toEqual(pointPos[0], 'event.clientX');
             expect(evt.clientY).toEqual(pointPos[1], 'event.clientY');
@@ -1205,16 +1228,18 @@ describe('Test event property of interactions on a geo plot:', function() {
 
                 expect(Object.keys(pt)).toEqual([
                     'data', 'fullData', 'curveNumber', 'pointNumber', 'lon', 'lat',
-                    'location'
+                    'location', 'text', 'marker.size'
                 ]);
 
                 expect(pt.curveNumber).toEqual(0, 'points[0].curveNumber');
                 expect(typeof pt.data).toEqual(typeof {}, 'points[0].data');
                 expect(typeof pt.fullData).toEqual(typeof {}, 'points[0].fullData');
-                expect(pt.lat).toEqual(-101.57, 'points[0].lat');
-                expect(pt.lon).toEqual(57.75, 'points[0].lon');
-                expect(pt.location).toEqual(57.75, 'points[0].location');
+                expect(pt.lat).toEqual(57.75, 'points[0].lat');
+                expect(pt.lon).toEqual(-101.57, 'points[0].lon');
+                expect(pt.location).toEqual('CAN', 'points[0].location');
                 expect(pt.pointNumber).toEqual(0, 'points[0].pointNumber');
+                expect(pt.text).toEqual(20, 'points[0].text');
+                expect(pt['marker.size']).toEqual(20, 'points[0][\'marker.size\']');
 
                 expect(evt.clientX).toEqual(nearPos[0], 'event.clientX');
                 expect(evt.clientY).toEqual(nearPos[1], 'event.clientY');

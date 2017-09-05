@@ -1,5 +1,6 @@
 var Plotly = require('@lib/index');
 var Plots = require('@src/plots/plots');
+var Lib = require('@src/lib');
 
 var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
@@ -38,12 +39,17 @@ describe('Test Plots', function() {
 
             var oldFullLayout = {
                 _plots: { xy: { plot: {} } },
-                xaxis: { c2p: function() {} },
-                yaxis: { _m: 20 },
+                xaxis: { c2p: function() {}, layer: 'above traces' },
+                yaxis: { _m: 20, layer: 'above traces' },
                 scene: { _scene: {} },
                 annotations: [{ _min: 10, }, { _max: 20 }],
                 someFunc: function() {}
             };
+
+            Lib.extendFlat(oldFullLayout._plots.xy, {
+                xaxis: oldFullLayout.xaxis,
+                yaxis: oldFullLayout.yaxis
+            });
 
             var newData = [{
                 type: 'scatter3d',
@@ -414,32 +420,19 @@ describe('Test Plots', function() {
                 '_hmpixcount', '_hmlumcount', '_mouseDownTime', '_legendMouseDownTime',
             ];
 
+            var expectedUndefined = [
+                'data', 'layout', '_fullData', '_fullLayout', 'calcdata', 'framework',
+                'empty', 'fid', 'undoqueue', 'undonum', 'autoplay', 'changed',
+                '_promises', '_redrawTimer', 'firstscatter', 'hmlumcount', 'hmpixcount',
+                'numboxes', '_hoverTimer', '_lastHoverTime', '_transitionData',
+                '_transitioning'
+            ];
+
             Plots.purge(gd);
-            expect(Object.keys(gd)).toEqual(expectedKeys);
-            expect(gd.data).toBeUndefined();
-            expect(gd.layout).toBeUndefined();
-            expect(gd._fullData).toBeUndefined();
-            expect(gd._fullLayout).toBeUndefined();
-            expect(gd.calcdata).toBeUndefined();
-            expect(gd.framework).toBeUndefined();
-            expect(gd.empty).toBeUndefined();
-            expect(gd.fid).toBeUndefined();
-            expect(gd.undoqueue).toBeUndefined();
-            expect(gd.undonum).toBeUndefined();
-            expect(gd.autoplay).toBeUndefined();
-            expect(gd.changed).toBeUndefined();
-            expect(gd._tester).toBeUndefined();
-            expect(gd._testref).toBeUndefined();
-            expect(gd._promises).toBeUndefined();
-            expect(gd._redrawTimer).toBeUndefined();
-            expect(gd.firstscatter).toBeUndefined();
-            expect(gd.hmlumcount).toBeUndefined();
-            expect(gd.hmpixcount).toBeUndefined();
-            expect(gd.numboxes).toBeUndefined();
-            expect(gd._hoverTimer).toBeUndefined();
-            expect(gd._lastHoverTime).toBeUndefined();
-            expect(gd._transitionData).toBeUndefined();
-            expect(gd._transitioning).toBeUndefined();
+            expect(Object.keys(gd).sort()).toEqual(expectedKeys.sort());
+            expectedUndefined.forEach(function(key) {
+                expect(gd[key]).toBeUndefined(key);
+            });
         });
     });
 
