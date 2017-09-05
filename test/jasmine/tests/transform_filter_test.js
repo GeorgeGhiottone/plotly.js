@@ -6,9 +6,11 @@ var Lib = require('@src/lib');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
-var assertDims = require('../assets/assert_dims');
-var assertStyle = require('../assets/assert_style');
 var customMatchers = require('../assets/custom_matchers');
+var customAssertions = require('../assets/custom_assertions');
+
+var assertDims = customAssertions.assertDims;
+var assertStyle = customAssertions.assertStyle;
 
 describe('filter transforms defaults:', function() {
 
@@ -260,6 +262,25 @@ describe('filter transforms calc:', function() {
         expect(out[0].x).toEqual([-2, 2, 3]);
         expect(out[0].y).toEqual([3, 3, 1]);
         expect(out[0].marker.color).toEqual([0.3, 0.3, 0.4]);
+    });
+
+    it('filters should handle array on base trace attributes', function() {
+        var out = _transform([Lib.extendDeep({}, base, {
+            hoverinfo: ['x', 'y', 'text', 'name', 'none', 'skip', 'all'],
+            hoverlabel: {
+                bgcolor: ['red', 'green', 'blue', 'black', 'yellow', 'cyan', 'pink'],
+            },
+            transforms: [{
+                type: 'filter',
+                operation: '>',
+                value: 0
+            }]
+        })]);
+
+        expect(out[0].x).toEqual([1, 2, 3]);
+        expect(out[0].y).toEqual([2, 3, 1]);
+        expect(out[0].hoverinfo).toEqual(['none', 'skip', 'all']);
+        expect(out[0].hoverlabel.bgcolor).toEqual(['yellow', 'cyan', 'pink']);
     });
 
     it('filters should skip if *enabled* is false', function() {

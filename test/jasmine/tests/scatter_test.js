@@ -8,7 +8,11 @@ var Plotly = require('@lib/index');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var customMatchers = require('../assets/custom_matchers');
+var customAssertions = require('../assets/custom_assertions');
 var fail = require('../assets/fail_test');
+
+var assertClip = customAssertions.assertClip;
+var assertNodeDisplay = customAssertions.assertNodeDisplay;
 
 describe('Test scatter', function() {
     'use strict';
@@ -383,6 +387,219 @@ describe('end-to-end scatter tests', function() {
             expect(Plotly.d3.selectAll('.textpoint').size()).toBe(3);
         }).catch(fail).then(done);
     });
+
+    it('should remove all point and text nodes on blank data', function(done) {
+        function assertNodeCnt(ptCnt, txCnt) {
+            expect(d3.selectAll('.point').size()).toEqual(ptCnt);
+            expect(d3.selectAll('.textpoint').size()).toEqual(txCnt);
+        }
+
+        function assertText(content) {
+            d3.selectAll('.textpoint').each(function(_, i) {
+                var tx = d3.select(this).select('text');
+                expect(tx.text()).toEqual(content[i]);
+            });
+        }
+
+        Plotly.plot(gd, [{
+            x: [150, 350, 650],
+            y: [100, 300, 600],
+            text: ['A', 'B', 'C'],
+            mode: 'markers+text',
+            marker: {
+                size: [100, 200, 300],
+                line: { width: [10, 20, 30] },
+                color: 'yellow',
+                sizeref: 3,
+                gradient: {
+                    type: 'radial',
+                    color: 'white'
+                }
+            }
+        }])
+        .then(function() {
+            assertNodeCnt(3, 3);
+            assertText(['A', 'B', 'C']);
+
+            return Plotly.restyle(gd, {
+                x: [[null, undefined, NaN]],
+                y: [[NaN, null, undefined]]
+            });
+        })
+        .then(function() {
+            assertNodeCnt(0, 0);
+
+            return Plotly.restyle(gd, {
+                x: [[150, 350, 650]],
+                y: [[100, 300, 600]]
+            });
+        })
+        .then(function() {
+            assertNodeCnt(3, 3);
+            assertText(['A', 'B', 'C']);
+        })
+        .catch(fail)
+        .then(done);
+    });
+
+    function _assertNodes(ptStyle, txContent) {
+        var pts = d3.selectAll('.point');
+        var txs = d3.selectAll('.textpoint');
+
+        expect(pts.size()).toEqual(ptStyle.length);
+        expect(txs.size()).toEqual(txContent.length);
+
+        pts.each(function(_, i) {
+            expect(d3.select(this).style('fill')).toEqual(ptStyle[i], 'pt ' + i);
+        });
+
+        txs.each(function(_, i) {
+            expect(d3.select(this).select('text').text()).toEqual(txContent[i], 'tx ' + i);
+        });
+    }
+
+    it('should reorder point and text nodes even when linked to ids (shuffle case)', function(done) {
+        Plotly.plot(gd, [{
+            x: [150, 350, 650],
+            y: [100, 300, 600],
+            text: ['apple', 'banana', 'clementine'],
+            ids: ['A', 'B', 'C'],
+            mode: 'markers+text',
+            marker: {
+                color: ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)']
+            },
+            transforms: [{
+                type: 'sort',
+                enabled: false,
+                target: [0, 1, 0]
+            }]
+        }])
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'],
+                ['apple', 'banana', 'clementine']
+            );
+
+            return Plotly.restyle(gd, 'transforms[0].enabled', true);
+        })
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 0, 255)', 'rgb(0, 255, 0)'],
+                ['apple', 'clementine', 'banana']
+            );
+
+            return Plotly.restyle(gd, 'transforms[0].enabled', false);
+        })
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'],
+                ['apple', 'banana', 'clementine']
+            );
+        })
+        .catch(fail)
+        .then(done);
+    });
+
+    it('should reorder point and text nodes even when linked to ids (add/remove case)', function(done) {
+        Plotly.plot(gd, [{
+            x: [150, 350, null, 600],
+            y: [100, 300, null, 700],
+            text: ['apple', 'banana', null, 'clementine'],
+            ids: ['A', 'B', null, 'C'],
+            mode: 'markers+text',
+            marker: {
+                color: ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', null, 'rgb(0, 0, 255)']
+            },
+            transforms: [{
+                type: 'filter',
+                enabled: false,
+                target: [1, 0, 0, 1],
+                operation: '=',
+                value: 1
+            }]
+        }])
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'],
+                ['apple', 'banana', 'clementine']
+            );
+
+            return Plotly.restyle(gd, 'transforms[0].enabled', true);
+        })
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 0, 255)'],
+                ['apple', 'clementine']
+            );
+
+            return Plotly.restyle(gd, 'transforms[0].enabled', false);
+        })
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 255, 0)', 'rgb(0, 0, 255)'],
+                ['apple', 'banana', 'clementine']
+            );
+        })
+        .catch(fail)
+        .then(done);
+    });
+
+    it('should smoothly add/remove nodes tags with *ids* during animations', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                mode: 'markers+text',
+                y: [1, 2, 1],
+                text: ['apple', 'banana', 'clementine'],
+                ids: ['A', 'B', 'C'],
+                marker: { color: ['red', 'green', 'blue'] }
+            }],
+            frames: [{
+                data: [{
+                    y: [2, 1, 2],
+                    text: ['apple', 'banana', 'dragon fruit'],
+                    ids: ['A', 'C', 'D'],
+                    marker: { color: ['red', 'blue', 'yellow'] }
+                }]
+            }]
+        })
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 128, 0)', 'rgb(0, 0, 255)'],
+                ['apple', 'banana', 'clementine']
+            );
+
+            return Plotly.animate(gd, null, {frame: {redraw: false}});
+        })
+        .then(function() {
+            _assertNodes(
+                ['rgb(255, 0, 0)', 'rgb(0, 0, 255)', 'rgb(255, 255, 0)'],
+                ['apple', 'banana', 'dragon fruit']
+            );
+        })
+        .catch(fail)
+        .then(done);
+    });
+
+    it('animates fillcolor', function(done) {
+        function fill() {
+            return d3.selectAll('.js-fill').node().style.fill;
+        }
+
+        Plotly.plot(gd, [{
+            x: [1, 2, 3, 4, 5, 6, 7],
+            y: [2, 3, 4, 5, 6, 7, 8],
+            fill: 'tozeroy',
+            fillcolor: 'rgb(255, 0, 0)',
+        }]).then(function() {
+            expect(fill()).toEqual('rgb(255, 0, 0)');
+            return Plotly.animate(gd,
+                [{data: [{fillcolor: 'rgb(0, 0, 255)'}]}],
+                {frame: {duration: 0, redraw: false}}
+            );
+        }).then(function() {
+            expect(fill()).toEqual('rgb(0, 0, 255)');
+        }).catch(fail).then(done);
+    });
 });
 
 describe('scatter hoverPoints', function() {
@@ -452,6 +669,138 @@ describe('scatter hoverPoints', function() {
             expect(pts[0].text).toEqual('apple', 'hover text');
             expect(pts[1].text).toEqual('banana', 'hover text');
             expect(pts[2].text).toEqual('orange', 'hover text');
+        })
+        .catch(fail)
+        .then(done);
+    });
+});
+
+describe('Test scatter *clipnaxis*:', function() {
+    afterEach(destroyGraphDiv);
+
+    it('should show/hide point/text/errorbars in clipped and non-clipped layers', function(done) {
+        var gd = createGraphDiv();
+        var fig = Lib.extendDeep({}, require('@mocks/cliponaxis_false.json'));
+        var xRange0 = fig.layout.xaxis.range.slice();
+        var yRange0 = fig.layout.yaxis.range.slice();
+
+        // only show 1 *cliponaxis: false* trace
+        fig.data = [fig.data[2]];
+
+        // add lines
+        fig.data[0].mode = 'markers+lines+text';
+
+        function _assert(layerClips, nodeDisplays, errorBarClips, lineClips) {
+            var subplotLayer = d3.select('.plot');
+            var scatterLayer = subplotLayer.select('.scatterlayer');
+
+            assertClip(subplotLayer, layerClips[0], 1, 'subplot layer');
+            assertClip(subplotLayer.select('.barlayer'), layerClips[1], 1, 'bar layer');
+            assertClip(scatterLayer, layerClips[2], 1, 'scatter layer');
+
+            assertNodeDisplay(
+                scatterLayer.selectAll('.point'),
+                nodeDisplays,
+                'scatter points'
+            );
+            assertNodeDisplay(
+                scatterLayer.selectAll('.textpoint'),
+                nodeDisplays,
+                'scatter text points'
+            );
+
+            assertClip(
+                scatterLayer.selectAll('.errorbar'),
+                errorBarClips[0], errorBarClips[1],
+                'error bars'
+            );
+            assertClip(
+                scatterLayer.selectAll('.js-line'),
+                lineClips[0], lineClips[1],
+                'line clips'
+            );
+        }
+
+        Plotly.plot(gd, fig)
+        .then(function() {
+            _assert(
+                [false, true, false],
+                [null, null, null, null, null, null],
+                [true, 6],
+                [true, 1]
+            );
+            return Plotly.restyle(gd, 'visible', false);
+        })
+        .then(function() {
+            _assert(
+                [true, false, false],
+                [],
+                [false, 0],
+                [false, 0]
+            );
+            return Plotly.restyle(gd, {visible: true, cliponaxis: null});
+        })
+        .then(function() {
+            _assert(
+                [true, false, false],
+                [null, null, null, null, null, null],
+                [false, 6],
+                [false, 1]
+            );
+            return Plotly.restyle(gd, 'visible', 'legendonly');
+        })
+        .then(function() {
+            _assert(
+                [true, false, false],
+                [],
+                [false, 0],
+                [false, 0]
+            );
+            return Plotly.restyle(gd, 'visible', true);
+        })
+        .then(function() {
+            _assert(
+                [true, false, false],
+                [null, null, null, null, null, null],
+                [false, 6],
+                [false, 1]
+            );
+            return Plotly.restyle(gd, 'cliponaxis', false);
+        })
+        .then(function() {
+            _assert(
+                [false, true, false],
+                [null, null, null, null, null, null],
+                [true, 6],
+                [true, 1]
+            );
+            return Plotly.relayout(gd, 'xaxis.range', [0, 1]);
+        })
+        .then(function() {
+            _assert(
+                [false, true, false],
+                [null, null, 'none', 'none', 'none', 'none'],
+                [true, 6],
+                [true, 1]
+            );
+            return Plotly.relayout(gd, 'yaxis.range', [0, 1]);
+        })
+        .then(function() {
+            _assert(
+                [false, true, false],
+                ['none', null, 'none', 'none', 'none', 'none'],
+                [true, 6],
+                [true, 1]
+            );
+            return Plotly.relayout(gd, {'xaxis.range': xRange0, 'yaxis.range': yRange0});
+        })
+        .then(function() {
+            _assert(
+                [false, true, false],
+                [null, null, null, null, null, null],
+                [true, 6],
+                [true, 1]
+            );
         })
         .catch(fail)
         .then(done);

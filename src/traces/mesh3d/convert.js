@@ -32,7 +32,7 @@ var proto = Mesh3DTrace.prototype;
 
 proto.handlePick = function(selection) {
     if(selection.object === this.mesh) {
-        var selectIndex = selection.data.index;
+        var selectIndex = selection.index = selection.data.index;
 
         selection.traceCoordinate = [
             this.data.x[selectIndex],
@@ -124,10 +124,11 @@ proto.update = function(data) {
     if(data.intensity) {
         this.color = '#fff';
         config.vertexIntensity = data.intensity;
+        config.vertexIntensityBounds = [data.cmin, data.cmax];
         config.colormap = parseColorScale(data.colorscale);
     }
     else if(data.vertexcolor) {
-        this.color = data.vertexcolors[0];
+        this.color = data.vertexcolor[0];
         config.vertexColors = parseColorArray(data.vertexcolor);
     }
     else if(data.facecolor) {

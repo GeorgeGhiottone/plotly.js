@@ -107,7 +107,8 @@ module.exports = {
         line: extendFlat({},
             {width: scatterMarkerLineAttrs.width},
             colorAttributes('marker'.line)
-        )
+        ),
+        gradient: scatterMarkerAttrs.gradient
     }, colorAttributes('marker'), {
         showscale: scatterMarkerAttrs.showscale,
         colorbar: colorbarAttrs
@@ -116,7 +117,7 @@ module.exports = {
     textfont: scatterAttrs.textfont,
     textposition: scatterAttrs.textposition,
     hoverinfo: extendFlat({}, plotAttrs.hoverinfo, {
-        flags: ['a', 'b', 'c', 'text', 'name']
+        flags: ['a', 'b', 'text', 'name']
     }),
     hoveron: scatterAttrs.hoveron,
 };

@@ -21,6 +21,8 @@ var animationAttributes = require('../plots/animation_attributes');
 var polarAreaAttrs = require('../plots/polar/area_attributes');
 var polarAxisAttrs = require('../plots/polar/axis_attributes');
 
+var editTypes = require('./edit_types');
+
 var extendFlat = Lib.extendFlat;
 var extendDeep = Lib.extendDeep;
 
@@ -62,7 +64,11 @@ exports.get = function() {
     return {
         defs: {
             valObjects: Lib.valObjects,
-            metaKeys: UNDERSCORE_ATTRS.concat(['description', 'role'])
+            metaKeys: UNDERSCORE_ATTRS.concat(['description', 'role']),
+            editTypes: {
+                traces: editTypes.traces(),
+                layout: editTypes.layout()
+            }
         },
 
         traces: traces,
@@ -136,13 +142,25 @@ exports.isValObject = function(obj) {
  *  list of array attributes for the given trace
  */
 exports.findArrayAttributes = function(trace) {
-    var arrayAttributes = [],
-        stack = [];
+    var arrayAttributes = [];
+    var stack = [];
 
     function callback(attr, attrName, attrs, level) {
         stack = stack.slice(0, level).concat([attrName]);
 
-        var splittableAttr = attr && (attr.valType === 'data_array' || attr.arrayOk === true);
+        var splittableAttr = (
+            attr &&
+            (attr.valType === 'data_array' || attr.arrayOk === true) &&
+            !(stack[level - 1] === 'colorbar' && (attrName === 'ticktext' || attrName === 'tickvals'))
+        );
+
+        // Manually exclude 'colorbar.tickvals' and 'colorbar.ticktext' for now
+        // which are declared as `valType: 'data_array'` but scale independently of
+        // the coordinate arrays.
+        //
+        // Down the road, we might want to add a schema field (e.g `uncorrelatedArray: true`)
+        // to distinguish attributes of the likes.
+
         if(!splittableAttr) return;
 
         var astr = toAttrString(stack);
@@ -156,17 +174,23 @@ exports.findArrayAttributes = function(trace) {
         return stack.join('.');
     }
 
-    exports.crawl(trace._module.attributes, callback);
+    exports.crawl(baseAttributes, callback);
+    if(trace._module && trace._module.attributes) {
+        exports.crawl(trace._module.attributes, callback);
+    }
 
     if(trace.transforms) {
         var transforms = trace.transforms;
 
         for(var i = 0; i < transforms.length; i++) {
             var transform = transforms[i];
+            var module = transform._module;
 
-            stack = ['transforms[' + i + ']'];
+            if(module) {
+                stack = ['transforms[' + i + ']'];
 
-            exports.crawl(transform._module.attributes, callback, 1);
+                exports.crawl(module.attributes, callback, 1);
+            }
         }
     }
 
@@ -176,9 +200,8 @@ exports.findArrayAttributes = function(trace) {
     // At the moment, we need this block to make sure that
     // ohlc and candlestick 'open', 'high', 'low', 'close' can be
     // used with filter ang groupby transforms.
-    if(trace._fullInput) {
+    if(trace._fullInput && trace._fullInput._module && trace._fullInput._module.attributes) {
         exports.crawl(trace._fullInput._module.attributes, callback);
-
         arrayAttributes = Lib.filterUnique(arrayAttributes);
     }
 

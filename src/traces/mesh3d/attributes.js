@@ -125,7 +125,7 @@ module.exports = {
         description: 'Sets the color of the whole mesh'
     },
     vertexcolor: {
-        valType: 'data_array',  // FIXME: this should be a color array
+        valType: 'data_array',
         role: 'style',
         description: [
             'Sets the color of each vertex',
@@ -165,8 +165,12 @@ module.exports = {
         width: extendFlat({}, surfaceAtts.contours.x.width)
     },
 
+    cauto: colorscaleAttrs.zauto,
+    cmin: colorscaleAttrs.zmin,
+    cmax: colorscaleAttrs.zmax,
     colorscale: colorscaleAttrs.colorscale,
     reversescale: colorscaleAttrs.reversescale,
+    autocolorscale: extendFlat({}, colorscaleAttrs.autocolorscale, {dflt: false}),
     showscale: colorscaleAttrs.showscale,
     colorbar: colorbarAttrs,
 

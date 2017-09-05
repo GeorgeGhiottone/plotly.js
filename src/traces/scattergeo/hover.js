@@ -9,7 +9,7 @@
 
 'use strict';
 
-var Fx = require('../../plots/cartesian/graph_interact');
+var Fx = require('../../components/fx');
 var Axes = require('../../plots/cartesian/axes');
 var BADNUM = require('../../constants/numerical').BADNUM;
 
@@ -66,8 +66,8 @@ module.exports = function hoverPoints(pointData) {
     pointData.y1 = pos[1] + rad;
 
     pointData.loc = di.loc;
-    pointData.lat = lonlat[0];
-    pointData.lon = lonlat[1];
+    pointData.lon = lonlat[0];
+    pointData.lat = lonlat[1];
 
     pointData.color = getTraceColor(trace, di);
     pointData.extraText = getExtraText(trace, di, geo.mockAxis);

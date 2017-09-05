@@ -57,10 +57,6 @@ module.exports = {
             'where `y0` is the starting coordinate and `dy` the step.'
         ].join(' ')
     },
-    customdata: {
-        valType: 'data_array',
-        description: 'Assigns extra data to each scatter point DOM element'
-    },
     dy: {
         valType: 'number',
         dflt: 1,
@@ -69,10 +65,6 @@ module.exports = {
             'Sets the y coordinate step.',
             'See `y0` for more info.'
         ].join(' ')
-    },
-    ids: {
-        valType: 'data_array',
-        description: 'A list of keys for object constancy of data points during animation'
     },
     text: {
         valType: 'string',
@@ -176,6 +168,7 @@ module.exports = {
             ].join(' ')
         }
     },
+
     connectgaps: {
         valType: 'boolean',
         dflt: false,
@@ -186,6 +179,19 @@ module.exports = {
             'in the provided data arrays are connected.'
         ].join(' ')
     },
+    cliponaxis: {
+        valType: 'boolean',
+        dflt: true,
+        role: 'info',
+        editType: 'doplot',
+        description: [
+            'Determines whether or not markers and text nodes',
+            'are clipped about the subplot axes.',
+            'To show markers and text nodes above axis lines and tick labels,',
+            'make sure to set `xaxis.layer` and `yaxis.layer` to *below traces*.'
+        ].join(' ')
+    },
+
     fill: {
         valType: 'enumerated',
         values: ['none', 'tozeroy', 'tozerox', 'tonexty', 'tonextx', 'toself', 'tonext'],
@@ -311,7 +317,29 @@ module.exports = {
             }
         },
             colorAttributes('marker.line')
-        )
+        ),
+        gradient: {
+            type: {
+                valType: 'enumerated',
+                values: ['radial', 'horizontal', 'vertical', 'none'],
+                arrayOk: true,
+                dflt: 'none',
+                role: 'style',
+                description: [
+                    'Sets the type of gradient used to fill the markers'
+                ].join(' ')
+            },
+            color: {
+                valType: 'color',
+                arrayOk: true,
+                role: 'style',
+                description: [
+                    'Sets the final color of the gradient fill:',
+                    'the center color for radial, the right for horizontal,',
+                    'or the bottom for vertical.',
+                ].join(' ')
+            }
+        }
     },
         colorAttributes('marker')
     ),

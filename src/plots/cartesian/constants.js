@@ -41,21 +41,6 @@ module.exports = {
     // width of axis drag regions
     DRAGGERSIZE: 20,
 
-    // max pixels away from mouse to allow a point to highlight
-    MAXDIST: 20,
-
-    // hover labels for multiple horizontal bars get tilted by this angle
-    YANGLE: 60,
-
-    // size and display constants for hover text
-    HOVERARROWSIZE: 6, // pixel size of hover arrows
-    HOVERTEXTPAD: 3, // pixels padding around text
-    HOVERFONTSIZE: 13,
-    HOVERFONT: 'Arial, sans-serif',
-
-    // minimum time (msec) between hover calls
-    HOVERMINTIME: 50,
-
     // max pixels off straight before a lasso select line counts as bent
     BENDPX: 1.5,
 
@@ -64,5 +49,26 @@ module.exports = {
 
     // last resort axis ranges for x and y axes if we have no data
     DFLTRANGEX: [-1, 6],
-    DFLTRANGEY: [-1, 4]
+    DFLTRANGEY: [-1, 4],
+
+    // Layers to keep trace types in the right order.
+    // from back to front:
+    // 1. heatmaps, 2D histos and contour maps
+    // 2. bars / 1D histos
+    // 3. errorbars for bars and scatter
+    // 4. scatter
+    // 5. box plots
+    traceLayerClasses: [
+        'imagelayer',
+        'maplayer',
+        'barlayer',
+        'carpetlayer',
+        'boxlayer',
+        'scatterlayer'
+    ],
+
+    layerValue2layerClass: {
+        'above traces': 'above',
+        'below traces': 'below'
+    }
 };

@@ -10,10 +10,16 @@
 'use strict';
 
 var d3 = require('d3');
+var isNumeric = require('fast-isnumeric');
+
+var numConstants = require('../constants/numerical');
+var FP_SAFE = numConstants.FP_SAFE;
+var BADNUM = numConstants.BADNUM;
 
 var lib = module.exports = {};
 
 lib.nestedProperty = require('./nested_property');
+lib.keyedContainer = require('./keyed_container');
 lib.isPlainObject = require('./is_plain_object');
 lib.isArray = require('./is_array');
 lib.mod = require('./mod');
@@ -26,6 +32,7 @@ lib.valObjects = coerceModule.valObjects;
 lib.coerce = coerceModule.coerce;
 lib.coerce2 = coerceModule.coerce2;
 lib.coerceFont = coerceModule.coerceFont;
+lib.coerceHoverinfo = coerceModule.coerceHoverinfo;
 lib.validate = coerceModule.validate;
 
 var datesModule = require('./dates');
@@ -68,6 +75,13 @@ lib.rotationXYMatrix = matrixModule.rotationXYMatrix;
 lib.apply2DTransform = matrixModule.apply2DTransform;
 lib.apply2DTransform2 = matrixModule.apply2DTransform2;
 
+var geom2dModule = require('./geometry2d');
+lib.segmentsIntersect = geom2dModule.segmentsIntersect;
+lib.segmentDistance = geom2dModule.segmentDistance;
+lib.getTextLocation = geom2dModule.getTextLocation;
+lib.clearLocationCache = geom2dModule.clearLocationCache;
+lib.getVisibleSegment = geom2dModule.getVisibleSegment;
+
 var extendModule = require('./extend');
 lib.extendFlat = extendModule.extendFlat;
 lib.extendDeep = extendModule.extendDeep;
@@ -86,6 +100,13 @@ lib.filterVisible = require('./filter_visible');
 lib.pushUnique = require('./push_unique');
 
 lib.cleanNumber = require('./clean_number');
+
+lib.ensureNumber = function num(v) {
+    if(!isNumeric(v)) return BADNUM;
+    v = Number(v);
+    if(v < -FP_SAFE || v > FP_SAFE) return BADNUM;
+    return isNumeric(v) ? Number(v) : BADNUM;
+};
 
 lib.noop = require('./noop');
 lib.identity = require('./identity');
@@ -337,11 +358,88 @@ lib.noneOrAll = function(containerIn, containerOut, attrList) {
     }
 };
 
+/** merges calcdata field (given by cdAttr) with traceAttr values
+ *
+ * N.B. Loop over minimum of cd.length and traceAttr.length
+ * i.e. it does not try to fill in beyond traceAttr.length-1
+ *
+ * @param {array} traceAttr : trace attribute
+ * @param {object} cd : calcdata trace
+ * @param {string} cdAttr : calcdata key
+ */
 lib.mergeArray = function(traceAttr, cd, cdAttr) {
     if(Array.isArray(traceAttr)) {
         var imax = Math.min(traceAttr.length, cd.length);
         for(var i = 0; i < imax; i++) cd[i][cdAttr] = traceAttr[i];
     }
+};
+
+/** fills calcdata field (given by cdAttr) with traceAttr values
+ *  or function of traceAttr values (e.g. some fallback)
+ *
+ * N.B. Loops over all cd items.
+ *
+ * @param {array} traceAttr : trace attribute
+ * @param {object} cd : calcdata trace
+ * @param {string} cdAttr : calcdata key
+ * @param {function} [fn] : optional function to apply to each array item
+ */
+lib.fillArray = function(traceAttr, cd, cdAttr, fn) {
+    fn = fn || lib.identity;
+
+    if(Array.isArray(traceAttr)) {
+        for(var i = 0; i < cd.length; i++) {
+            cd[i][cdAttr] = fn(traceAttr[i]);
+        }
+    }
+};
+
+/** Handler for trace-wide vs per-point options
+ *
+ * @param {object} trace : (full) trace object
+ * @param {number} ptNumber : index of the point in question
+ * @param {string} astr : attribute string
+ * @param {function} [fn] : optional function to apply to each array item
+ *
+ * @return {any}
+ */
+lib.castOption = function(trace, ptNumber, astr, fn) {
+    fn = fn || lib.identity;
+
+    var val = lib.nestedProperty(trace, astr).get();
+
+    if(Array.isArray(val)) {
+        if(Array.isArray(ptNumber) && Array.isArray(val[ptNumber[0]])) {
+            return fn(val[ptNumber[0]][ptNumber[1]]);
+        } else {
+            return fn(val[ptNumber]);
+        }
+    } else {
+        return val;
+    }
+};
+
+/** Returns target as set by 'target' transform attribute
+ *
+ * @param {object} trace : full trace object
+ * @param {object} transformOpts : transform option object
+ *  - target (string} :
+ *      either an attribute string referencing an array in the trace object, or
+ *      a set array.
+ *
+ * @return {array or false} : the target array (NOT a copy!!) or false if invalid
+ */
+lib.getTargetArray = function(trace, transformOpts) {
+    var target = transformOpts.target;
+
+    if(typeof target === 'string' && target) {
+        var array = lib.nestedProperty(trace, target).get();
+        return Array.isArray(array) ? array : false;
+    } else if(Array.isArray(target)) {
+        return target;
+    }
+
+    return false;
 };
 
 /**
@@ -389,13 +487,6 @@ lib.containsAny = function(s, fragments) {
         if(s.indexOf(fragments[i]) !== -1) return true;
     }
     return false;
-};
-
-// get the parent Plotly plot of any element. Whoo jquery-free tree climbing!
-lib.getPlotDiv = function(el) {
-    for(; el && el.removeAttribute; el = el.parentNode) {
-        if(lib.isPlotDiv(el)) return el;
-    }
 };
 
 lib.isPlotDiv = function(el) {
@@ -636,4 +727,34 @@ lib.numSeparate = function(value, separators, separatethousands) {
     }
 
     return x1 + x2;
+};
+
+var TEMPLATE_STRING_REGEX = /%{([^\s%{}]*)}/g;
+var SIMPLE_PROPERTY_REGEX = /^\w*$/;
+
+/*
+ * Substitute values from an object into a string
+ *
+ * Examples:
+ *  Lib.templateString('name: %{trace}', {trace: 'asdf'}) --> 'name: asdf'
+ *  Lib.templateString('name: %{trace[0].name}', {trace: [{name: 'asdf'}]}) --> 'name: asdf'
+ *
+ * @param {string}  input string containing %{...} template strings
+ * @param {obj}     data object containing substitution values
+ *
+ * @return {string} templated string
+ */
+
+lib.templateString = function(string, obj) {
+    // Not all that useful, but cache nestedProperty instantiation
+    // just in case it speeds things up *slightly*:
+    var getterCache = {};
+
+    return string.replace(TEMPLATE_STRING_REGEX, function(dummy, key) {
+        if(SIMPLE_PROPERTY_REGEX.test(key)) {
+            return obj[key] || '';
+        }
+        getterCache[key] = getterCache[key] || lib.nestedProperty(obj, key).get;
+        return getterCache[key]() || '';
+    });
 };

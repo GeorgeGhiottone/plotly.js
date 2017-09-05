@@ -1,4 +1,4 @@
-var PlotlyInternal = require('@src/plotly');
+var Plotly = require('@lib/index');
 
 var Plots = require('@src/plots/plots');
 var Lib = require('@src/lib');
@@ -6,7 +6,7 @@ var Color = require('@src/components/color');
 var tinycolor = require('tinycolor2');
 
 var handleTickValueDefaults = require('@src/plots/cartesian/tick_value_defaults');
-var Axes = PlotlyInternal.Axes;
+var Axes = require('@src/plots/cartesian/axes');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
@@ -583,7 +583,7 @@ describe('Test axes', function() {
         afterEach(destroyGraphDiv);
 
         it('updates ranges when adding, removing, or changing a constraint', function(done) {
-            PlotlyInternal.plot(gd,
+            Plotly.plot(gd,
                 [{z: [[0, 1], [2, 3]], type: 'heatmap'}],
                 // plot area is 200x100 px
                 {width: 400, height: 300, margin: {l: 100, r: 100, t: 100, b: 100}}
@@ -592,23 +592,280 @@ describe('Test axes', function() {
                 expect(gd.layout.xaxis.range).toBeCloseToArray([-0.5, 1.5], 5);
                 expect(gd.layout.yaxis.range).toBeCloseToArray([-0.5, 1.5], 5);
 
-                return PlotlyInternal.relayout(gd, {'xaxis.scaleanchor': 'y'});
+                return Plotly.relayout(gd, {'xaxis.scaleanchor': 'y'});
             })
             .then(function() {
                 expect(gd.layout.xaxis.range).toBeCloseToArray([-1.5, 2.5], 5);
                 expect(gd.layout.yaxis.range).toBeCloseToArray([-0.5, 1.5], 5);
 
-                return PlotlyInternal.relayout(gd, {'xaxis.scaleratio': 10});
+                return Plotly.relayout(gd, {'xaxis.scaleratio': 10});
             })
             .then(function() {
                 expect(gd.layout.xaxis.range).toBeCloseToArray([-0.5, 1.5], 5);
                 expect(gd.layout.yaxis.range).toBeCloseToArray([-4.5, 5.5], 5);
 
-                return PlotlyInternal.relayout(gd, {'xaxis.scaleanchor': null});
+                return Plotly.relayout(gd, {'xaxis.scaleanchor': null});
             })
             .then(function() {
                 expect(gd.layout.xaxis.range).toBeCloseToArray([-0.5, 1.5], 5);
                 expect(gd.layout.yaxis.range).toBeCloseToArray([-0.5, 1.5], 5);
+            })
+            .catch(failTest)
+            .then(done);
+        });
+
+        function assertRangeDomain(axName, range, domainIn, domainOut, msg) {
+            var ax = gd._fullLayout[axName];
+            var axIn = ax._input;
+
+            msg = msg || axName;
+
+            expect(ax.domain).toBeCloseToArray(domainOut, 5,
+                'full domain, ' + msg);
+
+            // the actual domain in layout is changed, but the original is
+            // cached in _fullLayout for responsiveness to later changes.
+            // (or may be deleted if domain is not adjusted)
+            expect(axIn.domain || ax.domain).toBeCloseToArray(ax.domain, 5,
+                'layout domain, ' + msg);
+            expect(ax._inputDomain || ax.domain).toBeCloseToArray(domainIn, 5,
+                '_inputDomain, ' + msg);
+
+            // input and full range always match
+            expect(ax.range.map(ax.r2l)).toBeCloseToArray(range.map(ax.r2l), 5,
+                'range, ' + msg + ': ' + ax.range);
+            expect(axIn.range.map(ax.r2l)).toBeCloseToArray(ax.range.map(ax.r2l), 5,
+                'input range, ' + msg + ': ' + ax.range);
+        }
+
+        it('can change per-axis constrain:domain/range and constraintoward', function(done) {
+            Plotly.plot(gd,
+                // start with a heatmap as it has no padding so calculations are easy
+                [{z: [[0, 1], [2, 3]], type: 'heatmap'}],
+                // plot area is 200x100 px
+                {
+                    width: 400,
+                    height: 300,
+                    margin: {l: 100, r: 100, t: 100, b: 100},
+                    xaxis: {constrain: 'domain'},
+                    yaxis: {constraintoward: 'top', 'scaleanchor': 'x'}
+                }
+            )
+            .then(function() {
+                // x axis is constrained, but by domain rather than by range
+                assertRangeDomain('xaxis', [-0.5, 1.5], [0, 1], [0.25, 0.75]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {
+                    'xaxis.constraintoward': 'right',
+                    'xaxis.domain': [0.05, 0.95],
+                    // no effect for now, y is not constrained
+                    'yaxis.constraintoward': 'bottom',
+                    'yaxis.constrain': 'domain'
+                });
+            })
+            .then(function() {
+                // debatable I guess... you asked for an explicit domain but got a
+                // smaller one due to the constraint, which is not how it works
+                // if you ask for a new range (in that case you get exactly that
+                // range and other axes adjust to accommodate that) but my rationale
+                // is that modifying domain is usually done at an earlier stage in
+                // making the chart so should affect the "envelope", not the more
+                // dynamic behavior of interaction like when you set a range.
+                assertRangeDomain('xaxis', [-0.5, 1.5], [0.05, 0.95], [0.45, 0.95]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {'xaxis.constrain': 'range'});
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-2.1, 1.5], [0.05, 0.95], [0.05, 0.95]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {
+                    'xaxis.domain': null,
+                    'xaxis.range[0]': -6.5
+                });
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-6.5, 1.5], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0, 0.5]);
+
+                return Plotly.relayout(gd, {'yaxis.constraintoward': 'middle'});
+            })
+            .then(function() {
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0.25, 0.75]);
+
+                return Plotly.relayout(gd, {'yaxis.constraintoward': 'top'});
+            })
+            .then(function() {
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0.5, 1]);
+
+                return Plotly.relayout(gd, {'yaxis.constrain': 'range'});
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-6.5, 1.5], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-2.5, 1.5], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {
+                    'xaxis.autorange': true,
+                    'xaxis.constrain': 'domain',
+                    'xaxis.constraintoward': 'left',
+                    'yaxis.autorange': true,
+                    'yaxis.constrain': 'domain'
+                });
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-0.5, 1.5], [0, 1], [0, 0.5]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {'xaxis.range': [-3.5, 4.5]});
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-3.5, 4.5], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0.5, 1]);
+
+                return Plotly.relayout(gd, {'xaxis.range': [0, 1]});
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [0, 1], [0, 1], [0, 0.25]);
+                assertRangeDomain('yaxis', [-0.5, 1.5], [0, 1], [0, 1]);
+            })
+            .catch(failTest)
+            .then(done);
+        });
+
+        it('autoranges consistently with padding', function(done) {
+            var xAutoPad = 0.09523809523809526;
+            var xAutorange = [-xAutoPad, 1 + xAutoPad];
+            var yAutoPad = 0.15476190476190477;
+            var yAutorange = [-yAutoPad, 1 + yAutoPad];
+            Plotly.plot(gd, [
+                {y: [0, 1], mode: 'markers', marker: {size: 4}},
+                {y: [0, 1], mode: 'markers', marker: {size: 4}, xaxis: 'x2', yaxis: 'y2'}
+            ], {
+                xaxis: {domain: [0, 0.5], constrain: 'domain'},
+                yaxis: {constrain: 'domain', scaleanchor: 'x'},
+                xaxis2: {domain: [0.5, 1], constrain: 'domain'},
+                yaxis2: {constrain: 'domain', scaleanchor: 'x2'},
+                // plot area 200x200px, so y axes should be squished to
+                // (a little over due to autoranging) half their input domain
+                width: 400,
+                height: 400,
+                margin: {l: 100, r: 100, t: 100, b: 100, p: 0},
+                showlegend: false
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', xAutorange, [0, 0.5], [0, 0.5]);
+                assertRangeDomain('yaxis', yAutorange, [0, 1], [0.225, 0.775]);
+                assertRangeDomain('xaxis2', xAutorange, [0.5, 1], [0.5, 1]);
+                assertRangeDomain('yaxis2', yAutorange, [0, 1], [0.225, 0.775]);
+
+                return Plotly.relayout(gd, {'xaxis.range': [-1, 2]});
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-1, 2], [0, 0.5], [0, 0.5]);
+                assertRangeDomain('yaxis', [-0.39, 1.39], [0, 1], [0.3516667, 0.6483333]);
+                assertRangeDomain('xaxis2', xAutorange, [0.5, 1], [0.5, 1]);
+                assertRangeDomain('yaxis2', yAutorange, [0, 1], [0.225, 0.775]);
+
+                return Plotly.relayout(gd, {'xaxis.autorange': true});
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', xAutorange, [0, 0.5], [0, 0.5]);
+                assertRangeDomain('yaxis', yAutorange, [0, 1], [0.225, 0.775]);
+                assertRangeDomain('xaxis2', xAutorange, [0.5, 1], [0.5, 1]);
+                assertRangeDomain('yaxis2', yAutorange, [0, 1], [0.225, 0.775]);
+            })
+            .catch(failTest)
+            .then(done);
+        });
+
+        it('can constrain date axes', function(done) {
+            Plotly.plot(gd, [{
+                x: ['2001-01-01', '2002-01-01'],
+                y: ['2001-01-01', '2002-01-01'],
+                mode: 'markers',
+                marker: {size: 4}
+            }], {
+                yaxis: {scaleanchor: 'x'},
+                width: 400,
+                height: 300,
+                margin: {l: 100, r: 100, t: 100, b: 100, p: 0}
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', ['2000-04-23 23:25:42.8572', '2002-09-10 00:34:17.1428'], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', ['2000-11-27 05:42:51.4286', '2002-02-04 18:17:08.5714'], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {
+                    'xaxis.constrain': 'domain',
+                    'yaxis.constrain': 'domain'
+                });
+            })
+            .then(function() {
+                // you'd have thought the x axis would end up exactly the same total size as y
+                // (which would be domain [.25, .75]) but it doesn't, because the padding is
+                // calculated as 5% of the original axis size, not of the constrained size.
+                assertRangeDomain('xaxis', ['2000-11-05 12:17:08.5714', '2002-02-26 11:42:51.4286'], [0, 1], [0.225, 0.775]);
+                assertRangeDomain('yaxis', ['2000-11-27 05:42:51.4286', '2002-02-04 18:17:08.5714'], [0, 1], [0, 1]);
+            })
+            .catch(failTest)
+            .then(done);
+        });
+
+        it('can constrain category axes', function(done) {
+            Plotly.plot(gd, [{
+                x: ['a', 'b'],
+                y: ['c', 'd'],
+                mode: 'markers',
+                marker: {size: 4}
+            }], {
+                yaxis: {scaleanchor: 'x'},
+                width: 300,
+                height: 400,
+                margin: {l: 100, r: 100, t: 100, b: 100, p: 0}
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-0.095238095, 1.095238095], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-0.69047619, 1.69047619], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {
+                    'xaxis.constrain': 'domain',
+                    'yaxis.constrain': 'domain'
+                });
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-0.095238095, 1.095238095], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-0.1547619, 1.1547619], [0, 1], [0.225, 0.775]);
+            })
+            .catch(failTest)
+            .then(done);
+        });
+
+        it('can constrain log axes', function(done) {
+            Plotly.plot(gd, [{
+                x: [1, 10],
+                y: [1, 10],
+                mode: 'markers',
+                marker: {size: 4}
+            }], {
+                xaxis: {type: 'log'},
+                yaxis: {type: 'log', scaleanchor: 'x'},
+                width: 300,
+                height: 400,
+                margin: {l: 100, r: 100, t: 100, b: 100, p: 0}
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-0.095238095, 1.095238095], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-0.69047619, 1.69047619], [0, 1], [0, 1]);
+
+                return Plotly.relayout(gd, {
+                    'xaxis.constrain': 'domain',
+                    'yaxis.constrain': 'domain'
+                });
+            })
+            .then(function() {
+                assertRangeDomain('xaxis', [-0.095238095, 1.095238095], [0, 1], [0, 1]);
+                assertRangeDomain('yaxis', [-0.1547619, 1.1547619], [0, 1], [0.225, 0.775]);
             })
             .catch(failTest)
             .then(done);
@@ -628,25 +885,25 @@ describe('Test axes', function() {
         describe('setting, or not setting categoryorder if it is not explicitly declared', function() {
 
             it('should set categoryorder to default if categoryorder and categoryarray are not supplied', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {xaxis: {type: 'category'}});
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {xaxis: {type: 'category'}});
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
                 expect(gd._fullLayout.xaxis.categorarray).toBe(undefined);
             });
 
             it('should set categoryorder to default even if type is not set to category explicitly', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}]);
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}]);
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
                 expect(gd._fullLayout.xaxis.categorarray).toBe(undefined);
             });
 
             it('should NOT set categoryorder to default if type is not category', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}]);
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}]);
                 expect(gd._fullLayout.yaxis.categoryorder).toBe(undefined);
                 expect(gd._fullLayout.xaxis.categorarray).toBe(undefined);
             });
 
             it('should set categoryorder to default if type is overridden to be category', function() {
-                PlotlyInternal.plot(gd, [{x: [1, 2, 3, 4, 5], y: [15, 11, 12, 13, 14]}], {yaxis: {type: 'category'}});
+                Plotly.plot(gd, [{x: [1, 2, 3, 4, 5], y: [15, 11, 12, 13, 14]}], {yaxis: {type: 'category'}});
                 expect(gd._fullLayout.xaxis.categoryorder).toBe(undefined);
                 expect(gd._fullLayout.yaxis.categorarray).toBe(undefined);
                 expect(gd._fullLayout.yaxis.categoryorder).toBe('trace');
@@ -658,7 +915,7 @@ describe('Test axes', function() {
         describe('setting categoryorder to "array"', function() {
 
             it('should leave categoryorder on "array" if it is supplied', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'array', categoryarray: ['b', 'a', 'd', 'e', 'c']}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('array');
@@ -666,7 +923,7 @@ describe('Test axes', function() {
             });
 
             it('should switch categoryorder on "array" if it is not supplied but categoryarray is supplied', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryarray: ['b', 'a', 'd', 'e', 'c']}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('array');
@@ -674,7 +931,7 @@ describe('Test axes', function() {
             });
 
             it('should revert categoryorder to "trace" if "array" is supplied but there is no list', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'array'}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
@@ -686,7 +943,7 @@ describe('Test axes', function() {
         describe('do not set categoryorder to "array" if list exists but empty', function() {
 
             it('should switch categoryorder to default if list is not supplied', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'array', categoryarray: []}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
@@ -694,7 +951,7 @@ describe('Test axes', function() {
             });
 
             it('should not switch categoryorder on "array" if categoryarray is supplied but empty', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryarray: []}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
@@ -705,7 +962,7 @@ describe('Test axes', function() {
         describe('do NOT set categoryorder to "array" if it has some other proper value', function() {
 
             it('should use specified categoryorder if it is supplied even if categoryarray exists', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'trace', categoryarray: ['b', 'a', 'd', 'e', 'c']}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
@@ -713,7 +970,7 @@ describe('Test axes', function() {
             });
 
             it('should use specified categoryorder if it is supplied even if categoryarray exists', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'category ascending', categoryarray: ['b', 'a', 'd', 'e', 'c']}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('category ascending');
@@ -721,7 +978,7 @@ describe('Test axes', function() {
             });
 
             it('should use specified categoryorder if it is supplied even if categoryarray exists', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'category descending', categoryarray: ['b', 'a', 'd', 'e', 'c']}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('category descending');
@@ -733,7 +990,7 @@ describe('Test axes', function() {
         describe('setting categoryorder to the default if the value is unexpected', function() {
 
             it('should switch categoryorder to "trace" if mode is supplied but invalid', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'invalid value'}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('trace');
@@ -741,7 +998,7 @@ describe('Test axes', function() {
             });
 
             it('should switch categoryorder to "array" if mode is supplied but invalid and list is supplied', function() {
-                PlotlyInternal.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
+                Plotly.plot(gd, [{x: ['c', 'a', 'e', 'b', 'd'], y: [15, 11, 12, 13, 14]}], {
                     xaxis: {type: 'category', categoryorder: 'invalid value', categoryarray: ['b', 'a', 'd', 'e', 'c']}
                 });
                 expect(gd._fullLayout.xaxis.categoryorder).toBe('array');
@@ -774,7 +1031,7 @@ describe('Test axes', function() {
                 }
             };
 
-            PlotlyInternal.plot(gd, data, layout);
+            Plotly.plot(gd, data, layout);
 
             var yaxis = gd._fullLayout.yaxis;
             expect(yaxis.ticklen).toBe(5);
@@ -798,7 +1055,7 @@ describe('Test axes', function() {
                 }
             };
 
-            PlotlyInternal.plot(gd, data, layout);
+            Plotly.plot(gd, data, layout);
 
             var yaxis = gd._fullLayout.yaxis;
             expect(yaxis.ticklen).toBe(10);
@@ -818,7 +1075,7 @@ describe('Test axes', function() {
                 }
             };
 
-            PlotlyInternal.plot(gd, data, layout);
+            Plotly.plot(gd, data, layout);
 
             var yaxis = gd._fullLayout.yaxis;
             expect(yaxis.tickangle).toBeUndefined();
@@ -1672,6 +1929,112 @@ describe('Test axes', function() {
             });
         }
 
+        it('reverts to "power" for SI/B exponentformat beyond the prefix range (linear case)', function() {
+            var textOut = mockCalc({
+                type: 'linear',
+                tickmode: 'linear',
+                exponentformat: 'B',
+                showexponent: 'all',
+                tick0: 0,
+                dtick: 1e13,
+                range: [8.5e13, 11.5e13]
+            });
+
+            expect(textOut).toEqual([
+                '90T', '100T', '110T'
+            ]);
+
+            textOut = mockCalc({
+                type: 'linear',
+                tickmode: 'linear',
+                exponentformat: 'B',
+                showexponent: 'all',
+                tick0: 0,
+                dtick: 1e14,
+                range: [8.5e14, 11.5e14]
+            });
+
+            expect(textOut).toEqual([
+                '0.9×10<sup>15</sup>',
+                '1×10<sup>15</sup>',
+                '1.1×10<sup>15</sup>'
+            ]);
+
+            textOut = mockCalc({
+                type: 'linear',
+                tickmode: 'linear',
+                exponentformat: 'SI',
+                showexponent: 'all',
+                tick0: 0,
+                dtick: 1e-16,
+                range: [8.5e-16, 11.5e-16]
+            });
+
+            expect(textOut).toEqual([
+                '0.9f', '1f', '1.1f'
+            ]);
+
+            textOut = mockCalc({
+                type: 'linear',
+                tickmode: 'linear',
+                exponentformat: 'SI',
+                showexponent: 'all',
+                tick0: 0,
+                dtick: 1e-17,
+                range: [8.5e-17, 11.5e-17]
+            });
+
+            expect(textOut).toEqual([
+                '0.9×10<sup>\u221216</sup>',
+                '1×10<sup>\u221216</sup>',
+                '1.1×10<sup>\u221216</sup>'
+            ]);
+        });
+
+        it('reverts to "power" for SI/B exponentformat beyond the prefix range (log case)', function() {
+            var textOut = mockCalc({
+                type: 'log',
+                tickmode: 'linear',
+                exponentformat: 'B',
+                showexponent: 'all',
+                tick0: 0,
+                dtick: 1,
+                range: [-18.5, 18.5]
+            });
+
+            expect(textOut).toEqual([
+                '10<sup>\u221218</sup>',
+                '10<sup>\u221217</sup>',
+                '10<sup>\u221216</sup>',
+                '1f', '10f', '100f', '1p', '10p', '100p', '1n', '10n', '100n',
+                '1μ', '10μ', '100μ', '0.001', '0.01', '0.1', '1', '10', '100',
+                '1000', '10k', '100k', '1M', '10M', '100M', '1B', '10B', '100B',
+                '1T', '10T', '100T',
+                '10<sup>15</sup>',
+                '10<sup>16</sup>',
+                '10<sup>17</sup>',
+                '10<sup>18</sup>'
+            ]);
+
+            textOut = mockCalc({
+                type: 'log',
+                tickmode: 'linear',
+                exponentformat: 'SI',
+                showexponent: 'all',
+                tick0: 0,
+                dtick: 'D2',
+                range: [7.9, 12.1]
+            });
+
+            expect(textOut).toEqual([
+                '100M', '2', '5',
+                '1G', '2', '5',
+                '10G', '2', '5',
+                '100G', '2', '5',
+                '1T'
+            ]);
+        });
+
         it('provides a new date suffix whenever the suffix changes', function() {
             var ax = {
                 type: 'date',
@@ -1967,6 +2330,55 @@ describe('Test axes', function() {
                 ['2000-01-01 11:00:00.1', 'Jan 1, 2000, 11:00:00.1'],
                 ['2000-01-01 11:00:00.0001', 'Jan 1, 2000, 11:00:00.0001']
             ]);
+        });
+
+        it('avoids infinite loops due to rounding errors', function() {
+            var textOut = mockCalc({
+                type: 'linear',
+                tickmode: 'linear',
+                tick0: 1e200,
+                dtick: 1e-200,
+                range: [1e200, 2e200]
+            });
+
+            // This actually gives text '-Infinity' because it can't
+            // calculate the first tick properly, but since it's not going to
+            // be able to do any better with the rest, we don't much care.
+            expect(textOut.length).toBe(1);
+        });
+
+        it('truncates at the greater of 1001 ticks or one per pixel', function() {
+            var ax = {
+                type: 'linear',
+                tickmode: 'linear',
+                tick0: 0,
+                dtick: 1,
+                range: [0, 1e6],
+                _length: 100
+            };
+
+            expect(mockCalc(ax).length).toBe(1001);
+
+            ax._length = 10000;
+
+            expect(mockCalc(ax).length).toBe(10001);
+        });
+
+        it('never hides the exponent when in hover mode', function() {
+            var ax = {
+                type: 'linear',
+                tickmode: 'linear',
+                tick0: 0,
+                dtick: 2e20,
+                range: [0, 1.0732484076433121e21],
+                _length: 270
+            };
+
+            mockCalc(ax);
+
+            expect(mockHoverText(ax, 1e-21)).toBe('1×10<sup>−21</sup>');
+            expect(mockHoverText(ax, 1)).toBe('1');
+            expect(mockHoverText(ax, 1e21)).toBe('1×10<sup>21</sup>');
         });
     });
 
