@@ -17721,21 +17721,6 @@ drawing.makeTester = function() {
     drawing.testref = testref;
 };
 
-<<<<<<< HEAD
-// use our offscreen tester to get a clientRect for an element,
-// in a reference frame where it isn't translated and its anchor
-// point is at (0,0)
-// always returns a copy of the bbox, so the caller can modify it safely
-var savedBBoxes = [],
-    maxSavedBBoxes = 10000;
-
-drawing.bBox = function(node) {
-    // cache elements we've already measured so we don't have to
-    // remeasure the same thing many times
-    var saveNum = node.attributes['data-bb'];
-    if(saveNum && saveNum.value) {
-        return Lib.extendFlat({}, savedBBoxes[saveNum.value]);
-=======
 /*
  * use our offscreen tester to get a clientRect for an element,
  * in a reference frame where it isn't translated (or transformed) and
@@ -17821,7 +17806,6 @@ drawing.bBox = function(node, inTester, hash) {
             out = drawing.savedBBoxes[hash];
             if(out) return Lib.extendFlat({}, out);
         }
->>>>>>> upstream/master
     }
     var testNode, tester;
     if(inTester) {
@@ -17830,30 +17814,6 @@ drawing.bBox = function(node, inTester, hash) {
     else {
         tester = drawing.tester.node();
 
-<<<<<<< HEAD
-    if(!drawing.test3) {
-        drawing.test3 = d3.select('#js-plotly-tester');
-        drawing.tester = drawing.test3.node();
-    }
-
-    // copy the node to test into the tester
-    var testNode = node.cloneNode(true);
-    drawing.tester.appendChild(testNode);
-    // standardize its position... do we really want to do this?
-    d3.select(testNode).attr({
-        x: 0,
-        y: 0,
-        transform: ''
-    });
-
-    var testRect = testNode.getBoundingClientRect();
-    if(!drawing.refRect) {
-        drawing.refRect = drawing.test3.select('.js-reference-point')
-            .node().getBoundingClientRect();
-    }
-
-    drawing.tester.removeChild(testNode);
-=======
         // copy the node to test into the tester
         testNode = node.cloneNode(true);
         tester.appendChild(testNode);
@@ -17870,15 +17830,14 @@ drawing.bBox = function(node, inTester, hash) {
         .getBoundingClientRect();
 
     if(!inTester) tester.removeChild(testNode);
->>>>>>> upstream/master
 
     var bb = {
         height: testRect.height,
         width: testRect.width,
-        left: testRect.left - drawing.refRect.left,
-        top: testRect.top - drawing.refRect.top,
-        right: testRect.right - drawing.refRect.left,
-        bottom: testRect.bottom - drawing.refRect.top
+        left: testRect.left - refRect.left,
+        top: testRect.top - refRect.top,
+        right: testRect.right - refRect.left,
+        bottom: testRect.bottom - refRect.top
     };
 
     // make sure we don't have too many saved boxes,
@@ -20808,21 +20767,10 @@ module.exports = {
 
     calc: require('./calc'),
 
-<<<<<<< HEAD
-        for(i = 0; i < fullData.length; i++) {
-            allTraces.push(i);
-            // Allow the legendonly state through for *all* trace types (including
-            // carpet for which it's overridden with true/false in supplyDefaults)
-            traceVisibility.push(
-                Registry.traceIs(fullData[i], 'notLegendIsolatable') ? true : 'legendonly'
-            );
-        }
-=======
     getDistanceFunction: helpers.getDistanceFunction,
     getClosest: helpers.getClosest,
     inbox: helpers.inbox,
     appendArrayPointValue: helpers.appendArrayPointValue,
->>>>>>> upstream/master
 
     castHoverOption: castHoverOption,
     castHoverinfo: castHoverinfo,
@@ -25852,7 +25800,7 @@ function drawOne(gd, index) {
     else {
         var plotinfo = gd._fullLayout._plots[options.xref + options.yref];
         if(plotinfo) {
-            var mainPlot = plotinfo.mainplot || plotinfo;
+            var mainPlot = plotinfo.mainplotinfo || plotinfo;
             drawShape(mainPlot.shapelayer);
         }
         else {
@@ -29531,27 +29479,12 @@ module.exports = function cleanNumber(v) {
 var isNumeric = require('fast-isnumeric');
 var tinycolor = require('tinycolor2');
 
-<<<<<<< HEAD
-var parser = new DOMParser();
-
-d3.selection.prototype.appendSVG = function(_svgString) {
-    var skeleton = [
-        '<svg xmlns="', xmlnsNamespaces.svg, '" ',
-        'xmlns:xlink="', xmlnsNamespaces.xlink, '">',
-        _svgString,
-        '</svg>'
-    ].join('');
-
-    var dom = parser.parseFromString(skeleton, 'application/xml'),
-        childNode = dom.documentElement.firstChild;
-=======
 var baseTraceAttrs = require('../plots/attributes');
 var getColorscale = require('../components/colorscale/get_scale');
 var colorscaleNames = Object.keys(require('../components/colorscale/scales'));
 var nestedProperty = require('./nested_property');
 
 var ID_REGEX = /^([2-9]|[1-9][0-9]+)$/;
->>>>>>> upstream/master
 
 exports.valObjects = {
     data_array: {
@@ -30555,16 +30488,7 @@ module.exports = function ensureArray(out, n) {
 
 'use strict';
 
-<<<<<<< HEAD
-var nestedProperty = require('../lib/nested_property');
-var isPlainObject = require('../lib/is_plain_object');
-var noop = require('../lib/noop');
-var Loggers = require('../lib/loggers');
-var sorterAsc = require('../lib/search').sorterAsc;
-var Registry = require('../registry');
-=======
 /* global jQuery:false */
->>>>>>> upstream/master
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -30621,17 +30545,6 @@ var Events = {
         plotObj._removeInternalListener = internalEv.removeListener.bind(internalEv);
         plotObj._removeAllInternalListeners = internalEv.removeAllListeners.bind(internalEv);
 
-<<<<<<< HEAD
-    var componentNums = Object.keys(edits).map(Number).sort(sorterAsc),
-        componentArrayIn = np.get(),
-        componentArray = componentArrayIn || [],
-        // componentArrayFull is used just to keep splices in line between
-        // full and input arrays, so private keys can be copied over after
-        // redoing supplyDefaults
-        // TODO: this assumes componentArray is in gd.layout - which will not be
-        // true after we extend this to restyle
-        componentArrayFull = nestedProperty(fullLayout, componentType).get();
-=======
         /*
          * We must wrap emit to continue to support JQuery events. The idea
          * is to check to see if the user is using JQuery events, if they are
@@ -30642,7 +30555,6 @@ var Events = {
             if(typeof jQuery !== 'undefined') {
                 jQuery(plotObj).trigger(event, data);
             }
->>>>>>> upstream/master
 
             ev.emit(event, data);
             internalEv.emit(event, data);
@@ -30728,13 +30640,9 @@ var Events = {
 
 };
 
-<<<<<<< HEAD
-},{"../lib/is_plain_object":129,"../lib/loggers":130,"../lib/nested_property":133,"../lib/noop":134,"../lib/search":141,"../registry":197,"./container_array_match":146}],149:[function(require,module,exports){
-=======
 module.exports = Events;
 
 },{"events":12}],145:[function(require,module,exports){
->>>>>>> upstream/master
 /**
 * Copyright 2012-2017, Plotly, Inc.
 * All rights reserved.
@@ -31141,15 +31049,7 @@ exports.getVisibleSegment = function getVisibleSegment(path, bounds, buffer) {
 // Simple helper functions
 // none of these need any external deps
 
-<<<<<<< HEAD
-    // Now plot the data
-    function drawData() {
-        var calcdata = gd.calcdata,
-            i,
-            rangesliderContainers = fullLayout._infolayer.selectAll('g.rangeslider-container');
-=======
 module.exports = function identity(d) { return d; };
->>>>>>> upstream/master
 
 },{}],150:[function(require,module,exports){
 /**
@@ -31163,15 +31063,8 @@ module.exports = function identity(d) { return d; };
 
 'use strict';
 
-<<<<<<< HEAD
-                rangesliderContainers
-                    .selectAll(query)
-                    .remove();
-            }
-=======
 var d3 = require('d3');
 var isNumeric = require('fast-isnumeric');
->>>>>>> upstream/master
 
 var numConstants = require('../constants/numerical');
 var FP_SAFE = numConstants.FP_SAFE;
@@ -42506,14 +42399,7 @@ axes.doTicks = function(gd, axid, skipTitle) {
                 {_offset: gs.l + (ax.position || 0) * gs.w, _length: 0} :
                 axisIds.getFromId(gd, ax.anchor);
 
-<<<<<<< HEAD
-            y = ax._offset + ax._length / 2 + 10; //added +10 for shift the label downside
-            x = counterAxis._offset + ((ax.side === 'right') ?
-                counterAxis._length + 10 +
-                    fontSize * (offsetBase + (ax.showticklabels ? 1 : 0.5)) :
-                -10 - fontSize * (offsetBase + (ax.showticklabels ? 0.5 : 0)));
-=======
-            y = ax._offset + ax._length / 2;
+            y = ax._offset + ax._length / 2 + 10;
             if(ax.side === 'right') {
                 x = counterAxis._length + titleStandoff +
                     fontSize * (ax.showticklabels ? 1 : 0.5);
@@ -42522,7 +42408,6 @@ axes.doTicks = function(gd, axid, skipTitle) {
                 x = -titleStandoff - fontSize * (ax.showticklabels ? 0.5 : 0);
             }
             x += counterAxis._offset;
->>>>>>> origin/master
 
             transform = {rotate: '0', offset: 0}; //rotate changed from -90 to 0
             if(!avoid.side) avoid.side = 'left';
@@ -60964,12 +60849,7 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         });
 
         join.selectAll('text')
-<<<<<<< HEAD
-            .classed('textpoint', true)
-            .call(Drawing.textPointStyle, trace)
-=======
             .call(Drawing.textPointStyle, trace, gd)
->>>>>>> upstream/master
             .each(function(d) {
                 // This just *has* to be totally custom becuase of SVG text positioning :(
                 // It's obviously copied from translatePoint; we just can't use that
