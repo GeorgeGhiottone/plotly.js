@@ -75,15 +75,7 @@ The main plotly.js bundle weights in at:
 
 | plotly.js | plotly.min.js | plotly.min.js + gzip | plotly-with-meta.js |
 |-----------|---------------|----------------------|---------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 5.1 MB | 2.1 MB | 631.2 kB | 5.3 MB |
-=======
-| 5.5 MB | 2.2 MB | 672.1 kB | 5.6 MB |
->>>>>>> upstream/master
-=======
-| 5.7 MB | 2.7 MB | 811.3 kB | 5.9 MB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 5.7 MB | 2.7 MB | 811.9 kB | 5.9 MB |
 
 ## Partial bundles
 
@@ -106,7 +98,7 @@ The `basic` partial bundle contains trace modules `scatter`, `bar` and `pie`.
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-| 2.1 MB | 760.1 kB | 247.9 kB |
+| 2.1 MB | 760.3 kB | 248.3 kB |
 
 #### CDN links
 
@@ -152,15 +144,7 @@ The `cartesian` partial bundle contains trace modules `scatter`, `bar`, `box`, `
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 1.7 MB | 646.4 kB | 210.3 kB |
-=======
-| 1.8 MB | 676 kB | 220.1 kB |
->>>>>>> upstream/master
-=======
-| 2.4 MB | 870.7 kB | 282.3 kB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 2.4 MB | 871 kB | 282.8 kB |
 
 #### CDN links
 
@@ -206,15 +190,7 @@ The `geo` partial bundle contains trace modules `scatter`, `scattergeo` and `cho
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 1.9 MB | 721.4 kB | 232.8 kB |
-=======
-| 2 MB | 759.1 kB | 245.6 kB |
->>>>>>> upstream/master
-=======
-| 2.1 MB | 783.6 kB | 257 kB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 2.1 MB | 783.3 kB | 257.3 kB |
 
 #### CDN links
 
@@ -260,15 +236,7 @@ The `gl3d` partial bundle contains trace modules `scatter`, `scatter3d`, `surfac
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 1.7 MB | 669.3 kB | 218.9 kB |
-=======
-| 1.8 MB | 698.5 kB | 228.5 kB |
->>>>>>> upstream/master
-=======
-| 3.2 MB | 1.3 MB | 404.7 kB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 3.2 MB | 1.3 MB | 404.9 kB |
 
 #### CDN links
 
@@ -314,15 +282,7 @@ The `gl2d` partial bundle contains trace modules `scatter`, `scattergl`, `splom`
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 2.6 MB | 1.1 MB | 344 kB |
-=======
-| 2.7 MB | 1.1 MB | 358.4 kB |
->>>>>>> upstream/master
-=======
-| 3.2 MB | 1.3 MB | 426.3 kB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 3.2 MB | 1.3 MB | 426.5 kB |
 
 #### CDN links
 
@@ -368,15 +328,7 @@ The `mapbox` partial bundle contains trace modules `scatter` and `scattermapbox`
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 2.7 MB | 1.1 MB | 353.5 kB |
-=======
-| 2.8 MB | 1.1 MB | 367.8 kB |
->>>>>>> upstream/master
-=======
-| 2.6 MB | 1.3 MB | 394.8 kB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 2.6 MB | 1.3 MB | 395 kB |
 
 #### CDN links
 
@@ -422,15 +374,7 @@ The `finance` partial bundle contains trace modules `scatter`, `bar`, `histogram
 
 | Raw size | Minified size | Minified + gzip size |
 |------|-----------------|------------------------|
-<<<<<<< HEAD
-<<<<<<< HEAD
-| 2.8 MB | 1.1 MB | 322.8 kB |
-=======
-| 2.9 MB | 1.1 MB | 333.6 kB |
->>>>>>> upstream/master
-=======
-| 2.2 MB | 790.4 kB | 257 kB |
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
+| 2.2 MB | 790.6 kB | 257.2 kB |
 
 #### CDN links
 
@@ -467,16 +411,6 @@ var Plotly = require('plotly.js-finance-dist');
 | ES6 module | `import Plotly from 'plotly.js/lib/index-finance'` |
 | CommonJS | `require('plotly.js/lib/index-finance')` |
 
-<<<<<<< HEAD
-| Raw size | Minified size | Minified + gzip size |
-|------|-----------------|------------------------|
-<<<<<<< HEAD
-| 1.8 MB | 673.2 kB | 217.9 kB |
-=======
-| 1.9 MB | 704.3 kB | 228.2 kB |
->>>>>>> upstream/master
-=======
->>>>>>> def6aa5a24527c68e90f50485255170609640e43
 
 ----------------
 
