@@ -30,6 +30,10 @@ describe('dragElement', function() {
 
     afterEach(destroyGraphDiv);
 
+    function countCoverSlip() {
+        return d3.selectAll('.dragcover').size();
+    }
+
     it('should init drag element', function() {
         var options = { element: this.element, gd: this.gd };
         dragElement.init(options);
@@ -57,13 +61,13 @@ describe('dragElement', function() {
         expect(args[2]).toEqual(Math.floor(this.y));
     });
 
-    it('should pass dragged, dx and dy to moveFn on mousemove', function() {
+    it('should pass dx and dy to moveFn on mousemove', function() {
         var args = [];
         var options = {
             element: this.element,
             gd: this.gd,
-            moveFn: function(dx, dy, dragged) {
-                args = [dx, dy, dragged];
+            moveFn: function() {
+                args = arguments;
             }
         };
         dragElement.init(options);
@@ -72,18 +76,45 @@ describe('dragElement', function() {
         mouseEvent('mousemove', this.x + 10, this.y + 10);
         mouseEvent('mouseup', this.x, this.y);
 
+        expect(args.length).toBe(2);
         expect(args[0]).toEqual(10);
         expect(args[1]).toEqual(10);
-        expect(args[2]).toBe(true);
     });
 
-    it('should pass dragged and numClicks to doneFn on mouseup & mouseout', function() {
+    it('does not pass the event to doneFn on mouseup after mousemove', function() {
         var args = [];
         var options = {
             element: this.element,
             gd: this.gd,
-            doneFn: function(dragged, numClicks) {
-                args = [dragged, numClicks];
+            doneFn: function() {
+                args = arguments;
+            },
+            clickFn: function() {
+                expect('should not call clickFn').toBe(true);
+            }
+        };
+        dragElement.init(options);
+
+        mouseEvent('mousedown', this.x, this.y);
+        mouseEvent('mousemove', this.x + 10, this.y + 10);
+        mouseEvent('mouseup', this.x, this.y);
+
+        expect(args.length).toBe(0);
+    });
+
+    it('should pass numClicks and event to clickFn on mouseup after no/small mousemove', function() {
+        var args = [];
+        var options = {
+            element: this.element,
+            gd: this.gd,
+            clickFn: function() {
+                args = arguments;
+            },
+            moveFn: function() {
+                expect('should not call moveFn').toBe(true);
+            },
+            doneFn: function() {
+                expect('should not call doneFn').toBe(true);
             }
         };
         dragElement.init(options);
@@ -91,22 +122,22 @@ describe('dragElement', function() {
         mouseEvent('mousedown', this.x, this.y);
         mouseEvent('mouseup', this.x, this.y);
 
-        expect(args[0]).toBe(false);
-        expect(args[1]).toEqual(1);
+        expect(args.length).toBe(2);
+        expect(args[0]).toEqual(1);
+        // click gets the mousedown event, as that's guaranteed to have
+        // the correct target
+        expect(args[1].type).toBe('mousedown');
 
         mouseEvent('mousedown', this.x, this.y);
-        mouseEvent('mousemove', this.x + 10, this.y + 10);
-        mouseEvent('mouseout', this.x, this.y);
+        mouseEvent('mousemove', this.x + 3, this.y + 3);
+        mouseEvent('mouseup', this.x, this.y);
 
-        expect(args[0]).toBe(true);
-        expect(args[1]).toEqual(2);
+        expect(args.length).toBe(2);
+        expect(args[0]).toEqual(2);
+        expect(args[1].type).toBe('mousedown');
     });
 
     it('should add a cover slip div to the DOM', function() {
-        function countCoverSlip() {
-            return d3.selectAll('.dragcover').size();
-        }
-
         var options = { element: this.element, gd: this.gd };
         dragElement.init(options);
 
@@ -118,8 +149,34 @@ describe('dragElement', function() {
         mouseEvent('mousemove', this.x + 10, this.y + 10);
         expect(countCoverSlip()).toEqual(1);
 
-        mouseEvent('mouseout', this.x, this.y);
+        mouseEvent('mouseup', this.x, this.y);
         expect(countCoverSlip()).toEqual(0);
+    });
+
+    it('should not add a cover slip div to the DOM when right click', function() {
+        var clickCalls = 0;
+        var options = {
+            element: this.element,
+            gd: this.gd,
+            clickFn: function() {
+                clickCalls++;
+            }
+        };
+        dragElement.init(options);
+
+        var mockObj = {
+            handleClick: function() {}
+        };
+        spyOn(mockObj, 'handleClick');
+
+        this.element.onclick = mockObj.handleClick;
+
+        mouseEvent('mousedown', this.x, this.y, { buttons: 2 });
+        expect(countCoverSlip()).toEqual(0);
+
+        mouseEvent('mouseup', this.x, this.y);
+        expect(mockObj.handleClick).not.toHaveBeenCalled();
+        expect(clickCalls).toBe(1);
     });
 
     it('should fire off click event when down/up without dragging', function() {

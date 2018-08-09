@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -20,7 +20,7 @@ ContourCarpet.style = require('../contour/style');
 ContourCarpet.moduleType = 'trace';
 ContourCarpet.name = 'contourcarpet';
 ContourCarpet.basePlotModule = require('../../plots/cartesian');
-ContourCarpet.categories = ['cartesian', 'carpet', 'contour', 'symbols', 'showLegend', 'hasLines', 'carpetDependent'];
+ContourCarpet.categories = ['cartesian', 'svg', 'carpet', 'contour', 'symbols', 'showLegend', 'hasLines', 'carpetDependent'];
 ContourCarpet.meta = {
     hrName: 'contour_carpet',
     description: [

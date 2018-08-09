@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -8,45 +8,22 @@
 
 'use strict';
 
-var shapeAttrs = require('../../components/shapes/attributes');
 var fontAttrs = require('../../plots/font_attributes');
 var plotAttrs = require('../../plots/attributes');
 var colorAttrs = require('../../components/color/attributes');
+var fxAttrs = require('../../components/fx/attributes');
+var domainAttrs = require('../../plots/domain').attributes;
 
 var extendFlat = require('../../lib/extend').extendFlat;
+var overrideAll = require('../../plot_api/edit_types').overrideAll;
 
-module.exports = {
+module.exports = overrideAll({
     hoverinfo: extendFlat({}, plotAttrs.hoverinfo, {
-        flags: ['label', 'text', 'value', 'percent', 'name']
+        flags: ['label', 'text', 'value', 'percent', 'name'],
     }),
-    domain: {
-        x: {
-            valType: 'info_array',
-            role: 'info',
-            items: [
-                {valType: 'number', min: 0, max: 1},
-                {valType: 'number', min: 0, max: 1}
-            ],
-            dflt: [0, 1],
-            description: [
-                'Sets the horizontal domain of this `sankey` trace',
-                '(in plot fraction).'
-            ].join(' ')
-        },
-        y: {
-            valType: 'info_array',
-            role: 'info',
-            items: [
-                {valType: 'number', min: 0, max: 1},
-                {valType: 'number', min: 0, max: 1}
-            ],
-            dflt: [0, 1],
-            description: [
-                'Sets the vertical domain of this `sankey` trace',
-                '(in plot fraction).'
-            ].join(' ')
-        }
-    },
+    hoverlabel: fxAttrs.hoverlabel, // needs editType override
+
+    domain: domainAttrs({name: 'sankey', trace: true}),
 
     orientation: {
         valType: 'enumerated',
@@ -91,7 +68,9 @@ module.exports = {
         ].join(' ')
     },
 
-    textfont: fontAttrs,
+    textfont: fontAttrs({
+        description: 'Sets the font for node labels'
+    }),
 
     node: {
         label: {
@@ -100,7 +79,9 @@ module.exports = {
             role: 'info',
             description: 'The shown name of the node.'
         },
-        color: extendFlat({}, shapeAttrs.fillcolor, {
+        color: {
+            valType: 'color',
+            role: 'style',
             arrayOk: true,
             description: [
                 'Sets the `node` color. It can be a single value, or an array for specifying color for each `node`.',
@@ -108,7 +89,7 @@ module.exports = {
                 'to have a variety of colors. These defaults are not fully opaque, to allow some visibility of',
                 'what is beneath the node.'
             ].join(' ')
-        }),
+        },
         line: {
             color: {
                 valType: 'color',
@@ -156,13 +137,15 @@ module.exports = {
             role: 'info',
             description: 'The shown name of the link.'
         },
-        color: extendFlat({}, shapeAttrs.fillcolor, {
+        color: {
+            valType: 'color',
+            role: 'style',
             arrayOk: true,
             description: [
                 'Sets the `link` color. It can be a single value, or an array for specifying color for each `link`.',
                 'If `link.color` is omitted, then by default, a translucent grey link will be used.'
             ].join(' ')
-        }),
+        },
         line: {
             color: {
                 valType: 'color',
@@ -204,4 +187,4 @@ module.exports = {
         },
         description: 'The links of the Sankey plot.'
     }
-};
+}, 'calc', 'nested');

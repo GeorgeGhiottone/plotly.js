@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -52,8 +52,7 @@ function fromLog(v) {
  * Creates/updates these conversion functions, and a few more utilities
  * like cleanRange, and makeCalcdata
  *
- * also clears the autorange bounds ._min and ._max
- * and the autotick constraints ._minDtick, ._forceTick0
+ * also clears the autotick constraints ._minDtick, ._forceTick0
  */
 module.exports = function setConvert(ax, fullLayout) {
     fullLayout = fullLayout || {};
@@ -92,7 +91,14 @@ module.exports = function setConvert(ax, fullLayout) {
         // as (local) ms if that fails.
         var ms = dateTime2ms(v, calendar || ax.calendar);
         if(ms === BADNUM) {
-            if(isNumeric(v)) ms = dateTime2ms(new Date(+v));
+            if(isNumeric(v)) {
+                v = +v;
+                // keep track of tenths of ms, that `new Date` will drop
+                // same logic as in Lib.ms2DateTime
+                var msecTenths = Math.floor(Lib.mod(v + 0.05, 1) * 10);
+                var msRounded = Math.round(v - msecTenths / 10);
+                ms = dateTime2ms(new Date(msRounded)) + msecTenths / 10;
+            }
             else return BADNUM;
         }
         return ms;
@@ -276,14 +282,16 @@ module.exports = function setConvert(ax, fullLayout) {
      * optional param rangeAttr: operate on a different attribute, like
      * ax._r, rather than ax.range
      */
-    ax.cleanRange = function(rangeAttr) {
+    ax.cleanRange = function(rangeAttr, opts) {
+        if(!opts) opts = {};
         if(!rangeAttr) rangeAttr = 'range';
-        var range = Lib.nestedProperty(ax, rangeAttr).get(),
-            i, dflt;
+
+        var range = Lib.nestedProperty(ax, rangeAttr).get();
+        var i, dflt;
 
         if(ax.type === 'date') dflt = Lib.dfltRange(ax.calendar);
         else if(axLetter === 'y') dflt = constants.DFLTRANGEY;
-        else dflt = constants.DFLTRANGEX;
+        else dflt = opts.dfltRange || constants.DFLTRANGEX;
 
         // make sure we don't later mutate the defaults
         dflt = dflt.slice();
@@ -381,11 +389,8 @@ module.exports = function setConvert(ax, fullLayout) {
         }
 
         if(!isFinite(ax._m) || !isFinite(ax._b)) {
-            Lib.notifier(
-                'Something went wrong with axis scaling',
-                'long');
             fullLayout._replotting = false;
-            throw new Error('axis scaling');
+            throw new Error('Something went wrong with axis scaling');
         }
     };
 
@@ -399,30 +404,42 @@ module.exports = function setConvert(ax, fullLayout) {
     // in case the expected data isn't there, make a list of
     // integers based on the opposite data
     ax.makeCalcdata = function(trace, axLetter) {
-        var arrayIn, arrayOut, i;
+        var arrayIn, arrayOut, i, len;
 
-        var cal = ax.type === 'date' && trace[axLetter + 'calendar'];
+        var axType = ax.type;
+        var cal = axType === 'date' && trace[axLetter + 'calendar'];
 
         if(axLetter in trace) {
             arrayIn = trace[axLetter];
-            arrayOut = new Array(arrayIn.length);
+            len = trace._length || arrayIn.length;
 
-            for(i = 0; i < arrayIn.length; i++) {
+            if(Lib.isTypedArray(arrayIn) && (axType === 'linear' || axType === 'log')) {
+                if(len === arrayIn.length) {
+                    return arrayIn;
+                } else if(arrayIn.subarray) {
+                    return arrayIn.subarray(0, len);
+                }
+            }
+
+            arrayOut = new Array(len);
+            for(i = 0; i < len; i++) {
                 arrayOut[i] = ax.d2c(arrayIn[i], 0, cal);
             }
         }
         else {
-            var v0 = ((axLetter + '0') in trace) ?
-                    ax.d2c(trace[axLetter + '0'], 0, cal) : 0,
-                dv = (trace['d' + axLetter]) ?
-                    Number(trace['d' + axLetter]) : 1;
+            var v0 = ((axLetter + '0') in trace) ? ax.d2c(trace[axLetter + '0'], 0, cal) : 0;
+            var dv = (trace['d' + axLetter]) ? Number(trace['d' + axLetter]) : 1;
 
             // the opposing data, for size if we have x and dx etc
             arrayIn = trace[{x: 'y', y: 'x'}[axLetter]];
-            arrayOut = new Array(arrayIn.length);
+            len = trace._length || arrayIn.length;
+            arrayOut = new Array(len);
 
-            for(i = 0; i < arrayIn.length; i++) arrayOut[i] = v0 + i * dv;
+            for(i = 0; i < len; i++) {
+                arrayOut[i] = v0 + i * dv;
+            }
         }
+
         return arrayOut;
     };
 
@@ -435,27 +452,45 @@ module.exports = function setConvert(ax, fullLayout) {
         );
     };
 
-    if(axLetter === 'x') {
-        ax.isPtWithinRange = function(d) {
-            var x = d.x;
-            return x >= ax.range[0] && x <= ax.range[1];
-        };
-    } else {
-        ax.isPtWithinRange = function(d) {
-            var y = d.y;
-            return y >= ax.range[0] && y <= ax.range[1];
-        };
-    }
+    ax.isPtWithinRange = function(d, calendar) {
+        var coord = ax.c2l(d[axLetter], null, calendar);
+        var r0 = ax.r2l(ax.range[0]);
+        var r1 = ax.r2l(ax.range[1]);
 
-    // for autoranging: arrays of objects:
-    //      {val: axis value, pad: pixel padding}
-    // on the low and high sides
-    ax._min = [];
-    ax._max = [];
+        if(r0 < r1) {
+            return r0 <= coord && coord <= r1;
+        } else {
+            // Reversed axis case.
+            return r1 <= coord && coord <= r0;
+        }
+    };
 
-    // copy ref to fullLayout.separators so that
+    ax.clearCalc = function() {
+        // initialize the category list, if there is one, so we start over
+        // to be filled in later by ax.d2c
+        ax._categories = (ax._initialCategories || []).slice();
+
+        // Build the lookup map for initialized categories
+        ax._categoriesMap = {};
+        for(var j = 0; j < ax._categories.length; j++) {
+            ax._categoriesMap[ax._categories[j]] = j;
+        }
+    };
+
+    // Propagate localization into the axis so that
     // methods in Axes can use it w/o having to pass fullLayout
+    // Default (non-d3) number formatting uses separators directly
+    // dates and d3-formatted numbers use the d3 locale
+    // Fall back on default format for dummy axes that don't care about formatting
+    var locale = fullLayout._d3locale;
+    if(ax.type === 'date') {
+        ax._dateFormat = locale ? locale.timeFormat.utc : d3.time.format.utc;
+        ax._extraFormat = fullLayout._extraFormat;
+    }
+    // occasionally we need _numFormat to pass through
+    // even though it won't be needed by this axis
     ax._separators = fullLayout.separators;
+    ax._numFormat = locale ? locale.numberFormat : d3.format;
 
     // and for bar charts and box plots: reset forced minimum tick spacing
     delete ax._minDtick;

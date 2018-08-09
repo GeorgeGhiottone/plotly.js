@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -55,10 +55,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
         return;
     }
 
-    // cut all data arrays down to same length
-    if(a && len < a.length) traceOut.a = a.slice(0, len);
-    if(b && len < b.length) traceOut.b = b.slice(0, len);
-    if(c && len < c.length) traceOut.c = c.slice(0, len);
+    traceOut._length = len;
 
     coerce('sum');
 
@@ -85,6 +82,7 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     var dfltHoverOn = [];
 
     if(subTypes.hasMarkers(traceOut) || subTypes.hasText(traceOut)) {
+        coerce('cliponaxis');
         coerce('marker.maxdisplayed');
         dfltHoverOn.push('points');
     }
@@ -100,5 +98,5 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
     }
     coerce('hoveron', dfltHoverOn.join('+') || 'points');
 
-    coerce('cliponaxis');
+    Lib.coerceSelectionMarkerOpacity(traceOut, coerce);
 };

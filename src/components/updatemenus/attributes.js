@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -11,11 +11,16 @@
 var fontAttrs = require('../../plots/font_attributes');
 var colorAttrs = require('../color/attributes');
 var extendFlat = require('../../lib/extend').extendFlat;
+var overrideAll = require('../../plot_api/edit_types').overrideAll;
 var padAttrs = require('../../plots/pad_attributes');
+var templatedArray = require('../../plot_api/plot_template').templatedArray;
 
-var buttonsAttrs = {
-    _isLinkedToArray: 'button',
-
+var buttonsAttrs = templatedArray('button', {
+    visible: {
+        valType: 'boolean',
+        role: 'info',
+        description: 'Determines whether or not this button is visible.'
+    },
     method: {
         valType: 'enumerated',
         values: ['restyle', 'relayout', 'animate', 'update', 'skip'],
@@ -34,9 +39,9 @@ var buttonsAttrs = {
         role: 'info',
         freeLength: true,
         items: [
-            { valType: 'any' },
-            { valType: 'any' },
-            { valType: 'any' }
+            {valType: 'any'},
+            {valType: 'any'},
+            {valType: 'any'}
         ],
         description: [
             'Sets the arguments values to be passed to the Plotly',
@@ -61,10 +66,9 @@ var buttonsAttrs = {
             'specification of `method` and `args`.'
         ].join(' ')
     }
-};
+});
 
-module.exports = {
-    _isLinkedToArray: 'updatemenu',
+module.exports = overrideAll(templatedArray('updatemenu', {
     _arrayAttrRegexps: [/^updatemenus\[(0|[1-9][0-9]+)\]\.buttons/],
 
     visible: {
@@ -162,7 +166,7 @@ module.exports = {
         description: 'Sets the padding around the buttons or dropdown menu.'
     }),
 
-    font: extendFlat({}, fontAttrs, {
+    font: fontAttrs({
         description: 'Sets the font of the update menu button text.'
     }),
 
@@ -182,6 +186,7 @@ module.exports = {
         min: 0,
         dflt: 1,
         role: 'style',
+        editType: 'arraydraw',
         description: 'Sets the width (in px) of the border enclosing the update menu.'
     }
-};
+}), 'arraydraw', 'from-root');

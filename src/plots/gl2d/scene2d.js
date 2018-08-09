@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -22,12 +22,15 @@ var createOptions = require('./convert');
 var createCamera = require('./camera');
 var convertHTMLToUnicode = require('../../lib/html2unicode');
 var showNoWebGlMsg = require('../../lib/show_no_webgl_msg');
-var axisConstraints = require('../../plots/cartesian/constraints');
+var axisConstraints = require('../cartesian/constraints');
 var enforceAxisConstraints = axisConstraints.enforce;
 var cleanAxisConstraints = axisConstraints.clean;
+var doAutoRange = require('../cartesian/autorange').doAutoRange;
 
 var AXES = ['xaxis', 'yaxis'];
 var STATIC_CANVAS, STATIC_CONTEXT;
+
+var SUBPLOT_PATTERN = require('../cartesian/constants').SUBPLOT_PATTERN;
 
 
 function Scene2D(options, fullLayout) {
@@ -36,11 +39,13 @@ function Scene2D(options, fullLayout) {
     this.pixelRatio = options.plotGlPixelRatio || window.devicePixelRatio;
     this.id = options.id;
     this.staticPlot = !!options.staticPlot;
+    this.scrollZoom = this.graphDiv._context.scrollZoom;
 
     this.fullData = null;
     this.updateRefs(fullLayout);
 
     this.makeFramework();
+    if(this.stopped) return;
 
     // update options
     this.glplotOptions = createOptions(this);
@@ -73,8 +78,6 @@ function Scene2D(options, fullLayout) {
     // it's OK if this says true when it's not, so long as
     // when we get a mouseout we set it to false before handling
     this.isMouseOver = true;
-
-    this.bounds = [Infinity, Infinity, -Infinity, -Infinity];
 
     // flag to stop render loop
     this.stopped = false;
@@ -111,14 +114,19 @@ proto.makeFramework = function() {
         this.gl = STATIC_CONTEXT;
     }
     else {
-        var liveCanvas = document.createElement('canvas');
+        var liveCanvas = this.container.querySelector('.gl-canvas-focus');
 
         var gl = getContext({
             canvas: liveCanvas,
+            preserveDrawingBuffer: true,
             premultipliedAlpha: true
         });
 
-        if(!gl) showNoWebGlMsg(this);
+        if(!gl) {
+            showNoWebGlMsg(this);
+            this.stopped = true;
+            return;
+        }
 
         this.canvas = liveCanvas;
         this.gl = gl;
@@ -139,7 +147,7 @@ proto.makeFramework = function() {
     // disabling user select on the canvas
     // sanitizes double-clicks interactions
     // ref: https://github.com/plotly/plotly.js/issues/744
-    canvas.className += 'user-select-none';
+    canvas.className += ' user-select-none';
 
     // create SVG container for hover text
     var svgContainer = this.svgContainer = document.createElementNS(
@@ -156,9 +164,11 @@ proto.makeFramework = function() {
     mouseContainer.style.position = 'absolute';
     mouseContainer.style['pointer-events'] = 'auto';
 
+    this.pickCanvas = this.container.querySelector('.gl-canvas-pick');
+
+
     // append canvas, hover svg and mouse div to container
     var container = this.container;
-    container.appendChild(canvas);
     container.appendChild(svgContainer);
     container.appendChild(mouseContainer);
 
@@ -176,19 +186,23 @@ proto.toImage = function(format) {
     if(!format) format = 'png';
 
     this.stopped = true;
+
     if(this.staticPlot) this.container.appendChild(STATIC_CANVAS);
 
     // update canvas size
     this.updateSize(this.canvas);
 
-    // force redraw
-    this.glplot.setDirty();
-    this.glplot.draw();
 
     // grab context and yank out pixels
     var gl = this.glplot.gl,
         w = gl.drawingBufferWidth,
         h = gl.drawingBufferHeight;
+
+    // force redraw
+    gl.clearColor(1, 1, 1, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    this.glplot.setDirty();
+    this.glplot.draw();
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
@@ -250,9 +264,6 @@ proto.updateSize = function(canvas) {
         canvas.height = pixelHeight;
     }
 
-    // make sure plots render right thing
-    if(this.redraw) this.redraw();
-
     return canvas;
 };
 
@@ -293,9 +304,9 @@ function compareTicks(a, b) {
 proto.updateRefs = function(newFullLayout) {
     this.fullLayout = newFullLayout;
 
-    var spmatch = Axes.subplotMatch,
-        xaxisName = 'xaxis' + this.id.match(spmatch)[1],
-        yaxisName = 'yaxis' + this.id.match(spmatch)[2];
+    var spmatch = this.id.match(SUBPLOT_PATTERN);
+    var xaxisName = 'xaxis' + spmatch[1];
+    var yaxisName = 'yaxis' + spmatch[2];
 
     this.xaxis = this.fullLayout[xaxisName];
     this.yaxis = this.fullLayout[yaxisName];
@@ -369,7 +380,6 @@ proto.destroy = function() {
 
     this.glplot.dispose();
 
-    if(!this.staticPlot) this.container.removeChild(this.canvas);
     this.container.removeChild(this.svgContainer);
     this.container.removeChild(this.mouseContainer);
 
@@ -385,6 +395,8 @@ proto.plot = function(fullData, calcData, fullLayout) {
     var glplot = this.glplot;
 
     this.updateRefs(fullLayout);
+    this.xaxis.clearCalc();
+    this.yaxis.clearCalc();
     this.updateTraces(fullData, calcData);
     this.updateFx(fullLayout.dragmode);
 
@@ -423,32 +435,13 @@ proto.plot = function(fullData, calcData, fullLayout) {
     this.mouseContainer.style.left = size.l + domainX[0] * size.w + 'px';
     this.mouseContainer.style.top = size.t + (1 - domainY[1]) * size.h + 'px';
 
-    var bounds = this.bounds;
-    bounds[0] = bounds[1] = Infinity;
-    bounds[2] = bounds[3] = -Infinity;
-
-    var traceIds = Object.keys(this.traces);
     var ax, i;
 
-    for(i = 0; i < traceIds.length; ++i) {
-        var traceObj = this.traces[traceIds[i]];
-
-        for(var k = 0; k < 2; ++k) {
-            bounds[k] = Math.min(bounds[k], traceObj.bounds[k]);
-            bounds[k + 2] = Math.max(bounds[k + 2], traceObj.bounds[k + 2]);
-        }
-    }
-
     for(i = 0; i < 2; ++i) {
-        if(bounds[i] > bounds[i + 2]) {
-            bounds[i] = -1;
-            bounds[i + 2] = 1;
-        }
-
         ax = this[AXES[i]];
         ax._length = options.viewBox[i + 2] - options.viewBox[i];
 
-        Axes.doAutoRange(ax);
+        doAutoRange(this.graphDiv, ax);
         ax.setScale();
     }
 
@@ -532,8 +525,10 @@ proto.updateTraces = function(fullData, calcData) {
 proto.updateFx = function(dragmode) {
     // switch to svg interactions in lasso/select mode
     if(dragmode === 'lasso' || dragmode === 'select') {
+        this.pickCanvas.style['pointer-events'] = 'none';
         this.mouseContainer.style['pointer-events'] = 'none';
     } else {
+        this.pickCanvas.style['pointer-events'] = 'auto';
         this.mouseContainer.style['pointer-events'] = 'auto';
     }
 

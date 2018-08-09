@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -10,10 +10,10 @@
 'use strict';
 
 var annAtts = require('../annotations/attributes');
+var overrideAll = require('../../plot_api/edit_types').overrideAll;
+var templatedArray = require('../../plot_api/plot_template').templatedArray;
 
-module.exports = {
-    _isLinkedToArray: 'annotation',
-
+module.exports = overrideAll(templatedArray('annotation', {
     visible: annAtts.visible,
     x: {
         valType: 'any',
@@ -71,12 +71,16 @@ module.exports = {
     showarrow: annAtts.showarrow,
     arrowcolor: annAtts.arrowcolor,
     arrowhead: annAtts.arrowhead,
+    startarrowhead: annAtts.startarrowhead,
+    arrowside: annAtts.arrowside,
     arrowsize: annAtts.arrowsize,
+    startarrowsize: annAtts.startarrowsize,
     arrowwidth: annAtts.arrowwidth,
     standoff: annAtts.standoff,
+    startstandoff: annAtts.startstandoff,
     hovertext: annAtts.hovertext,
     hoverlabel: annAtts.hoverlabel,
-    captureevents: annAtts.captureevents
+    captureevents: annAtts.captureevents,
 
     // maybes later?
     // clicktoshow: annAtts.clicktoshow,
@@ -89,4 +93,4 @@ module.exports = {
     // xref: 'x'
     // yref: 'y
     // zref: 'z'
-};
+}), 'calc', 'from-root');

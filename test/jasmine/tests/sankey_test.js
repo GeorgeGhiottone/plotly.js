@@ -4,13 +4,15 @@ var Lib = require('@src/lib');
 var d3 = require('d3');
 var mock = require('@mocks/sankey_energy.json');
 var mockDark = require('@mocks/sankey_energy_dark.json');
-var Plots = require('@src/plots/plots');
 var Sankey = require('@src/traces/sankey');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var fail = require('../assets/fail_test');
 var mouseEvent = require('../assets/mouse_event');
+var assertHoverLabelStyle = require('../assets/custom_assertions').assertHoverLabelStyle;
+var supplyAllDefaults = require('../assets/supply_defaults');
+var defaultColors = require('@src/components/color/attributes').defaults;
 
 describe('sankey tests', function() {
 
@@ -19,7 +21,7 @@ describe('sankey tests', function() {
     function _supply(traceIn) {
         var traceOut = { visible: true },
             defaultColor = '#444',
-            layout = { };
+            layout = { colorway: defaultColors };
 
         Sankey.supplyDefaults(traceIn, traceOut, defaultColor, layout);
 
@@ -30,7 +32,7 @@ describe('sankey tests', function() {
         var traceOut = { visible: true },
             defaultColor = '#444';
 
-        Sankey.supplyDefaults(traceIn, traceOut, defaultColor, layout);
+        Sankey.supplyDefaults(traceIn, traceOut, defaultColor, Lib.extendFlat({colorway: defaultColors}, layout));
 
         return traceOut;
     }
@@ -56,37 +58,38 @@ describe('sankey tests', function() {
         });
     });
 
-    describe('log warning if issue is encountered with graph structure',
-        function() {
+    describe('No warnings for missing nodes', function() {
+        // we used to warn when some nodes were not used in the links
+        // not doing that anymore, it's not really consistent with
+        // the rest of our data processing.
+        it('some nodes are not linked', function() {
 
-            it('some nodes are not linked', function() {
-
-                var warnings = [];
-                spyOn(Lib, 'warn').and.callFake(function(msg) {
-                    warnings.push(msg);
-                });
-
-                _supply({
-                    node: {
-                        label: ['a', 'b', 'c']
-                    },
-                    link: {
-                        value: [1],
-                        source: [0],
-                        target: [1]
-                    }
-                });
-
-                expect(warnings.length).toEqual(1);
+            var warnings = [];
+            spyOn(Lib, 'warn').and.callFake(function(msg) {
+                warnings.push(msg);
             });
+
+            _supply({
+                node: {
+                    label: ['a', 'b', 'c']
+                },
+                link: {
+                    value: [1],
+                    source: [0],
+                    target: [1]
+                }
+            });
+
+            expect(warnings.length).toEqual(0);
         });
+    });
 
     describe('sankey global defaults', function() {
 
         it('should not coerce trace opacity', function() {
             var gd = Lib.extendDeep({}, mock);
 
-            Plots.supplyDefaults(gd);
+            supplyAllDefaults(gd);
 
             expect(gd._fullData[0].opacity).toBeUndefined();
         });
@@ -112,6 +115,8 @@ describe('sankey tests', function() {
                 expect(fullTrace.link.target)
                     .toEqual([], 'presence of link target array is guaranteed');
 
+                expect(fullTrace.link.label)
+                    .toEqual([], 'presence of link target array is guaranteed');
             });
 
         it('\'Sankey\' specification should have proper types',
@@ -175,10 +180,63 @@ describe('sankey tests', function() {
                 }
             });
 
-            expect(Lib.isArray(fullTrace.node.color)).toBe(true, 'set up color array');
+            expect(Array.isArray(fullTrace.node.color)).toBe(true, 'set up color array');
+            expect(fullTrace.node.color).toEqual(['rgba(31, 119, 180, 0.8)', 'rgba(255, 127, 14, 0.8)']);
 
         });
 
+        it('respects layout.colorway', function() {
+
+            var fullTrace = _supplyWithLayout({
+                node: {
+                    label: ['a', 'b']
+                },
+                link: {
+                    source: [0],
+                    target: [1],
+                    value: [1]
+                }
+            }, {colorway: ['rgb(255, 0, 0)', 'rgb(0, 0, 255)']});
+
+            expect(Array.isArray(fullTrace.node.color)).toBe(true, 'set up color array');
+            expect(fullTrace.node.color).toEqual(['rgba(255, 0, 0, 0.8)', 'rgba(0, 0, 255, 0.8)']);
+
+        });
+
+        it('does not fill \'link\' labels even if not specified', function() {
+
+            var fullTrace = _supply({
+                node: {
+                    label: ['a', 'b']
+                },
+                link: {
+                    source: [0, 1],
+                    target: [1, 0],
+                    value: [1, 2]
+                }
+            });
+
+            expect(Array.isArray(fullTrace.link.label)).toBe(true, 'must be an array');
+            expect(fullTrace.link.label).toEqual([], 'an array of empty strings');
+        });
+
+        it('preserves \'link\' labels if  specified', function() {
+
+            var fullTrace = _supply({
+                node: {
+                    label: ['a', 'b']
+                },
+                link: {
+                    source: [0, 1],
+                    target: [1, 0],
+                    value: [1, 2],
+                    label: ['a', 'b']
+                }
+            });
+
+            expect(Array.isArray(fullTrace.link.label)).toBe(true, 'must be an array');
+            expect(fullTrace.link.label).toEqual(['a', 'b'], 'an array of the supplied values');
+        });
     });
 
     describe('sankey calc', function() {
@@ -186,7 +244,7 @@ describe('sankey tests', function() {
         function _calc(trace) {
             var gd = { data: [trace] };
 
-            Plots.supplyDefaults(gd);
+            supplyAllDefaults(gd);
             var fullTrace = gd._fullData[0];
             Sankey.calc(gd, fullTrace);
             return fullTrace;
@@ -194,30 +252,19 @@ describe('sankey tests', function() {
 
         var base = { type: 'sankey' };
 
-        it('circularity is detected', function() {
+        describe('remove nodes if encountering circularity', function() {
+            var errors;
 
-            var errors = [];
-            spyOn(Lib, 'error').and.callFake(function(msg) {
-                errors.push(msg);
+            beforeEach(function() {
+                errors = [];
+                spyOn(Lib, 'error').and.callFake(function(msg) {
+                    errors.push(msg);
+                });
             });
 
-            _calc(Lib.extendDeep({}, base, {
-                node: {
-                    label: ['a', 'b', 'c']
-                },
-                link: {
-                    value: [1, 1, 1],
-                    source: [0, 1, 2],
-                    target: [1, 2, 0]
-                }
-            }));
-
-            expect(errors.length).toEqual(1);
-        });
-
-        describe('remove nodes if encountering circularity', function() {
-
             it('removing a single self-pointing node', function() {
+                expect(errors.length).toBe(0);
+
                 var fullTrace = _calc(Lib.extendDeep({}, base, {
                     node: {
                         label: ['a']
@@ -233,10 +280,12 @@ describe('sankey tests', function() {
                 expect(fullTrace.link.value).toEqual([], 'link value(s) removed');
                 expect(fullTrace.link.source).toEqual([], 'link source(s) removed');
                 expect(fullTrace.link.target).toEqual([], 'link target(s) removed');
-
+                expect(errors.length).toBe(1);
             });
 
             it('removing everything if detecting a circle', function() {
+                expect(errors.length).toBe(0);
+
                 var fullTrace = _calc(Lib.extendDeep({}, base, {
                     node: {
                         label: ['a', 'b', 'c', 'd', 'e']
@@ -252,7 +301,7 @@ describe('sankey tests', function() {
                 expect(fullTrace.link.value).toEqual([], 'link value(s) removed');
                 expect(fullTrace.link.source).toEqual([], 'link source(s) removed');
                 expect(fullTrace.link.target).toEqual([], 'link target(s) removed');
-
+                expect(errors.length).toBe(1);
             });
         });
     });
@@ -311,49 +360,49 @@ describe('sankey tests', function() {
                     done();
                 });
         });
+
+        it('\'node\' remains visible even if \'value\' is very low', function(done) {
+
+            var gd = createGraphDiv();
+            var minimock = [{
+                type: 'sankey',
+                node: {
+                    label: ['a', 'b1', 'b2']
+                },
+                link: {
+                    source: [0, 0],
+                    target: [1, 2],
+                    value: [1000000, 0.001]
+                }
+            }];
+            Plotly.plot(gd, minimock)
+                .then(function() {
+                    expect(d3.selectAll('.sankey .node-rect')[0].reduce(function(prevMin, rect) {
+                        return Math.min(prevMin, d3.select(rect).attr('height'));
+                    }, Infinity)).toEqual(0.5);
+                    done();
+                });
+        });
     });
 
     describe('Test hover/click interactions:', function() {
         afterEach(destroyGraphDiv);
 
-        function assertLabel(content, style) {
-            var g = d3.selectAll('.hovertext');
-            var lines = g.selectAll('.nums .line');
-            var name = g.selectAll('.name');
-
-            expect(lines.size()).toBe(content.length - 1);
-
-            lines.each(function(_, i) {
-                expect(d3.select(this).text()).toBe(content[i]);
-            });
-
-            expect(name.text()).toBe(content[content.length - 1]);
-
-            var path = g.select('path');
-            expect(path.style('fill')).toEqual(style[0], 'bgcolor');
-            expect(path.style('stroke')).toEqual(style[1], 'bordercolor');
-
-            var text = g.select('text.nums');
-            expect(parseInt(text.style('font-size'))).toEqual(style[2], 'font.size');
-            expect(text.style('font-family').split(',')[0]).toEqual(style[3], 'font.family');
-            expect(text.style('fill')).toEqual(style[4], 'font.color');
-        }
-
-        it('should shows the correct hover labels', function(done) {
+        it('should show the correct hover labels', function(done) {
             var gd = createGraphDiv();
             var mockCopy = Lib.extendDeep({}, mock);
 
             function _hover(px, py) {
                 mouseEvent('mousemove', px, py);
                 mouseEvent('mouseover', px, py);
-                delete gd._lastHoverTime;
+                Lib.clearThrottle();
             }
 
             Plotly.plot(gd, mockCopy).then(function() {
-                _hover(400, 300);
+                _hover(404, 302);
 
                 assertLabel(
-                    ['Solid', 'Incoming flow count: 4', 'Outgoing flow count: 3', '447TWh'],
+                    ['Solid', 'incoming flow count: 4', 'outgoing flow count: 3', '447TWh'],
                     ['rgb(148, 103, 189)', 'rgb(255, 255, 255)', 13, 'Arial', 'rgb(255, 255, 255)']
                 );
             })
@@ -361,17 +410,17 @@ describe('sankey tests', function() {
                 _hover(450, 300);
 
                 assertLabel(
-                    ['Source: Solid', 'Target: Industry', '46TWh'],
+                    ['source: Solid', 'target: Industry', '46TWh'],
                     ['rgb(0, 0, 96)', 'rgb(255, 255, 255)', 13, 'Arial', 'rgb(255, 255, 255)']
                 );
 
                 return Plotly.relayout(gd, 'hoverlabel.font.family', 'Roboto');
             })
             .then(function() {
-                _hover(400, 300);
+                _hover(404, 302);
 
                 assertLabel(
-                    ['Solid', 'Incoming flow count: 4', 'Outgoing flow count: 3', '447TWh'],
+                    ['Solid', 'incoming flow count: 4', 'outgoing flow count: 3', '447TWh'],
                     ['rgb(148, 103, 189)', 'rgb(255, 255, 255)', 13, 'Roboto', 'rgb(255, 255, 255)']
                 );
             })
@@ -379,7 +428,7 @@ describe('sankey tests', function() {
                 _hover(450, 300);
 
                 assertLabel(
-                    ['Source: Solid', 'Target: Industry', '46TWh'],
+                    ['source: Solid', 'target: Industry', '46TWh'],
                     ['rgb(0, 0, 96)', 'rgb(255, 255, 255)', 13, 'Roboto', 'rgb(255, 255, 255)']
                 );
 
@@ -391,10 +440,10 @@ describe('sankey tests', function() {
                 });
             })
             .then(function() {
-                _hover(400, 300);
+                _hover(404, 302);
 
                 assertLabel(
-                    ['Solid', 'Incoming flow count: 4', 'Outgoing flow count: 3', '447TWh'],
+                    ['Solid', 'incoming flow count: 4', 'outgoing flow count: 3', '447TWh'],
                     ['rgb(255, 0, 0)', 'rgb(0, 0, 255)', 20, 'Roboto', 'rgb(0, 0, 0)']
                 );
             })
@@ -402,12 +451,36 @@ describe('sankey tests', function() {
                 _hover(450, 300);
 
                 assertLabel(
-                    ['Source: Solid', 'Target: Industry', '46TWh'],
+                    ['source: Solid', 'target: Industry', '46TWh'],
                     ['rgb(255, 0, 0)', 'rgb(0, 0, 255)', 20, 'Roboto', 'rgb(0, 0, 0)']
                 );
             })
             .catch(fail)
             .then(done);
+        });
+
+        it('should show correct hover labels even if there is no link.label supplied', function(done) {
+            var gd = createGraphDiv();
+            var mockCopy = Lib.extendDeep({}, mock);
+            delete mockCopy.data[0].link.label;
+
+            function _hover(px, py) {
+                mouseEvent('mousemove', px, py);
+                mouseEvent('mouseover', px, py);
+                Lib.clearThrottle();
+            }
+
+            Plotly.plot(gd, mockCopy)
+                .then(function() {
+                    _hover(450, 300);
+
+                    assertLabel(
+                        ['source: Solid', 'target: Industry', '46TWh'],
+                        ['rgb(0, 0, 96)', 'rgb(255, 255, 255)', 13, 'Arial', 'rgb(255, 255, 255)']
+                    );
+                })
+                .catch(fail)
+                .then(done);
         });
     });
 
@@ -422,14 +495,14 @@ describe('sankey tests', function() {
 
         function _makeWrapper(eventType, mouseFn) {
             var posByElementType = {
-                node: [400, 300],
+                node: [404, 302],
                 link: [450, 300]
             };
 
             return function(elType) {
                 return new Promise(function(resolve, reject) {
                     gd.once(eventType, function(d) {
-                        delete gd._lastHoverTime;
+                        Lib.clearThrottle();
                         resolve(d);
                     });
 
@@ -520,3 +593,30 @@ describe('sankey tests', function() {
         });
     });
 });
+
+function assertLabel(content, style) {
+    var g = d3.selectAll('.hovertext');
+    var lines = g.selectAll('.nums .line');
+    var name = g.selectAll('.name');
+    var tooltipBoundingBox = g.node().getBoundingClientRect();
+    var nameBoundingBox = name.node().getBoundingClientRect();
+
+    expect(tooltipBoundingBox.top <= nameBoundingBox.top);
+    expect(tooltipBoundingBox.bottom >= nameBoundingBox.bottom);
+
+    expect(lines.size()).toBe(content.length - 1);
+
+    lines.each(function(_, i) {
+        expect(d3.select(this).text()).toBe(content[i]);
+    });
+
+    expect(name.text()).toBe(content[content.length - 1]);
+
+    assertHoverLabelStyle(g, {
+        bgcolor: style[0],
+        bordercolor: style[1],
+        fontSize: style[2],
+        fontFamily: style[3],
+        fontColor: style[4]
+    });
+}

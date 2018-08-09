@@ -7,10 +7,14 @@ var smoothFill2D = require('@src/traces/carpet/smooth_fill_2d_array');
 var smoothFill = require('@src/traces/carpet/smooth_fill_array');
 
 var d3 = require('d3');
-var customMatchers = require('../assets/custom_matchers');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var fail = require('../assets/fail_test');
+
+var mouseEvent = require('../assets/mouse_event');
+var assertHoverLabelContent = require('../assets/custom_assertions').assertHoverLabelContent;
+
+var supplyAllDefaults = require('../assets/supply_defaults');
 
 describe('carpet supplyDefaults', function() {
     'use strict';
@@ -112,13 +116,13 @@ describe('carpet supplyDefaults', function() {
 describe('supplyDefaults visibility check', function() {
     it('does not hide empty subplots', function() {
         var gd = {data: [], layout: {xaxis: {}}};
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         expect(gd._fullLayout.xaxis.visible).toBe(true);
     });
 
     it('does not hide axes with non-carpet traces', function() {
         var gd = {data: [{x: []}]};
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         expect(gd._fullLayout.xaxis.visible).toBe(true);
     });
 
@@ -133,7 +137,7 @@ describe('supplyDefaults visibility check', function() {
             type: 'contourcarpet',
             z: [[1, 2, 3], [4, 5, 6]],
         }]};
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         expect(gd._fullLayout.xaxis.visible).toBe(true);
     });
 
@@ -147,7 +151,7 @@ describe('supplyDefaults visibility check', function() {
             type: 'contourcarpet',
             z: [[1, 2, 3], [4, 5, 6]],
         }]};
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         expect(gd._fullLayout.xaxis.visible).toBe(false);
     });
 
@@ -177,7 +181,7 @@ describe('supplyDefaults visibility check', function() {
             }]
         };
 
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         expect(gd._fullLayout.xaxis.visible).toBe(true);
     });
 
@@ -207,15 +211,13 @@ describe('supplyDefaults visibility check', function() {
             }]
         };
 
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         expect(gd._fullLayout.xaxis.visible).toBe(true);
     });
 });
 
 describe('carpet smooth_fill_2d_array', function() {
     var _;
-
-    beforeAll(function() { jasmine.addMatchers(customMatchers); });
 
     it('fills in all points trivially', function() {
         // Given only corners, should just propagate the constant throughout:
@@ -381,8 +383,6 @@ describe('carpet smooth_fill_2d_array', function() {
 describe('smooth_fill_array', function() {
     var _;
 
-    beforeAll(function() { jasmine.addMatchers(customMatchers); });
-
     it('fills in via linear interplation', function() {
         expect(smoothFill([_, _, 2, 3, _, _, 6, 7, _, _, 10, 11, _]))
         .toBeCloseToArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
@@ -511,6 +511,32 @@ describe('Test carpet interactions:', function() {
         .catch(fail)
         .then(done);
     });
+
+    it('scattercarpet should be able to coexist with scatter traces', function(done) {
+        var mock = Lib.extendDeep({}, require('@mocks/scattercarpet.json'));
+
+        function _assert(exp) {
+            expect(d3.selectAll('.point').size())
+                .toBe(exp, 'number of scatter pts on graph');
+        }
+
+        Plotly.newPlot(gd, mock).then(function() {
+            _assert(12);
+
+            return Plotly.addTraces(gd, {
+                y: [1, 2, 1]
+            });
+        })
+        .then(function() {
+            _assert(15);
+            return Plotly.deleteTraces(gd, [0]);
+        })
+        .then(function() {
+            _assert(3);
+        })
+        .catch(fail)
+        .then(done);
+    });
 });
 
 describe('scattercarpet array attributes', function() {
@@ -567,6 +593,56 @@ describe('scattercarpet array attributes', function() {
             }
         })
         .catch(fail)
+        .then(done);
+    });
+});
+
+describe('scattercarpet hover labels', function() {
+    var gd;
+
+    afterEach(destroyGraphDiv);
+
+    function run(pos, fig, content) {
+        gd = createGraphDiv();
+
+        return Plotly.plot(gd, fig).then(function() {
+            mouseEvent('mousemove', pos[0], pos[1]);
+            assertHoverLabelContent({
+                nums: content[0].join('\n'),
+                name: content[1]
+            });
+        });
+    }
+
+    it('should generate hover label (base)', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/scattercarpet.json'));
+
+        run(
+            [200, 200], fig,
+            [['a: 0.200', 'b: 3.500', 'y: 2.900'], 'a = 0.2']
+        )
+        .then(done);
+    });
+
+    it('should generate hover label with \'hoverinfo\' set', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/scattercarpet.json'));
+        fig.data[5].hoverinfo = 'a+y';
+
+        run(
+            [200, 200], fig,
+            [['a: 0.200', 'y: 2.900'], null]
+        )
+        .then(done);
+    });
+
+    it('should generate hover label with arrayOk \'hoverinfo\' settings', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/scattercarpet.json'));
+        fig.data[5].hoverinfo = ['a+b', 'a+b', 'a+b', 'b+y'];
+
+        run(
+            [200, 200], fig,
+            [['b: 3.500', 'y: 2.900'], null]
+        )
         .then(done);
     });
 });

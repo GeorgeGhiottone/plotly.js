@@ -6,15 +6,34 @@ var Lib = require('@src/lib');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
+var failTest = require('../assets/fail_test');
 var customAssertions = require('../assets/custom_assertions');
+var supplyAllDefaults = require('../assets/supply_defaults');
 
 var assertDims = customAssertions.assertDims;
 var assertStyle = customAssertions.assertStyle;
 
+var mockFullLayout = {
+    _subplots: {cartesian: ['xy'], xaxis: ['x'], yaxis: ['y']},
+    _modules: [],
+    _visibleModules: [],
+    _basePlotModules: [],
+    _has: function() {},
+    _dfltTitle: {x: 'xxx', y: 'yyy'},
+    _requestRangeslider: {},
+    _traceUids: []
+};
+
+
 describe('general transforms:', function() {
     'use strict';
 
-    var fullLayout = { _transformModules: [] };
+    var fullLayout = {
+        _transformModules: [],
+        _subplots: {cartesian: ['xy'], xaxis: ['x'], yaxis: ['y']},
+        _modules: [],
+        _basePlotModules: []
+    };
 
     var traceIn, traceOut;
 
@@ -24,9 +43,20 @@ describe('general transforms:', function() {
             transforms: [{}]
         };
 
-        traceOut = Plots.supplyTraceDefaults(traceIn, 0, fullLayout);
+        traceOut = Plots.supplyTraceDefaults(traceIn, {type: 'scatter'}, 0, fullLayout);
 
         expect(traceOut.transforms).toEqual([{}]);
+    });
+
+    it('does not transform traces with no length', function() {
+        traceIn = {
+            y: [],
+            transforms: [{}]
+        };
+
+        traceOut = Plots.supplyTraceDefaults(traceIn, {type: 'scatter'}, 0, fullLayout);
+
+        expect(traceOut.transforms).toBeUndefined();
     });
 
     it('supplyTraceDefaults should supply the transform defaults', function() {
@@ -35,7 +65,7 @@ describe('general transforms:', function() {
             transforms: [{ type: 'filter' }]
         };
 
-        traceOut = Plots.supplyTraceDefaults(traceIn, 0, fullLayout);
+        traceOut = Plots.supplyTraceDefaults(traceIn, {type: 'scatter'}, 0, fullLayout);
 
         expect(traceOut.transforms).toEqual([{
             type: 'filter',
@@ -54,12 +84,12 @@ describe('general transforms:', function() {
             transforms: [{ type: 'invalid' }]
         };
 
-        traceOut = Plots.supplyTraceDefaults(traceIn, 0, fullLayout);
+        traceOut = Plots.supplyTraceDefaults(traceIn, {type: 'scatter'}, 0, fullLayout);
 
         expect(traceOut.y).toBe(traceIn.y);
     });
 
-    it('supplyTraceDefaults should honored global transforms', function() {
+    it('supplyTraceDefaults should honor global transforms', function() {
         traceIn = {
             y: [2, 1, 2],
             transforms: [{
@@ -74,10 +104,13 @@ describe('general transforms:', function() {
             _transformModules: [],
             _globalTransforms: [{
                 type: 'filter'
-            }]
+            }],
+            _subplots: {cartesian: ['xy'], xaxis: ['x'], yaxis: ['y']},
+            _modules: [],
+            _basePlotModules: []
         };
 
-        traceOut = Plots.supplyTraceDefaults(traceIn, 0, layout);
+        traceOut = Plots.supplyTraceDefaults(traceIn, {type: 'scatter'}, 0, layout);
 
         expect(traceOut.transforms[0]).toEqual(jasmine.objectContaining({
             type: 'filter',
@@ -116,7 +149,7 @@ describe('general transforms:', function() {
         }];
 
         var dataOut = [];
-        Plots.supplyDataDefaults(dataIn, dataOut, {}, []);
+        Plots.supplyDataDefaults(dataIn, dataOut, {}, mockFullLayout);
 
         var msg;
 
@@ -179,18 +212,34 @@ describe('user-defined transforms:', function() {
         var transformIn = { type: 'fake' };
         var transformOut = {};
 
+        var calledSupplyDefaults = 0;
+        var calledTransform = 0;
+        var calledSupplyLayoutDefaults = 0;
+
         var dataIn = [{
+            y: [1, 2, 3],
             transforms: [transformIn]
         }];
 
-        var fullData = [],
-            layout = {},
-            fullLayout = { _has: function() {} },
-            transitionData = {};
+        var fullData = [];
+        var layout = {};
+        var fullLayout = Lib.extendDeep({}, mockFullLayout);
+        var transitionData = {};
 
         function assertSupplyDefaultsArgs(_transformIn, traceOut, _layout) {
-            expect(_transformIn).toBe(transformIn);
+            if(!calledSupplyDefaults) {
+                expect(_transformIn).toBe(transformIn);
+            }
+            else {
+                // second supplyDefaults call has _module attached
+                expect(_transformIn).toEqual(jasmine.objectContaining({
+                    type: 'fake',
+                    _module: jasmine.objectContaining({name: 'fake'})
+                }));
+            }
             expect(_layout).toBe(fullLayout);
+
+            calledSupplyDefaults++;
 
             return transformOut;
         }
@@ -202,6 +251,8 @@ describe('user-defined transforms:', function() {
             expect(opts.layout).toBe(layout);
             expect(opts.fullLayout).toBe(fullLayout);
 
+            calledTransform++;
+
             return dataOut;
         }
 
@@ -210,6 +261,8 @@ describe('user-defined transforms:', function() {
             expect(_fullLayout).toBe(fullLayout);
             expect(_fullData).toBe(fullData);
             expect(_transitionData).toBe(transitionData);
+
+            calledSupplyLayoutDefaults++;
         }
 
         var fakeTransformModule = {
@@ -225,6 +278,64 @@ describe('user-defined transforms:', function() {
         Plots.supplyDataDefaults(dataIn, fullData, layout, fullLayout);
         Plots.supplyLayoutModuleDefaults(layout, fullLayout, fullData, transitionData);
         delete Plots.transformsRegistry.fake;
+        expect(calledSupplyDefaults).toBe(2);
+        expect(calledTransform).toBe(1);
+        expect(calledSupplyLayoutDefaults).toBe(1);
+    });
+
+    it('handles `makesData` transforms when the incoming trace has no data', function() {
+        var transformIn = {type: 'linemaker', x0: 3, y0: 2, x1: 5, y1: 10, n: 3};
+        var dataIn = [{transforms: [transformIn], mode: 'lines+markers'}];
+        var fullData = [];
+        var layout = {};
+        var fullLayout = Lib.extendDeep({}, mockFullLayout);
+
+        var lineMakerModule = {
+            moduleType: 'transform',
+            name: 'linemaker',
+            makesData: true,
+            attributes: {},
+            supplyDefaults: function(transformIn) {
+                return Lib.extendFlat({}, transformIn);
+            },
+            transform: function(data, state) {
+                var transform = state.transform;
+                var trace = data[0];
+                var n = transform.n;
+                var x = new Array(n);
+                var y = new Array(n);
+
+                // our exciting transform - make a line!
+                for(var i = 0; i < n; i++) {
+                    x[i] = transform.x0 + (i / (n - 1)) * (transform.x1 - transform.x0);
+                    y[i] = transform.y0 + (i / (n - 1)) * (transform.y1 - transform.y0);
+                }
+
+                // we didn't coerce mode before, because there was no data
+                expect(trace.mode).toBeUndefined();
+                expect(trace.line).toBeUndefined();
+                expect(trace.marker).toBeUndefined();
+
+                // just put the input trace back in here, it'll get coerced again after the transform
+                var traceOut = Lib.extendFlat(trace._input, {x: x, y: y});
+
+                return [traceOut];
+            }
+        };
+
+        Plotly.register(lineMakerModule);
+        Plots.supplyDataDefaults(dataIn, fullData, layout, fullLayout);
+        delete Plots.transformsRegistry.linemaker;
+
+        expect(fullData.length).toBe(1);
+        var traceOut = fullData[0];
+        expect(traceOut.x).toEqual([3, 4, 5]);
+        expect(traceOut.y).toEqual([2, 6, 10]);
+
+        // make sure we redid supplyDefaults after the data arrays were added
+        expect(traceOut.mode).toBe('lines+markers');
+        expect(traceOut.line).toBeDefined();
+        expect(traceOut.marker).toBeDefined();
     });
 
 });
@@ -245,7 +356,7 @@ describe('multiple transforms:', function() {
             groups: ['a', 'a', 'b', 'a', 'b', 'b', 'a'],
             styles: [{
                 target: 'a',
-                value: {marker: {color: 'red'}},
+                value: {marker: {color: 'red'}}
             }, {
                 target: 'b',
                 value: {marker: {color: 'blue'}}
@@ -277,7 +388,59 @@ describe('multiple transforms:', function() {
         }]
     }];
 
+    var mockData2 = [{
+        x: [1, 2, 3, 4, 5],
+        y: [2, 3, 1, 7, 9],
+        marker: {size: [10, 20, 20, 20, 10]},
+        transforms: [
+            {
+                type: 'filter',
+                operation: '>',
+                value: 2,
+                target: 'y'
+            },
+            {
+                type: 'aggregate',
+                groups: 'marker.size',
+                aggregations: [
+                    {target: 'x', func: 'sum'}, // 20: 6, 10: 5
+                    {target: 'y', func: 'avg'}  // 20: 5, 10: 9
+                ]
+            },
+            {
+                type: 'filter',
+                operation: '<',
+                value: 6,
+                target: 'x'
+            }
+        ]
+    }];
+
     afterEach(destroyGraphDiv);
+
+    it('Plotly.plot should plot the transform traces - filter|aggregate|filter', function(done) {
+        var data = Lib.extendDeep([], mockData2);
+
+        Plotly.plot(gd, data).then(function() {
+            expect(gd.data.length).toEqual(1);
+
+            // this would be the result if we didn't have a second filter - kept for test case overview
+            // expect(gd._fullData[0].x).toEqual([6, 5]);
+            // expect(gd._fullData[0].y).toEqual([5, 9]);
+            // expect(gd._fullData[0].marker.size).toEqual([20, 10]);
+
+            expect(gd._fullData[0].x).toEqual([5]);
+            expect(gd._fullData[0].y).toEqual([9]);
+            expect(gd._fullData[0].marker.size).toEqual([10]);
+
+            expect(gd._fullData[0].transforms[0]._indexToPoints).toEqual({0: [1], 1: [3], 2: [4]});
+            expect(gd._fullData[0].transforms[1]._indexToPoints).toEqual({0: [1, 3], 1: [4]});
+            expect(gd._fullData[0].transforms[2]._indexToPoints).toEqual({0: [4]});
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
 
     it('Plotly.plot should plot the transform traces', function(done) {
         var data = Lib.extendDeep([], mockData0);
@@ -294,9 +457,9 @@ describe('multiple transforms:', function() {
             expect(gd._fullData[1].y).toEqual([2, 3]);
 
             assertDims([2, 2]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('Plotly.plot should plot the transform traces (reverse case)', function(done) {
@@ -316,9 +479,9 @@ describe('multiple transforms:', function() {
             expect(gd._fullData[1].y).toEqual([2, 3]);
 
             assertDims([2, 2]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('Plotly.restyle should work', function(done) {
@@ -368,9 +531,9 @@ describe('multiple transforms:', function() {
                 ['rgb(0, 128, 0)', 'rgb(255, 0, 0)'],
                 [0.4, 0.4]
             );
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('Plotly.extendTraces should work', function(done) {
@@ -412,9 +575,9 @@ describe('multiple transforms:', function() {
             return Plotly.deleteTraces(gd, [0]);
         }).then(function() {
             assertDims([]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('toggling trace visibility should work', function(done) {
@@ -434,12 +597,12 @@ describe('multiple transforms:', function() {
             return Plotly.restyle(gd, 'visible', [true, true]);
         }).then(function() {
             assertDims([2, 2, 2, 2]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
-    it('executes filter and aggregate in the order given', function() {
+    it('executes filter and aggregate in the order given', function(done) {
         // filter and aggregate do not commute!
 
         var trace1 = {
@@ -463,18 +626,21 @@ describe('multiple transforms:', function() {
         var trace2 = Lib.extendDeep({}, trace1);
         trace2.transforms.reverse();
 
-        Plotly.newPlot(gd, [trace1, trace2]);
+        Plotly.newPlot(gd, [trace1, trace2]).then(function() {
+            var trace1Out = gd._fullData[0];
+            expect(trace1Out.x).toEqual([2]);
+            expect(trace1Out.y).toEqual([5]);
 
-        var trace1Out = gd._fullData[0];
-        expect(trace1Out.x).toEqual([2]);
-        expect(trace1Out.y).toEqual([5]);
+            var trace2Out = gd._fullData[1];
+            expect(trace2Out.x).toEqual([4, -5]);
+            expect(trace2Out.y).toEqual([5, 4]);
 
-        var trace2Out = gd._fullData[1];
-        expect(trace2Out.x).toEqual([4, -5]);
-        expect(trace2Out.y).toEqual([5, 4]);
+        })
+        .catch(failTest)
+        .then(done);
     });
 
-    it('always executes groupby before aggregate', function() {
+    it('always executes groupby before aggregate', function(done) {
         // aggregate and groupby wouldn't commute, but groupby always happens first
         // because it has a `transform`, and aggregate has a `calcTransform`
 
@@ -497,29 +663,31 @@ describe('multiple transforms:', function() {
         var trace2 = Lib.extendDeep({}, trace1);
         trace2.transforms.reverse();
 
-        Plotly.newPlot(gd, [trace1, trace2]);
+        Plotly.newPlot(gd, [trace1, trace2]).then(function() {
+            var t1g1 = gd._fullData[0];
+            var t1g2 = gd._fullData[1];
+            var t2g1 = gd._fullData[2];
+            var t2g2 = gd._fullData[3];
 
-        var t1g1 = gd._fullData[0];
-        var t1g2 = gd._fullData[1];
-        var t2g1 = gd._fullData[2];
-        var t2g2 = gd._fullData[3];
+            expect(t1g1.x).toEqual([1, 2]);
+            expect(t1g1.y).toEqual([2, 4]);
+            // group 2 has its aggregations switched, since group 2 comes first
+            expect(t1g2.x).toEqual([3, 9]);
+            expect(t1g2.y).toEqual([6, 9]);
 
-        expect(t1g1.x).toEqual([1, 2]);
-        expect(t1g1.y).toEqual([2, 4]);
-        // group 2 has its aggregations switched, since group 2 comes first
-        expect(t1g2.x).toEqual([3, 9]);
-        expect(t1g2.y).toEqual([6, 9]);
-
-        // if we had done aggregation first, we'd implicitly get the first val
-        // for each of the groupby groups, which is [1, 1]
-        // so we'd only make 1 output trace, and it would look like:
-        // {x: [10, 5], y: [20/3, 5]}
-        // (and if we got some other groupby groups values, the most it could do
-        // is break ^^ into two separate traces)
-        expect(t2g1.x).toEqual(t1g1.x);
-        expect(t2g1.y).toEqual(t1g1.y);
-        expect(t2g2.x).toEqual(t1g2.x);
-        expect(t2g2.y).toEqual(t1g2.y);
+            // if we had done aggregation first, we'd implicitly get the first val
+            // for each of the groupby groups, which is [1, 1]
+            // so we'd only make 1 output trace, and it would look like:
+            // {x: [10, 5], y: [20/3, 5]}
+            // (and if we got some other groupby groups values, the most it could do
+            // is break ^^ into two separate traces)
+            expect(t2g1.x).toEqual(t1g1.x);
+            expect(t2g1.y).toEqual(t1g1.y);
+            expect(t2g2.x).toEqual(t1g2.x);
+            expect(t2g2.y).toEqual(t1g2.y);
+        })
+        .catch(failTest)
+        .then(done);
     });
 });
 
@@ -538,8 +706,9 @@ describe('invalid transforms', function() {
             transforms: [{}]
         }]).then(function() {
             expect(gd._fullData[0].transforms.length).toEqual(1);
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 });
 
@@ -600,9 +769,9 @@ describe('multiple traces with transforms:', function() {
             expect(gd._fullData[2].y).toEqual([3, 5, 2]);
 
             assertDims([2, 3, 3]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('Plotly.restyle should work', function(done) {
@@ -655,9 +824,9 @@ describe('multiple traces with transforms:', function() {
                 ['rgb(0, 128, 0)', 'rgb(0, 128, 0)', 'rgb(255, 0, 0)'],
                 [0.4, 0.6, 0.6]
             );
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('Plotly.extendTraces should work', function(done) {
@@ -682,9 +851,9 @@ describe('multiple traces with transforms:', function() {
             }, [0]);
         }).then(function() {
             assertDims([5, 4, 4]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('Plotly.deleteTraces should work', function(done) {
@@ -702,9 +871,9 @@ describe('multiple traces with transforms:', function() {
             return Plotly.deleteTraces(gd, [0]);
         }).then(function() {
             assertDims([]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('toggling trace visibility should work', function(done) {
@@ -730,9 +899,10 @@ describe('multiple traces with transforms:', function() {
             return Plotly.restyle(gd, 'visible', 'legendonly', [0]);
         }).then(function() {
             assertDims([3, 3]);
+        })
+        .catch(failTest)
+        .then(done);
 
-            done();
-        });
     });
 });
 
@@ -798,6 +968,7 @@ describe('restyle applied on transforms:', function() {
             expect(gd.data[0].transforms).toBeUndefined(msg);
             expect(gd._fullData[0].y).toEqual([2, 1, 2], msg);
         })
+        .catch(failTest)
         .then(done);
     });
 
@@ -814,7 +985,7 @@ describe('supplyDefaults with groupby + filter', function() {
             layout: layout || {}
         };
 
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         Plots.doCalcdata(gd);
 
         return gd.calcdata.map(calcDatatoTrace);

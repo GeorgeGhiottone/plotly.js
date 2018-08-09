@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -16,7 +16,8 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut, fullData) {
         return Lib.coerce(layoutIn, layoutOut, layoutAttributes, attr, dflt);
     }
 
-    coerce('dragmode');
+    var dragMode = coerce('dragmode');
+    if(dragMode === 'select') coerce('selectdirection');
 
     var hovermodeDflt;
     if(layoutOut._has('cartesian')) {
@@ -27,13 +28,23 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut, fullData) {
     }
     else hovermodeDflt = 'closest';
 
-    coerce('hovermode', hovermodeDflt);
+    var hoverMode = coerce('hovermode', hovermodeDflt);
+    if(hoverMode) {
+        coerce('hoverdistance');
+        coerce('spikedistance');
+    }
 
-    // if only mapbox subplots is present on graph,
+    // if only mapbox or geo subplots is present on graph,
     // reset 'zoom' dragmode to 'pan' until 'zoom' is implemented,
     // so that the correct modebar button is active
-    if(layoutOut._has('mapbox') && layoutOut._basePlotModules.length === 1 &&
-       layoutOut.dragmode === 'zoom') {
+    var hasMapbox = layoutOut._has('mapbox');
+    var hasGeo = layoutOut._has('geo');
+    var len = layoutOut._basePlotModules.length;
+
+    if(layoutOut.dragmode === 'zoom' && (
+        ((hasMapbox || hasGeo) && len === 1) ||
+        (hasMapbox && hasGeo && len === 2)
+    )) {
         layoutOut.dragmode = 'pan';
     }
 };

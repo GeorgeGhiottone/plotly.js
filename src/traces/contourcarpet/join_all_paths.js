@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -11,8 +11,6 @@
 var Drawing = require('../../components/drawing');
 var axisAlignedLine = require('../carpet/axis_aligned_line');
 var Lib = require('../../lib');
-// var map1dArray = require('../carpet/map_1d_array');
-// var makepath = require('../carpet/makepath');
 
 module.exports = function joinAllPaths(trace, pi, perimeter, ab2p, carpet, carpetcd, xa, ya) {
     var i;

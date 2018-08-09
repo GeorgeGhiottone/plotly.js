@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -11,6 +11,7 @@
 var Axes = require('../plots/cartesian/axes');
 var Lib = require('../lib');
 var PlotSchema = require('../plot_api/plot_schema');
+var pointsAccessorFunction = require('./helpers').pointsAccessorFunction;
 var BADNUM = require('../constants/numerical').BADNUM;
 
 exports.moduleType = 'transform';
@@ -21,6 +22,8 @@ var attrs = exports.attributes = {
     enabled: {
         valType: 'boolean',
         dflt: true,
+        role: 'info',
+        editType: 'calc',
         description: [
             'Determines whether this aggregate transform is enabled or disabled.'
         ].join(' ')
@@ -33,6 +36,8 @@ var attrs = exports.attributes = {
         noBlank: true,
         arrayOk: true,
         dflt: 'x',
+        role: 'info',
+        editType: 'calc',
         description: [
             'Sets the grouping target to which the aggregation is applied.',
             'Data points with matching group values will be coalesced into',
@@ -51,6 +56,7 @@ var attrs = exports.attributes = {
         target: {
             valType: 'string',
             role: 'info',
+            editType: 'calc',
             description: [
                 'A reference to the data array in the parent trace to aggregate.',
                 'To aggregate by nested variables, use *.* to access them.',
@@ -62,9 +68,10 @@ var attrs = exports.attributes = {
         },
         func: {
             valType: 'enumerated',
-            values: ['count', 'sum', 'avg', 'median', 'mode', 'rms', 'stddev', 'min', 'max', 'first', 'last'],
+            values: ['count', 'sum', 'avg', 'median', 'mode', 'rms', 'stddev', 'min', 'max', 'first', 'last', 'change', 'range'],
             dflt: 'first',
             role: 'info',
+            editType: 'calc',
             description: [
                 'Sets the aggregation function.',
                 'All values from the linked `target`, corresponding to the same value',
@@ -79,7 +86,9 @@ var attrs = exports.attributes = {
                 'for example a sum of dates or average of categories.',
                 '*median* will return the average of the two central values if there is',
                 'an even count. *mode* will return the first value to reach the maximum',
-                'count, in case of a tie.'
+                'count, in case of a tie.',
+                '*change* will return the difference between the first and last linked values.',
+                '*range* will return the difference between the min and max linked values.'
             ].join(' ')
         },
         funcmode: {
@@ -87,6 +96,7 @@ var attrs = exports.attributes = {
             values: ['sample', 'population'],
             dflt: 'sample',
             role: 'info',
+            editType: 'calc',
             description: [
                 '*stddev* supports two formula variants: *sample* (normalize by N-1)',
                 'and *population* (normalize by N).'
@@ -95,11 +105,15 @@ var attrs = exports.attributes = {
         enabled: {
             valType: 'boolean',
             dflt: true,
+            role: 'info',
+            editType: 'calc',
             description: [
                 'Determines whether this aggregation function is enabled or disabled.'
             ].join(' ')
-        }
-    }
+        },
+        editType: 'calc'
+    },
+    editType: 'calc'
 };
 
 var aggAttrs = attrs.aggregations;
@@ -155,7 +169,7 @@ exports.supplyDefaults = function(transformIn, traceOut) {
         arrayAttrs[groups] = 0;
     }
 
-    var aggregationsIn = transformIn.aggregations;
+    var aggregationsIn = transformIn.aggregations || [];
     var aggregationsOut = transformOut.aggregations = new Array(aggregationsIn.length);
     var aggregationOut;
 
@@ -163,23 +177,21 @@ exports.supplyDefaults = function(transformIn, traceOut) {
         return Lib.coerce(aggregationsIn[i], aggregationOut, aggAttrs, attr, dflt);
     }
 
-    if(aggregationsIn) {
-        for(i = 0; i < aggregationsIn.length; i++) {
-            aggregationOut = {};
-            var target = coercei('target');
-            var func = coercei('func');
-            var enabledi = coercei('enabled');
+    for(i = 0; i < aggregationsIn.length; i++) {
+        aggregationOut = {_index: i};
+        var target = coercei('target');
+        var func = coercei('func');
+        var enabledi = coercei('enabled');
 
-            // add this aggregation to the output only if it's the first instance
-            // of a valid target attribute - or an unused target attribute with "count"
-            if(enabledi && target && (arrayAttrs[target] || (func === 'count' && arrayAttrs[target] === undefined))) {
-                if(func === 'stddev') coercei('funcmode');
+        // add this aggregation to the output only if it's the first instance
+        // of a valid target attribute - or an unused target attribute with "count"
+        if(enabledi && target && (arrayAttrs[target] || (func === 'count' && arrayAttrs[target] === undefined))) {
+            if(func === 'stddev') coercei('funcmode');
 
-                arrayAttrs[target] = 0;
-                aggregationsOut[i] = aggregationOut;
-            }
-            else aggregationsOut[i] = {enabled: false};
+            arrayAttrs[target] = 0;
+            aggregationsOut[i] = aggregationOut;
         }
+        else aggregationsOut[i] = {enabled: false, _index: i};
     }
 
     // any array attributes we haven't yet covered, fill them with the default aggregation
@@ -188,7 +200,8 @@ exports.supplyDefaults = function(transformIn, traceOut) {
             aggregationsOut.push({
                 target: arrayAttrArray[i],
                 func: aggAttrs.func.dflt,
-                enabled: true
+                enabled: true,
+                _index: -1
             });
         }
     }
@@ -205,19 +218,33 @@ exports.calcTransform = function(gd, trace, opts) {
     var groupArray = Lib.getTargetArray(trace, {target: groups});
     if(!groupArray) return;
 
-    var i, vi, groupIndex;
+    var i, vi, groupIndex, newGrouping;
 
     var groupIndices = {};
+    var indexToPoints = {};
     var groupings = [];
-    for(i = 0; i < groupArray.length; i++) {
+
+    var originalPointsAccessor = pointsAccessorFunction(trace.transforms, opts);
+
+    var len = groupArray.length;
+    if(trace._length) len = Math.min(len, trace._length);
+
+    for(i = 0; i < len; i++) {
         vi = groupArray[i];
         groupIndex = groupIndices[vi];
         if(groupIndex === undefined) {
             groupIndices[vi] = groupings.length;
-            groupings.push([i]);
+            newGrouping = [i];
+            groupings.push(newGrouping);
+            indexToPoints[groupIndices[vi]] = originalPointsAccessor(i);
         }
-        else groupings[groupIndex].push(i);
+        else {
+            groupings[groupIndex].push(i);
+            indexToPoints[groupIndices[vi]] = (indexToPoints[groupIndices[vi]] || []).concat(originalPointsAccessor(i));
+        }
     }
+
+    opts._indexToPoints = indexToPoints;
 
     var aggregations = opts.aggregations;
 
@@ -232,6 +259,8 @@ exports.calcTransform = function(gd, trace, opts) {
             enabled: true
         });
     }
+
+    trace._length = groupings.length;
 };
 
 function aggregateOneArray(gd, trace, groupings, aggregation) {
@@ -248,6 +277,12 @@ function aggregateOneArray(gd, trace, groupings, aggregation) {
         arrayOut[i] = func(arrayIn, groupings[i]);
     }
     targetNP.set(arrayOut);
+
+    if(aggregation.func === 'count') {
+        // count does not depend on an input array, so it's likely not part of _arrayAttrs yet
+        // but after this transform it most definitely *is* an array attribute.
+        Lib.pushUnique(trace._arrayAttrs, attr);
+    }
 }
 
 function getAggregateFunction(opts, conversions) {
@@ -310,6 +345,27 @@ function getAggregateFunction(opts, conversions) {
                     if(vi !== BADNUM) out = Math.max(out, vi);
                 }
                 return (out === -Infinity) ? BADNUM : c2d(out);
+            };
+
+        case 'range':
+            return function(array, indices) {
+                var min = Infinity;
+                var max = -Infinity;
+                for(var i = 0; i < indices.length; i++) {
+                    var vi = d2c(array[indices[i]]);
+                    if(vi !== BADNUM) {
+                        min = Math.min(min, vi);
+                        max = Math.max(max, vi);
+                    }
+                }
+                return (max === -Infinity || min === Infinity) ? BADNUM : c2d(max - min);
+            };
+
+        case 'change':
+            return function(array, indices) {
+                var first = d2c(array[indices[0]]);
+                var last = d2c(array[indices[indices.length - 1]]);
+                return (first === BADNUM || last === BADNUM) ? BADNUM : c2d(last - first);
             };
 
         case 'median':

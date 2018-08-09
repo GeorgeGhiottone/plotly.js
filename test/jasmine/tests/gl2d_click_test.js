@@ -4,8 +4,11 @@ var Lib = require('@src/lib');
 var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
-var customMatchers = require('../assets/custom_matchers');
-var fail = require('../assets/fail_test.js');
+var failTest = require('../assets/fail_test.js');
+
+var customAssertions = require('../assets/custom_assertions');
+var assertHoverLabelStyle = customAssertions.assertHoverLabelStyle;
+var assertHoverLabelContent = customAssertions.assertHoverLabelContent;
 
 // cartesian click events events use the hover data
 // from the mousemove events and then simulate
@@ -14,6 +17,7 @@ var click = require('../assets/timed_click');
 var hover = require('../assets/hover');
 var delay = require('../assets/delay');
 var mouseEvent = require('../assets/mouse_event');
+var readPixel = require('../assets/read_pixel');
 
 // contourgl is not part of the dist plotly.js bundle initially
 Plotly.register([
@@ -61,7 +65,7 @@ var mock4 = {
     layout: {}
 };
 
-describe('Test hover and click interactions', function() {
+describe('@gl @flaky Test hover and click interactions', function() {
     var gd;
 
     function makeHoverFn(gd, x, y) {
@@ -121,7 +125,6 @@ describe('Test hover and click interactions', function() {
             'data', 'fullData', 'xaxis', 'yaxis'
         ]), 'event data keys');
 
-        expect(typeof pt.data.uid).toBe('string', msg + ' - uid');
         expect(pt.xaxis.domain.length).toBe(2, msg + ' - xaxis');
         expect(pt.yaxis.domain.length).toBe(2, msg + ' - yaxis');
 
@@ -129,41 +132,6 @@ describe('Test hover and click interactions', function() {
         expect(pt.y).toBe(expected.y, msg + ' - y');
         expect(pt.curveNumber).toBe(expected.curveNumber, msg + ' - curve number');
         expect(String(pt.pointNumber)).toBe(String(expected.pointNumber), msg + ' - point number');
-    }
-
-    function assertHoverLabelStyle(sel, expected, msg) {
-        if(sel.node() === null) {
-            expect(expected.noHoverLabel).toBe(true);
-            return;
-        }
-
-        var path = sel.select('path');
-        expect(path.style('fill')).toBe(expected.bgColor, msg + ' - bgcolor');
-        expect(path.style('stroke')).toBe(expected.borderColor, msg + ' - bordercolor');
-
-        var text = sel.select('text.nums');
-        expect(parseInt(text.style('font-size'))).toBe(expected.fontSize, msg + ' - font.size');
-        expect(text.style('font-family').split(',')[0]).toBe(expected.fontFamily, msg + ' - font.family');
-        expect(text.style('fill')).toBe(expected.fontColor, msg + ' - font.color');
-    }
-
-    function assertHoveLabelContent(expected) {
-        var label = expected.label;
-
-        if(label === undefined) return;
-
-        var g = d3.select('.hovertext');
-
-        if(label === null) {
-            expect(g.size()).toBe(0);
-        } else {
-            var lines = g.selectAll('text.nums');
-
-            expect(lines.size()).toBe(label.length);
-            lines.each(function(_, i) {
-                expect(d3.select(this).text()).toEqual(label[i]);
-            });
-        }
     }
 
     // returns basic hover/click/unhover runner for one xy position
@@ -181,9 +149,20 @@ describe('Test hover and click interactions', function() {
             return delay(100)()
                 .then(_hover)
                 .then(function(eventData) {
-                    assertEventData(eventData, expected);
-                    assertHoverLabelStyle(d3.select('g.hovertext'), expected, opts.msg);
-                    assertHoveLabelContent(expected);
+                    assertEventData(eventData, expected, opts.msg);
+
+                    var g = d3.select('g.hovertext');
+                    if(g.node() === null) {
+                        expect(expected.noHoverLabel).toBe(true);
+                    } else {
+                        assertHoverLabelStyle(g, expected, opts.msg);
+                    }
+                    if(expected.label) {
+                        assertHoverLabelContent({
+                            nums: expected.label[0],
+                            name: expected.label[1]
+                        });
+                    }
                 })
                 .then(_click)
                 .then(function(eventData) {
@@ -195,10 +174,6 @@ describe('Test hover and click interactions', function() {
                 });
         };
     }
-
-    beforeAll(function() {
-        jasmine.addMatchers(customMatchers);
-    });
 
     beforeEach(function() {
         gd = createGraphDiv();
@@ -219,6 +194,7 @@ describe('Test hover and click interactions', function() {
             }
         };
         _mock.data[0].hoverinfo = _mock.data[0].x.map(function(_, i) { return i % 2 ? 'y' : 'x'; });
+
         _mock.data[0].hoverlabel = {
             bgcolor: 'blue',
             bordercolor: _mock.data[0].x.map(function(_, i) { return i % 2 ? 'red' : 'green'; })
@@ -227,11 +203,11 @@ describe('Test hover and click interactions', function() {
         var run = makeRunner([634, 321], {
             x: 15.772,
             y: 0.387,
-            label: ['0.387'],
+            label: ['0.387', null],
             curveNumber: 0,
             pointNumber: 33,
-            bgColor: 'rgb(0, 0, 255)',
-            borderColor: 'rgb(255, 0, 0)',
+            bgcolor: 'rgb(0, 0, 255)',
+            bordercolor: 'rgb(255, 0, 0)',
             fontSize: 20,
             fontFamily: 'Arial',
             fontColor: 'rgb(255, 255, 0)'
@@ -241,7 +217,85 @@ describe('Test hover and click interactions', function() {
 
         Plotly.plot(gd, _mock)
         .then(run)
-        .catch(fail)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should output correct event data for scattergl in *select* dragmode', function(done) {
+        var _mock = Lib.extendDeep({}, mock1);
+
+        _mock.layout.dragmode = 'select';
+
+        _mock.layout.hoverlabel = {
+            font: {
+                size: 20,
+                color: 'yellow'
+            }
+        };
+        _mock.data[0].hoverinfo = _mock.data[0].x.map(function(_, i) { return i % 2 ? 'y' : 'x'; });
+
+        _mock.data[0].hoverlabel = {
+            bgcolor: 'blue',
+            bordercolor: _mock.data[0].x.map(function(_, i) { return i % 2 ? 'red' : 'green'; })
+        };
+
+        var run = makeRunner([634, 321], {
+            x: 15.772,
+            y: 0.387,
+            label: ['0.387', null],
+            curveNumber: 0,
+            pointNumber: 33,
+            bgcolor: 'rgb(0, 0, 255)',
+            bordercolor: 'rgb(255, 0, 0)',
+            fontSize: 20,
+            fontFamily: 'Arial',
+            fontColor: 'rgb(255, 255, 0)'
+        }, {
+            msg: 'scattergl'
+        });
+
+        Plotly.plot(gd, _mock)
+        .then(run)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should output correct event data for scattergl in *lasso* dragmode', function(done) {
+        var _mock = Lib.extendDeep({}, mock1);
+
+        _mock.layout.dragmode = 'lasso';
+
+        _mock.layout.hoverlabel = {
+            font: {
+                size: 20,
+                color: 'yellow'
+            }
+        };
+        _mock.data[0].hoverinfo = _mock.data[0].x.map(function(_, i) { return i % 2 ? 'y' : 'x'; });
+
+        _mock.data[0].hoverlabel = {
+            bgcolor: 'blue',
+            bordercolor: _mock.data[0].x.map(function(_, i) { return i % 2 ? 'red' : 'green'; })
+        };
+
+        var run = makeRunner([634, 321], {
+            x: 15.772,
+            y: 0.387,
+            label: ['0.387', null],
+            curveNumber: 0,
+            pointNumber: 33,
+            bgcolor: 'rgb(0, 0, 255)',
+            bordercolor: 'rgb(255, 0, 0)',
+            fontSize: 20,
+            fontFamily: 'Arial',
+            fontColor: 'rgb(255, 255, 0)'
+        }, {
+            msg: 'scattergl'
+        });
+
+        Plotly.plot(gd, _mock)
+        .then(run)
+        .catch(failTest)
         .then(done);
     });
 
@@ -261,7 +315,34 @@ describe('Test hover and click interactions', function() {
 
         Plotly.plot(gd, _mock)
         .then(run)
-        .catch(fail)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should show correct label for scattergl when hovertext is set', function(done) {
+        var _mock = Lib.extendDeep({}, mock1);
+        _mock.data[0].hovertext = 'text';
+        _mock.data[0].hovertext = 'HoVeRtExT';
+        _mock.layout.hovermode = 'closest';
+
+        var run = makeRunner([634, 321], {
+            x: 15.772,
+            y: 0.387,
+            label: ['(15.772, 0.387)\nHoVeRtExT', null],
+            curveNumber: 0,
+            pointNumber: 33,
+            bgcolor: 'rgb(0, 0, 238)',
+            bordercolor: 'rgb(255, 255, 255)',
+            fontSize: 13,
+            fontFamily: 'Arial',
+            fontColor: 'rgb(255, 255, 255)'
+        }, {
+            msg: 'scattergl with hovertext'
+        });
+
+        Plotly.plot(gd, _mock)
+        .then(run)
+        .catch(failTest)
         .then(done);
     });
 
@@ -278,8 +359,8 @@ describe('Test hover and click interactions', function() {
             y: 9,
             curveNumber: 2,
             pointNumber: 1,
-            bgColor: 'rgb(0, 128, 0)',
-            borderColor: 'rgb(255, 255, 255)',
+            bgcolor: 'rgb(0, 128, 0)',
+            bordercolor: 'rgb(255, 255, 255)',
             fontSize: 8,
             fontFamily: 'Arial',
             fontColor: 'rgb(255, 255, 255)'
@@ -289,7 +370,7 @@ describe('Test hover and click interactions', function() {
 
         Plotly.plot(gd, _mock)
         .then(run)
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -310,8 +391,8 @@ describe('Test hover and click interactions', function() {
             y: 3,
             curveNumber: 0,
             pointNumber: [3, 3],
-            bgColor: 'rgb(68, 68, 68)',
-            borderColor: 'rgb(255, 255, 255)',
+            bgcolor: 'rgb(68, 68, 68)',
+            bordercolor: 'rgb(255, 255, 255)',
             fontSize: 20,
             fontFamily: 'Roboto',
             fontColor: 'rgb(255, 255, 255)'
@@ -322,7 +403,7 @@ describe('Test hover and click interactions', function() {
 
         Plotly.plot(gd, _mock)
         .then(run)
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -343,8 +424,8 @@ describe('Test hover and click interactions', function() {
             y: 1,
             curveNumber: 0,
             pointNumber: [1, 2],
-            bgColor: 'rgb(0, 0, 0)',
-            borderColor: 'rgb(255, 255, 255)',
+            bgcolor: 'rgb(0, 0, 0)',
+            bordercolor: 'rgb(255, 255, 255)',
             fontSize: 13,
             fontFamily: 'Arial',
             fontColor: 'rgb(255, 255, 255)'
@@ -355,7 +436,7 @@ describe('Test hover and click interactions', function() {
 
         Plotly.plot(gd, _mock)
         .then(run)
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -367,8 +448,8 @@ describe('Test hover and click interactions', function() {
             y: 18,
             curveNumber: 2,
             pointNumber: 0,
-            bgColor: 'rgb(44, 160, 44)',
-            borderColor: 'rgb(255, 255, 255)',
+            bgcolor: 'rgb(44, 160, 44)',
+            bordercolor: 'rgb(255, 255, 255)',
             fontSize: 13,
             fontFamily: 'Arial',
             fontColor: 'rgb(255, 255, 255)'
@@ -382,8 +463,8 @@ describe('Test hover and click interactions', function() {
             y: 18,
             curveNumber: 2,
             pointNumber: 0,
-            bgColor: 'rgb(255, 127, 14)',
-            borderColor: 'rgb(68, 68, 68)',
+            bgcolor: 'rgb(255, 127, 14)',
+            bordercolor: 'rgb(68, 68, 68)',
             fontSize: 13,
             fontFamily: 'Arial',
             fontColor: 'rgb(68, 68, 68)'
@@ -397,7 +478,7 @@ describe('Test hover and click interactions', function() {
             return Plotly.restyle(gd, 'visible', false, [1]);
         })
         .then(run2)
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -412,8 +493,8 @@ describe('Test hover and click interactions', function() {
             y: 18,
             curveNumber: 2,
             pointNumber: 0,
-            bgColor: 'rgb(44, 160, 44)',
-            borderColor: 'rgb(255, 255, 255)',
+            bgcolor: 'rgb(44, 160, 44)',
+            bordercolor: 'rgb(255, 255, 255)',
             fontSize: 13,
             fontFamily: 'Arial',
             fontColor: 'rgb(255, 255, 255)'
@@ -430,8 +511,8 @@ describe('Test hover and click interactions', function() {
             y: 18,
             curveNumber: 2,
             pointNumber: 0,
-            bgColor: 'rgb(255, 127, 14)',
-            borderColor: 'rgb(68, 68, 68)',
+            bgcolor: 'rgb(255, 127, 14)',
+            bordercolor: 'rgb(68, 68, 68)',
             fontSize: 13,
             fontFamily: 'Arial',
             fontColor: 'rgb(68, 68, 68)'
@@ -445,7 +526,7 @@ describe('Test hover and click interactions', function() {
             return Plotly.restyle(gd, 'visible', false, [1]);
         })
         .then(run2)
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -461,8 +542,8 @@ describe('Test hover and click interactions', function() {
             y: 3,
             curveNumber: 0,
             pointNumber: [3, 3],
-            bgColor: 'rgb(68, 68, 68)',
-            borderColor: 'rgb(255, 255, 255)',
+            bgcolor: 'rgb(68, 68, 68)',
+            bordercolor: 'rgb(255, 255, 255)',
             fontSize: 20,
             fontFamily: 'Arial',
             fontColor: 'rgb(255, 255, 255)'
@@ -473,25 +554,37 @@ describe('Test hover and click interactions', function() {
 
         Plotly.plot(gd, _mock)
         .then(run)
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 });
 
-describe('@noCI Test gl2d lasso/select:', function() {
+describe('@noCI @gl Test gl2d lasso/select:', function() {
     var mockFancy = require('@mocks/gl2d_14.json');
+    delete mockFancy.layout.xaxis.autorange;
+    delete mockFancy.layout.yaxis.autorange;
+    mockFancy.layout.xaxis.range = [-2.951309064136961, 2.0954721318818916];
+    mockFancy.layout.yaxis.range = [-0.9248866483012275, 1.3232607344525835];
+
     var mockFast = Lib.extendDeep({}, mockFancy, {
         data: [{mode: 'markers'}],
         layout: {
-            xaxis: {type: 'linear'},
-            yaxis: {type: 'linear'}
+            xaxis: {
+                type: 'linear',
+                range: [-3.869222222222223, 73.55522222222223]
+            },
+            yaxis: {
+                type: 'linear',
+                range: [-0.7402222222222222, 17.144222222222222]
+            }
         }
     });
 
     var gd;
-    var selectPath = [[93, 193], [143, 193]];
+    var selectPath = [[98, 193], [108, 193]];
+    var selectPath2 = [[118, 193], [128, 193]];
     var lassoPath = [[316, 171], [318, 239], [335, 243], [328, 169]];
-    var lassoPath2 = [[93, 193], [143, 193], [143, 500], [93, 500], [93, 193]];
+    var lassoPath2 = [[98, 193], [108, 193], [108, 500], [98, 500], [98, 193]];
 
     afterEach(function() {
         Plotly.purge(gd);
@@ -500,21 +593,25 @@ describe('@noCI Test gl2d lasso/select:', function() {
 
     function drag(path) {
         var len = path.length;
+        var el = d3.select(gd).select('rect.nsewdrag').node();
+        var opts = {element: el};
 
-        mouseEvent('mousemove', path[0][0], path[0][1]);
-        mouseEvent('mousedown', path[0][0], path[0][1]);
+        Lib.clearThrottle();
+        mouseEvent('mousemove', path[0][0], path[0][1], opts);
+        mouseEvent('mousedown', path[0][0], path[0][1], opts);
 
         path.slice(1, len).forEach(function(pt) {
-            mouseEvent('mousemove', pt[0], pt[1]);
+            Lib.clearThrottle();
+            mouseEvent('mousemove', pt[0], pt[1], opts);
         });
 
-        mouseEvent('mouseup', path[len - 1][0], path[len - 1][1]);
+        mouseEvent('mouseup', path[len - 1][0], path[len - 1][1], opts);
     }
 
     function select(path) {
         return new Promise(function(resolve, reject) {
             gd.once('plotly_selected', resolve);
-            setTimeout(function() { reject('did not trigger *plotly_selected*');}, 100);
+            setTimeout(function() { reject('did not trigger *plotly_selected*');}, 200);
             drag(path);
         });
     }
@@ -531,9 +628,6 @@ describe('@noCI Test gl2d lasso/select:', function() {
         });
     }
 
-    function countGlObjects() {
-        return gd._fullLayout._plots.xy._scene2d.glplot.objects.length;
-    }
 
     it('should work under fast mode with *select* dragmode', function(done) {
         var _mock = Lib.extendDeep({}, mockFast);
@@ -543,21 +637,22 @@ describe('@noCI Test gl2d lasso/select:', function() {
         Plotly.plot(gd, _mock)
         .then(delay(100))
         .then(function() {
-            expect(countGlObjects()).toBe(1, 'has on gl-scatter2d object');
+            expect(gd._fullLayout._plots.xy._scene.select2d).not.toBe(undefined, 'scatter2d renderer');
 
             return select(selectPath);
         })
+        .then(delay(100))
         .then(function(eventData) {
             assertEventData(eventData, {
                 points: [
-                    {x: 3.911, y: 0.401},
-                    {x: 5.34, y: 0.403},
-                    {x: 6.915, y: 0.411}
+                    {pointNumber: 25, x: 1.425, y: 0.538},
+                    {pointNumber: 26, x: 1.753, y: 0.5},
+                    {pointNumber: 27, x: 2.22, y: 0.45}
                 ]
             });
-            expect(countGlObjects()).toBe(2, 'adds a dimmed gl-scatter2d objects');
+
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -569,21 +664,19 @@ describe('@noCI Test gl2d lasso/select:', function() {
         Plotly.plot(gd, _mock)
         .then(delay(100))
         .then(function() {
-            expect(countGlObjects()).toBe(1);
-
             return select(lassoPath2);
         })
+        .then(delay(100))
         .then(function(eventData) {
             assertEventData(eventData, {
                 points: [
-                    {x: 3.911, y: 0.401},
-                    {x: 5.34, y: 0.403},
-                    {x: 6.915, y: 0.411}
+                    {pointNumber: 25, x: 1.425, y: 0.538},
+                    {pointNumber: 26, x: 1.753, y: 0.5},
+                    {pointNumber: 27, x: 2.22, y: 0.45}
                 ]
             });
-            expect(countGlObjects()).toBe(2);
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -595,17 +688,15 @@ describe('@noCI Test gl2d lasso/select:', function() {
         Plotly.plot(gd, _mock)
         .then(delay(100))
         .then(function() {
-            expect(countGlObjects()).toBe(2, 'has a gl-line2d and a gl-scatter2d-sdf');
-
-            return select(selectPath);
+            return select(selectPath2);
         })
+        .then(delay(100))
         .then(function(eventData) {
             assertEventData(eventData, {
                 points: [{x: 0.004, y: 12.5}]
             });
-            expect(countGlObjects()).toBe(2, 'only changes colors of gl-scatter2d-sdf object');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -617,17 +708,259 @@ describe('@noCI Test gl2d lasso/select:', function() {
         Plotly.plot(gd, _mock)
         .then(delay(100))
         .then(function() {
-            expect(countGlObjects()).toBe(2, 'has a gl-line2d and a gl-scatter2d-sdf');
-
             return select(lassoPath);
         })
         .then(function(eventData) {
             assertEventData(eventData, {
                 points: [{ x: 0.099, y: 2.75 }]
             });
-            expect(countGlObjects()).toBe(2, 'only changes colors of gl-scatter2d-sdf object');
         })
-        .catch(fail)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should work on trace with enabled transforms', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/gl2d_transforms.json'));
+        fig.layout.dragmode = 'select';
+        fig.layout.margin = {t: 0, b: 0, l: 0, r: 0};
+        fig.layout.height = 500;
+        fig.layout.width = 500;
+        gd = createGraphDiv();
+
+        Plotly.plot(gd, fig)
+        .then(delay(100))
+        .then(function() { return select([[100, 100], [250, 250]]); })
+        .then(function(eventData) {
+            assertEventData(eventData, {
+                points: [
+                    { x: 3, y: 4 },
+                    { x: 2, y: 4 }
+                ]
+            });
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should work on gl text charts', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/gl2d_text_chart_basic.json'));
+        fig.layout.dragmode = 'select';
+        fig.layout.margin = {t: 0, b: 0, l: 0, r: 0};
+        fig.layout.height = 500;
+        fig.layout.width = 500;
+        gd = createGraphDiv();
+
+        function _assertGlTextOpts(msg, exp) {
+            var scene = gd.calcdata[0][0].t._scene;
+            scene.glText.forEach(function(opts, i) {
+                expect(Array.from(opts.color))
+                    .toBeCloseToArray(exp.rgba[i], 2, 'item ' + i + ' - ' + msg);
+            });
+        }
+
+        Plotly.plot(gd, fig)
+        .then(delay(100))
+        .then(function() {
+            _assertGlTextOpts('base', {
+                rgba: [
+                    [68, 68, 68, 255],
+                    [68, 68, 68, 255],
+                    [68, 68, 68, 255]
+                ]
+            });
+        })
+        .then(function() { return select([[100, 100], [250, 250]]); })
+        .then(function(eventData) {
+            assertEventData(eventData, {
+                points: [{x: 1, y: 2}]
+            });
+            _assertGlTextOpts('after selection', {
+                rgba: [
+                    [
+                        68, 68, 68, 51,
+                        68, 68, 68, 51,
+                        68, 68, 68, 51,
+                    ],
+                    [
+                        68, 68, 68, 51,
+                        // this is the selected pt!
+                        68, 68, 68, 255,
+                        68, 68, 68, 51
+                    ],
+                    [
+                        68, 68, 68, 51,
+                        68, 68, 68, 51,
+                        68, 68, 68, 51
+                    ]
+                ]
+            });
+        })
+        .then(function() {
+            return Plotly.restyle(gd, 'selected.textfont.color', 'red');
+        })
+        .then(function() { return select([[100, 100], [250, 250]]); })
+        .then(function() {
+            _assertGlTextOpts('after selection - with set selected.textfont.color', {
+                rgba: [
+                    [
+                        68, 68, 68, 255,
+                        68, 68, 68, 255,
+                        68, 68, 68, 255,
+                    ],
+                    [
+                        68, 68, 68, 255,
+                        // this is the selected pt!
+                        255, 0, 0, 255,
+                        68, 68, 68, 255
+                    ],
+                    [
+                        68, 68, 68, 255,
+                        68, 68, 68, 255,
+                        68, 68, 68, 255
+                    ]
+                ]
+            });
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should work on gl text charts with array textfont.color', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/gl2d_text_chart_arrays.json'));
+        fig.layout.dragmode = 'select';
+        fig.layout.margin = {t: 0, b: 0, l: 0, r: 0};
+        fig.layout.height = 500;
+        fig.layout.width = 500;
+        gd = createGraphDiv();
+
+        function _assertGlTextOpts(msg, exp) {
+            var scene = gd.calcdata[0][0].t._scene;
+            scene.glText.forEach(function(opts, i) {
+                expect(Array.from(opts.color))
+                    .toBeCloseToArray(exp.rgba[i], 2, 'item ' + i + ' - ' + msg);
+            });
+        }
+
+        Plotly.plot(gd, fig)
+        .then(delay(100))
+        .then(function() {
+            _assertGlTextOpts('base', {
+                rgba: [
+                    [
+                        255, 0, 0, 255,
+                        0, 0, 255, 255,
+                        0, 128, 0, 255
+                    ],
+                    [
+                        0, 0, 0, 255,
+                        211, 211, 210, 255,
+                        237, 97, 0, 255
+                    ]
+                ]
+            });
+        })
+        .then(function() { return select([[100, 10], [250, 100]]); })
+        .then(function(eventData) {
+            assertEventData(eventData, {
+                points: [{x: 1, y: 2}]
+            });
+            _assertGlTextOpts('after selection', {
+                rgba: [
+                    [
+                        255, 0, 0, 51,
+                        0, 0, 255, 51,
+                        0, 128, 0, 51
+                    ],
+                    [
+                        0, 0, 0, 51,
+                        // this is the selected pt!
+                        211, 211, 210, 255,
+                        237, 97, 0, 51
+                    ]
+                ]
+            });
+        })
+        .then(function() {
+            return Plotly.restyle(gd, 'selected.textfont.color', 'red');
+        })
+        .then(function() { return select([[100, 10], [250, 100]]); })
+        .then(function() {
+            _assertGlTextOpts('after selection - with set selected.textfont.color', {
+                rgba: [
+                    [
+                        255, 0, 0, 255,
+                        0, 0, 255, 255,
+                        0, 128, 0, 255
+                    ],
+                    [
+                        0, 0, 0, 255,
+                        // this is the selected pt!
+                        255, 0, 0, 255,
+                        237, 97, 0, 255
+                    ]
+                ]
+            });
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('should work after a width/height relayout', function(done) {
+        gd = createGraphDiv();
+
+        var w = 500;
+        var h = 500;
+        var w2 = 800;
+        var h2 = 600;
+        var pad = 20;
+
+        function _read(query) {
+            var canvas = gd.querySelector(query);
+            return readPixel(canvas, 0, 0, gd.layout.width, gd.layout.height)
+                .reduce(function(acc, v) { return acc + v; }, 0);
+        }
+
+        function readContext() { return _read('.gl-canvas-context'); }
+
+        function readFocus() { return _read('.gl-canvas-focus'); }
+
+        Plotly.plot(gd, [{
+            type: 'scattergl',
+            mode: 'markers',
+            y: [2, 1, 2]
+        }], {
+            dragmode: 'select',
+            margin: {t: 0, b: 0, l: 0, r: 0},
+            width: w, height: h
+        })
+        .then(delay(100))
+        .then(function() {
+            expect(readContext()).toBeGreaterThan(1e4, 'base context');
+            expect(readFocus()).toBe(0, 'base focus');
+        })
+        .then(function() { return select([[pad, pad], [w - pad, h - pad]]); })
+        .then(function() {
+            expect(readContext()).toBe(0, 'select context');
+            expect(readFocus()).toBeGreaterThan(1e4, 'select focus');
+        })
+        .then(function() {
+            return Plotly.update(gd,
+                {selectedpoints: null},
+                {width: w2, height: h2}
+            );
+        })
+        .then(function() {
+            expect(readContext()).toBeGreaterThan(1e4, 'update context');
+            expect(readFocus()).toBe(0, 'update focus');
+        })
+        .then(function() { return select([[pad, pad], [w2 - pad, h2 - pad]]); })
+        .then(function() {
+            // make sure full w2/h2 context canvas is cleared!
+            // from https://github.com/plotly/plotly.js/issues/2731<Paste>
+            expect(readContext()).toBe(0, 'update+select context');
+            expect(readFocus()).toBeGreaterThan(1e4, 'update+select focus');
+        })
+        .catch(failTest)
         .then(done);
     });
 });

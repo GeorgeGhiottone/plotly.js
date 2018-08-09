@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -10,16 +10,20 @@
 
 var tarjan = require('strongly-connected-components');
 var Lib = require('../../lib');
+var wrap = require('../../lib/gup').wrap;
 
 function circularityPresent(nodeList, sources, targets) {
 
-    var nodes = nodeList.map(function() {return [];});
+    var nodeLen = nodeList.length;
+    var nodes = Lib.init2dArray(nodeLen, 0);
 
     for(var i = 0; i < Math.min(sources.length, targets.length); i++) {
-        if(sources[i] === targets[i]) {
-            return true; // self-link which is also a scc of one
+        if(Lib.isIndex(sources[i], nodeLen) && Lib.isIndex(targets[i], nodeLen)) {
+            if(sources[i] === targets[i]) {
+                return true; // self-link which is also a scc of one
+            }
+            nodes[sources[i]].push(targets[i]);
         }
-        nodes[sources[i]].push(targets[i]);
     }
 
     var scc = tarjan(nodes);
@@ -44,8 +48,8 @@ module.exports = function calc(gd, trace) {
         trace.node.color = [];
     }
 
-    return [{
+    return wrap({
         link: trace.link,
         node: trace.node
-    }];
+    });
 };
