@@ -1,15 +1,16 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
 * LICENSE file in the root directory of this source tree.
 */
 
-
 'use strict';
 
+var Lib = require('../../lib');
 var subtypes = require('../scatter/subtypes');
+var BADNUM = require('../../constants/numerical').BADNUM;
 
 module.exports = function selectPoints(searchInfo, polygon) {
     var cd = searchInfo.cd;
@@ -17,41 +18,36 @@ module.exports = function selectPoints(searchInfo, polygon) {
     var ya = searchInfo.yaxis;
     var selection = [];
     var trace = cd[0].trace;
+    var i;
 
-    var di, lonlat, x, y, i;
-
-    // flag used in ./convert.js
-    // to not insert data-driven 'circle-opacity' when we don't need to
-    trace._hasDimmedPts = false;
-
-    if(trace.visible !== true || !subtypes.hasMarkers(trace)) return;
+    if(!subtypes.hasMarkers(trace)) return [];
 
     if(polygon === false) {
         for(i = 0; i < cd.length; i++) {
-            cd[i].dim = 0;
+            cd[i].selected = 0;
         }
     } else {
         for(i = 0; i < cd.length; i++) {
-            di = cd[i];
-            lonlat = di.lonlat;
-            x = xa.c2p(lonlat);
-            y = ya.c2p(lonlat);
+            var di = cd[i];
+            var lonlat = di.lonlat;
 
-            if(polygon.contains([x, y])) {
-                trace._hasDimmedPts = true;
-                selection.push({
-                    pointNumber: i,
-                    lon: lonlat[0],
-                    lat: lonlat[1]
-                });
-                di.dim = 0;
-            } else {
-                di.dim = 1;
+            if(lonlat[0] !== BADNUM) {
+                var lonlat2 = [Lib.wrap180(lonlat[0]), lonlat[1]];
+                var xy = [xa.c2p(lonlat2), ya.c2p(lonlat2)];
+
+                if(polygon.contains(xy)) {
+                    selection.push({
+                        pointNumber: i,
+                        lon: lonlat[0],
+                        lat: lonlat[1]
+                    });
+                    di.selected = 1;
+                } else {
+                    di.selected = 0;
+                }
             }
         }
     }
-
-    trace._glTrace.update(cd);
 
     return selection;
 };

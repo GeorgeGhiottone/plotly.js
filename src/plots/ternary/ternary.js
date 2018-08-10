@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -12,8 +12,9 @@
 var d3 = require('d3');
 var tinycolor = require('tinycolor2');
 
-var Plotly = require('../../plotly');
+var Registry = require('../../registry');
 var Lib = require('../../lib');
+var _ = Lib._;
 var Color = require('../../components/color');
 var Drawing = require('../../components/drawing');
 var setConvert = require('../cartesian/set_convert');
@@ -23,9 +24,9 @@ var Axes = require('../cartesian/axes');
 var dragElement = require('../../components/dragelement');
 var Fx = require('../../components/fx');
 var Titles = require('../../components/titles');
-var prepSelect = require('../cartesian/select');
+var prepSelect = require('../cartesian/select').prepSelect;
+var clearSelect = require('../cartesian/select').clearSelect;
 var constants = require('../cartesian/constants');
-
 
 function Ternary(options, fullLayout) {
     this.id = options.id;
@@ -63,7 +64,7 @@ proto.plot = function(ternaryCalcData, fullLayout) {
 
     _this.updateLayers(ternaryLayout);
     _this.adjustLayout(ternaryLayout, graphSize);
-    Plots.generalUpdatePerTraceModule(_this, ternaryCalcData, ternaryLayout);
+    Plots.generalUpdatePerTraceModule(_this.graphDiv, _this, ternaryCalcData, ternaryLayout);
     _this.layers.plotbg.select('path').call(Color.fill, ternaryLayout.bgcolor);
 };
 
@@ -71,31 +72,21 @@ proto.makeFramework = function(fullLayout) {
     var _this = this;
     var ternaryLayout = fullLayout[_this.id];
 
-    var defGroup = _this.defs.selectAll('g.clips')
-        .data([0]);
-    defGroup.enter().append('g')
-        .classed('clips', true);
+    var clipId = _this.clipId = 'clip' + _this.layoutId + _this.id;
+    var clipIdRelative = _this.clipIdRelative = 'clip-relative' + _this.layoutId + _this.id;
 
     // clippath for this ternary subplot
-    var clipId = _this.clipId = 'clip' + _this.layoutId + _this.id;
-    _this.clipDef = defGroup.selectAll('#' + clipId)
-        .data([0]);
-    _this.clipDef.enter().append('clipPath').attr('id', clipId)
-        .append('path').attr('d', 'M0,0Z');
+    _this.clipDef = Lib.ensureSingleById(fullLayout._clips, 'clipPath', clipId, function(s) {
+        s.append('path').attr('d', 'M0,0Z');
+    });
 
     // 'relative' clippath (i.e. no translation) for this ternary subplot
-    var clipIdRelative = _this.clipIdRelative = 'clip-relative' + _this.layoutId + _this.id;
-    _this.clipDefRelative = defGroup.selectAll('#' + clipIdRelative)
-        .data([0]);
-    _this.clipDefRelative.enter().append('clipPath').attr('id', clipIdRelative)
-        .append('path').attr('d', 'M0,0Z');
+    _this.clipDefRelative = Lib.ensureSingleById(fullLayout._clips, 'clipPath', clipIdRelative, function(s) {
+        s.append('path').attr('d', 'M0,0Z');
+    });
 
     // container for everything in this ternary subplot
-    _this.plotContainer = _this.container.selectAll('g.' + _this.id)
-        .data([0]);
-    _this.plotContainer.enter().append('g')
-        .classed(_this.id, true);
-
+    _this.plotContainer = Lib.ensureSingle(_this.container, 'g', _this.id);
     _this.updateLayers(ternaryLayout);
 
     Drawing.setClipUrl(_this.layers.backplot, clipId);
@@ -160,6 +151,9 @@ proto.updateLayers = function(ternaryLayout) {
             } else if(d === 'grids') {
                 grids.forEach(function(d) {
                     layers[d] = s.append('g').classed('grid ' + d, true);
+
+                    var fictID = (d === 'bgrid') ? 'x' : 'y';
+                    layers[d].append('g').classed(fictID, true);
                 });
             }
         });
@@ -262,7 +256,8 @@ proto.adjustLayout = function(ternaryLayout, graphSize) {
         _pos: 0, // _this.xaxis.domain[0] * graphSize.w,
         _id: 'y',
         _length: w,
-        _gridpath: 'M0,0l' + h + ',-' + (w / 2)
+        _gridpath: 'M0,0l' + h + ',-' + (w / 2),
+        automargin: false // don't use automargins routine for labels
     });
     setConvert(aaxis, _this.graphDiv._fullLayout);
     aaxis.setScale();
@@ -281,7 +276,8 @@ proto.adjustLayout = function(ternaryLayout, graphSize) {
         _pos: 0, // (1 - yDomain0) * graphSize.h,
         _id: 'x',
         _length: w,
-        _gridpath: 'M0,0l-' + (w / 2) + ',-' + h
+        _gridpath: 'M0,0l-' + (w / 2) + ',-' + h,
+        automargin: false // don't use automargins routine for labels
     });
     setConvert(baxis, _this.graphDiv._fullLayout);
     baxis.setScale();
@@ -302,7 +298,8 @@ proto.adjustLayout = function(ternaryLayout, graphSize) {
         _pos: 0, // _this.xaxis.domain[1] * graphSize.w,
         _id: 'y',
         _length: w,
-        _gridpath: 'M0,0l-' + h + ',' + (w / 2)
+        _gridpath: 'M0,0l-' + h + ',' + (w / 2),
+        automargin: false // don't use automargins routine for labels
     });
     setConvert(caxis, _this.graphDiv._fullLayout);
     caxis.setScale();
@@ -322,16 +319,19 @@ proto.adjustLayout = function(ternaryLayout, graphSize) {
 
     // TODO: shift axes to accommodate linewidth*sin(30) tick mark angle
 
-    var bTransform = 'translate(' + x0 + ',' + (y0 + h) + ')';
+    // TODO: there's probably an easier way to handle these translations/offsets now...
+    var bTransform = 'translate(' + (x0 - baxis._offset) + ',' + (y0 + h) + ')';
 
     _this.layers.baxis.attr('transform', bTransform);
     _this.layers.bgrid.attr('transform', bTransform);
 
-    var aTransform = 'translate(' + (x0 + w / 2) + ',' + y0 + ')rotate(30)';
+    var aTransform = 'translate(' + (x0 + w / 2) + ',' + y0 +
+        ')rotate(30)translate(0,' + -aaxis._offset + ')';
     _this.layers.aaxis.attr('transform', aTransform);
     _this.layers.agrid.attr('transform', aTransform);
 
-    var cTransform = 'translate(' + (x0 + w / 2) + ',' + y0 + ')rotate(-30)';
+    var cTransform = 'translate(' + (x0 + w / 2) + ',' + y0 +
+        ')rotate(-30)translate(0,' + -caxis._offset + ')';
     _this.layers.caxis.attr('transform', cTransform);
     _this.layers.cgrid.attr('transform', cTransform);
 
@@ -376,18 +376,18 @@ proto.drawAxes = function(doTitles) {
         caxis = _this.caxis;
     // 3rd arg true below skips titles, so we can configure them
     // correctly later on.
-    Axes.doTicks(gd, aaxis, true);
-    Axes.doTicks(gd, baxis, true);
-    Axes.doTicks(gd, caxis, true);
+    Axes.doTicksSingle(gd, aaxis, true);
+    Axes.doTicksSingle(gd, baxis, true);
+    Axes.doTicksSingle(gd, caxis, true);
 
     if(doTitles) {
         var apad = Math.max(aaxis.showticklabels ? aaxis.tickfont.size / 2 : 0,
             (caxis.showticklabels ? caxis.tickfont.size * 0.75 : 0) +
             (caxis.ticks === 'outside' ? caxis.ticklen * 0.87 : 0));
-        Titles.draw(gd, 'a' + titlesuffix, {
+        _this.layers['a-title'] = Titles.draw(gd, 'a' + titlesuffix, {
             propContainer: aaxis,
             propName: _this.id + '.aaxis.title',
-            dfltName: 'Component A',
+            placeholder: _(gd, 'Click to enter Component A title'),
             attributes: {
                 x: _this.x0 + _this.w / 2,
                 y: _this.y0 - aaxis.titlefont.size / 3 - apad,
@@ -395,13 +395,14 @@ proto.drawAxes = function(doTitles) {
             }
         });
 
+
         var bpad = (baxis.showticklabels ? baxis.tickfont.size : 0) +
             (baxis.ticks === 'outside' ? baxis.ticklen : 0) + 3;
 
-        Titles.draw(gd, 'b' + titlesuffix, {
+        _this.layers['b-title'] = Titles.draw(gd, 'b' + titlesuffix, {
             propContainer: baxis,
             propName: _this.id + '.baxis.title',
-            dfltName: 'Component B',
+            placeholder: _(gd, 'Click to enter Component B title'),
             attributes: {
                 x: _this.x0 - bpad,
                 y: _this.y0 + _this.h + baxis.titlefont.size * 0.83 + bpad,
@@ -409,10 +410,10 @@ proto.drawAxes = function(doTitles) {
             }
         });
 
-        Titles.draw(gd, 'c' + titlesuffix, {
+        _this.layers['c-title'] = Titles.draw(gd, 'c' + titlesuffix, {
             propContainer: caxis,
             propName: _this.id + '.caxis.title',
-            dfltName: 'Component C',
+            placeholder: _(gd, 'Click to enter Component C title'),
             attributes: {
                 x: _this.x0 + _this.w + bpad,
                 y: _this.y0 + _this.h + caxis.titlefont.size * 0.83 + bpad,
@@ -454,7 +455,6 @@ proto.initInteractions = function() {
             xaxis: _this.xaxis,
             yaxis: _this.yaxis
         },
-        doubleclick: doubleClick,
         subplot: _this.id,
         prepFn: function(e, startX, startY) {
             // these aren't available yet when initInteractions
@@ -479,11 +479,24 @@ proto.initInteractions = function() {
                 dragOptions.moveFn = plotDrag;
                 dragOptions.doneFn = dragDone;
                 panPrep();
-                clearSelect();
+                clearSelect(zoomContainer);
             }
             else if(dragModeNow === 'select' || dragModeNow === 'lasso') {
                 prepSelect(e, startX, startY, dragOptions, dragModeNow);
             }
+        },
+        clickFn: function(numClicks, evt) {
+            removeZoombox(gd);
+
+            if(numClicks === 2) {
+                var attrs = {};
+                attrs[_this.id + '.aaxis.min'] = 0;
+                attrs[_this.id + '.baxis.min'] = 0;
+                attrs[_this.id + '.caxis.min'] = 0;
+                gd.emit('plotly_doubleclick', null);
+                Registry.call('relayout', gd, attrs);
+            }
+            Fx.click(gd, evt, _this.id);
         }
     };
 
@@ -524,7 +537,7 @@ proto.initInteractions = function() {
             })
             .attr('d', 'M0,0Z');
 
-        clearSelect();
+        clearSelect(zoomContainer);
     }
 
     function getAFrac(x, y) { return 1 - (y / _this.h); }
@@ -576,24 +589,20 @@ proto.initInteractions = function() {
         }
     }
 
-    function zoomDone(dragged, numClicks) {
-        if(mins === mins0) {
-            if(numClicks === 2) doubleClick();
-
-            return removeZoombox(gd);
-        }
-
+    function zoomDone() {
         removeZoombox(gd);
+
+        if(mins === mins0) return;
 
         var attrs = {};
         attrs[_this.id + '.aaxis.min'] = mins.a;
         attrs[_this.id + '.baxis.min'] = mins.b;
         attrs[_this.id + '.caxis.min'] = mins.c;
 
-        Plotly.relayout(gd, attrs);
+        Registry.call('relayout', gd, attrs);
 
         if(SHOWZOOMOUTTIP && gd.data && gd._context.showTips) {
-            Lib.notifier('Double-click to<br>zoom back out', 'long');
+            Lib.notifier(_(gd, 'Double-click to zoom back out'), 'long');
             SHOWZOOMOUTTIP = false;
         }
     }
@@ -657,43 +666,19 @@ proto.initInteractions = function() {
         _this.plotContainer.selectAll('.crisp').classed('crisp', false);
 
         if(_this._hasClipOnAxisFalse) {
-            var scatterPoints = _this.plotContainer
-                .select('.scatterlayer').selectAll('.points');
-
-            scatterPoints.selectAll('.point')
-                .call(Drawing.hideOutsideRangePoints, _this);
-
-            scatterPoints.selectAll('.textpoint')
+            _this.plotContainer
+                .select('.scatterlayer').selectAll('.trace')
                 .call(Drawing.hideOutsideRangePoints, _this);
         }
     }
 
-    function dragDone(dragged, numClicks) {
-        if(dragged) {
-            var attrs = {};
-            attrs[_this.id + '.aaxis.min'] = mins.a;
-            attrs[_this.id + '.baxis.min'] = mins.b;
-            attrs[_this.id + '.caxis.min'] = mins.c;
-
-            Plotly.relayout(gd, attrs);
-        }
-        else if(numClicks === 2) doubleClick();
-    }
-
-    function clearSelect() {
-        // until we get around to persistent selections, remove the outline
-        // here. The selection itself will be removed when the plot redraws
-        // at the end.
-        zoomContainer.selectAll('.select-outline').remove();
-    }
-
-    function doubleClick() {
+    function dragDone() {
         var attrs = {};
-        attrs[_this.id + '.aaxis.min'] = 0;
-        attrs[_this.id + '.baxis.min'] = 0;
-        attrs[_this.id + '.caxis.min'] = 0;
-        gd.emit('plotly_doubleclick', null);
-        Plotly.relayout(gd, attrs);
+        attrs[_this.id + '.aaxis.min'] = mins.a;
+        attrs[_this.id + '.baxis.min'] = mins.b;
+        attrs[_this.id + '.caxis.min'] = mins.c;
+
+        Registry.call('relayout', gd, attrs);
     }
 
     // finally, set up hover and click
@@ -709,10 +694,6 @@ proto.initInteractions = function() {
         if(gd._dragging) return;
 
         dragElement.unhover(gd, evt);
-    };
-
-    dragger.onclick = function(evt) {
-        Fx.click(gd, evt, _this.id);
     };
 
     dragElement.init(dragOptions);

@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -10,13 +10,13 @@
 'use strict';
 
 var createMesh = require('gl-mesh3d');
-var tinycolor = require('tinycolor2');
 var triangulate = require('delaunay-triangulate');
 var alphaShape = require('alpha-shape');
 var convexHull = require('convex-hull');
 
+var parseColorScale = require('../../lib/gl_format_color').parseColorScale;
 var str2RgbaArray = require('../../lib/str2rgbarray');
-
+var zip3 = require('../../plots/gl3d/zip3');
 
 function Mesh3DTrace(scene, mesh, uid) {
     this.scene = scene;
@@ -40,32 +40,19 @@ proto.handlePick = function(selection) {
             this.data.z[selectIndex]
         ];
 
+        var text = this.data.text;
+        if(Array.isArray(text) && text[selectIndex] !== undefined) {
+            selection.textLabel = text[selectIndex];
+        } else if(text) {
+            selection.textLabel = text;
+        }
+
         return true;
     }
 };
 
-function parseColorScale(colorscale) {
-    return colorscale.map(function(elem) {
-        var index = elem[0];
-        var color = tinycolor(elem[1]);
-        var rgb = color.toRgb();
-        return {
-            index: index,
-            rgb: [rgb.r, rgb.g, rgb.b, 1]
-        };
-    });
-}
-
 function parseColorArray(colors) {
     return colors.map(str2RgbaArray);
-}
-
-function zip3(x, y, z) {
-    var result = new Array(x.length);
-    for(var i = 0; i < x.length; ++i) {
-        result[i] = [x[i], y[i], z[i]];
-    }
-    return result;
 }
 
 proto.update = function(data) {

@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -13,7 +13,10 @@ var Surface = {};
 
 Surface.attributes = require('./attributes');
 Surface.supplyDefaults = require('./defaults');
-Surface.colorbar = require('./colorbar');
+Surface.colorbar = {
+    min: 'cmin',
+    max: 'cmax'
+};
 Surface.calc = require('./calc');
 Surface.plot = require('./convert');
 

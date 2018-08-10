@@ -1,5 +1,4 @@
 var Plotly = require('@lib');
-var Plots = require('@src/plots/plots');
 var Lib = require('@src/lib');
 var ScatterTernary = require('@src/traces/scatterternary');
 
@@ -7,8 +6,8 @@ var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var fail = require('../assets/fail_test');
-var customMatchers = require('../assets/custom_matchers');
 var customAssertions = require('../assets/custom_assertions');
+var supplyAllDefaults = require('../assets/supply_defaults');
 
 var assertClip = customAssertions.assertClip;
 var assertNodeDisplay = customAssertions.assertNodeDisplay;
@@ -102,7 +101,8 @@ describe('scatterternary defaults', function() {
         expect(traceOut.visible).toBe(false);
     });
 
-    it('should truncate data arrays to the same length (\'c\' is shortest case)', function() {
+    it('should not truncate data arrays to the same length (\'c\' is shortest case)', function() {
+        // this is handled at the calc step now via _length.
         traceIn = {
             a: [1, 2, 3],
             b: [1, 2],
@@ -110,12 +110,14 @@ describe('scatterternary defaults', function() {
         };
 
         supplyDefaults(traceIn, traceOut, defaultColor, layout);
-        expect(traceOut.a).toEqual([1]);
-        expect(traceOut.b).toEqual([1]);
+        expect(traceOut.a).toEqual([1, 2, 3]);
+        expect(traceOut.b).toEqual([1, 2]);
         expect(traceOut.c).toEqual([1]);
+        expect(traceOut._length).toBe(1);
     });
 
-    it('should truncate data arrays to the same length (\'a\' is shortest case)', function() {
+    it('should not truncate data arrays to the same length (\'a\' is shortest case)', function() {
+        // this is handled at the calc step now via _length.
         traceIn = {
             a: [1],
             b: [1, 2, 3],
@@ -124,11 +126,13 @@ describe('scatterternary defaults', function() {
 
         supplyDefaults(traceIn, traceOut, defaultColor, layout);
         expect(traceOut.a).toEqual([1]);
-        expect(traceOut.b).toEqual([1]);
-        expect(traceOut.c).toEqual([1]);
+        expect(traceOut.b).toEqual([1, 2, 3]);
+        expect(traceOut.c).toEqual([1, 2]);
+        expect(traceOut._length).toBe(1);
     });
 
-    it('should truncate data arrays to the same length (\'a\' is shortest case)', function() {
+    it('should not truncate data arrays to the same length (\'a\' is shortest case)', function() {
+        // this is handled at the calc step now via _length.
         traceIn = {
             a: [1, 2],
             b: [1],
@@ -136,9 +140,25 @@ describe('scatterternary defaults', function() {
         };
 
         supplyDefaults(traceIn, traceOut, defaultColor, layout);
-        expect(traceOut.a).toEqual([1]);
+        expect(traceOut.a).toEqual([1, 2]);
         expect(traceOut.b).toEqual([1]);
-        expect(traceOut.c).toEqual([1]);
+        expect(traceOut.c).toEqual([1, 2, 3]);
+        expect(traceOut._length).toBe(1);
+    });
+
+    it('is set visible: false if a, b, or c is empty', function() {
+        var trace0 = {
+            a: [1, 2],
+            b: [2, 1],
+            c: [2, 2]
+        };
+
+        ['a', 'b', 'c'].forEach(function(letter) {
+            traceIn = Lib.extendDeep({}, trace0);
+            traceIn[letter] = [];
+            supplyDefaults(traceIn, traceOut, defaultColor, layout);
+            expect(traceOut.visible).toBe(false, letter);
+        });
     });
 
     it('should include \'name\' in \'hoverinfo\' default if multi trace graph', function() {
@@ -150,7 +170,7 @@ describe('scatterternary defaults', function() {
         };
 
         var gd = {data: [traceIn, {}]};
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
 
         expect(gd._fullData[0].hoverinfo).toBe('all');
     });
@@ -164,7 +184,7 @@ describe('scatterternary defaults', function() {
         };
 
         var gd = {data: [traceIn]};
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
 
         expect(gd._fullData[0].hoverinfo).toBe('a+b+c+text');
     });
@@ -208,10 +228,6 @@ describe('scatterternary calc', function() {
 
     var calc = ScatterTernary.calc;
 
-    beforeAll(function() {
-        jasmine.addMatchers(customMatchers);
-    });
-
     var gd, trace, cd;
 
     beforeEach(function() {
@@ -223,32 +239,39 @@ describe('scatterternary calc', function() {
 
         trace = {
             subplot: 'ternary',
-            sum: 1
+            sum: 1,
+            _length: 3
         };
     });
+
+    function get(cd, component) {
+        return cd.map(function(v) {
+            return v[component];
+        });
+    }
 
     it('should fill in missing component (case \'c\')', function() {
         trace.a = [0.1, 0.3, 0.6];
         trace.b = [0.3, 0.6, 0.1];
 
-        calc(gd, trace);
-        expect(trace.c).toBeCloseToArray([0.6, 0.1, 0.3]);
+        cd = calc(gd, trace);
+        expect(get(cd, 'c')).toBeCloseToArray([0.6, 0.1, 0.3]);
     });
 
     it('should fill in missing component (case \'b\')', function() {
         trace.a = [0.1, 0.3, 0.6];
         trace.c = [0.1, 0.3, 0.2];
 
-        calc(gd, trace);
-        expect(trace.b).toBeCloseToArray([0.8, 0.4, 0.2]);
+        cd = calc(gd, trace);
+        expect(get(cd, 'b')).toBeCloseToArray([0.8, 0.4, 0.2]);
     });
 
     it('should fill in missing component (case \'a\')', function() {
         trace.b = [0.1, 0.3, 0.6];
         trace.c = [0.8, 0.4, 0.1];
 
-        calc(gd, trace);
-        expect(trace.a).toBeCloseToArray([0.1, 0.3, 0.3]);
+        cd = calc(gd, trace);
+        expect(get(cd, 'a')).toBeCloseToArray([0.1, 0.3, 0.3]);
     });
 
     it('should skip over non-numeric values', function() {
@@ -337,7 +360,8 @@ describe('scatterternary hover', function() {
             cd: cd[0],
             trace: cd[0][0].trace,
             xa: ternary.xaxis,
-            ya: ternary.yaxis
+            ya: ternary.yaxis,
+            subplot: ternary
         };
 
         return ScatterTernary.hoverPoints(pointData, xval, yval, hovermode);

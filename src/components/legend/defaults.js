@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -11,6 +11,7 @@
 
 var Registry = require('../../registry');
 var Lib = require('../../lib');
+var Template = require('../../plot_api/plot_template');
 
 var attributes = require('./attributes');
 var basePlotLayoutAttributes = require('../../plots/layout_attributes');
@@ -18,15 +19,12 @@ var helpers = require('./helpers');
 
 
 module.exports = function legendDefaults(layoutIn, layoutOut, fullData) {
-    var containerIn = layoutIn.legend || {},
-        containerOut = layoutOut.legend = {};
+    var containerIn = layoutIn.legend || {};
 
-    var visibleTraces = 0,
-        defaultOrder = 'normal',
-        defaultX,
-        defaultY,
-        defaultXAnchor,
-        defaultYAnchor;
+    var visibleTraces = 0;
+    var defaultOrder = 'normal';
+
+    var defaultX, defaultY, defaultXAnchor, defaultYAnchor;
 
     for(var i = 0; i < fullData.length; i++) {
         var trace = fullData[i];
@@ -49,14 +47,16 @@ module.exports = function legendDefaults(layoutIn, layoutOut, fullData) {
         }
     }
 
-    function coerce(attr, dflt) {
-        return Lib.coerce(containerIn, containerOut, attributes, attr, dflt);
-    }
-
     var showLegend = Lib.coerce(layoutIn, layoutOut,
         basePlotLayoutAttributes, 'showlegend', visibleTraces > 1);
 
     if(showLegend === false) return;
+
+    var containerOut = Template.newContainer(layoutOut, 'legend');
+
+    function coerce(attr, dflt) {
+        return Lib.coerce(containerIn, containerOut, attributes, attr, dflt);
+    }
 
     coerce('bgcolor', layoutOut.paper_bgcolor);
     coerce('bordercolor');

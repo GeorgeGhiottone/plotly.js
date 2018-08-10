@@ -1,9 +1,9 @@
 var Plotly = require('@lib/index');
-var Plots = require('@src/plots/plots');
 
 var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
+var supplyAllDefaults = require('../assets/supply_defaults');
 
 describe('Fx defaults', function() {
     'use strict';
@@ -14,7 +14,7 @@ describe('Fx defaults', function() {
             layout: layout || {}
         };
 
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
 
         return {
             data: gd._fullData,
@@ -24,7 +24,11 @@ describe('Fx defaults', function() {
 
     it('should default (blank version)', function() {
         var layoutOut = _supply().layout;
-        expect(layoutOut.hovermode).toBe('closest', 'hovermode to closest');
+        // we get a blank cartesian subplot that has no traces...
+        // so all traces are horizontal -> hovermode defaults to y
+        // we could add a special case to push this back to x, but
+        // it seems like it has no practical consequence.
+        expect(layoutOut.hovermode).toBe('y', 'hovermode to y');
         expect(layoutOut.dragmode).toBe('zoom', 'dragmode to zoom');
     });
 
@@ -76,7 +80,7 @@ describe('Fx defaults', function() {
         .layout;
 
         expect(layoutOut.hovermode).toBe('closest', 'hovermode to closest');
-        expect(layoutOut.dragmode).toBe('zoom', 'dragmode to zoom');
+        expect(layoutOut.dragmode).toBe('pan', 'dragmode to zoom');
     });
 
     it('should default (multi plot type version)', function() {
@@ -197,14 +201,13 @@ describe('relayout', function() {
     afterEach(destroyGraphDiv);
 
     it('should update main drag with correct', function(done) {
-
         function assertMainDrag(cursor, isActive) {
             expect(d3.selectAll('rect.nsewdrag').size()).toEqual(1, 'number of nodes');
-            var mainDrag = d3.select('rect.nsewdrag'),
-                node = mainDrag.node();
+            var mainDrag = d3.select('rect.nsewdrag');
+            var node = mainDrag.node();
 
-            expect(mainDrag.classed('cursor-' + cursor)).toBe(true, 'cursor ' + cursor);
-            expect(mainDrag.style('pointer-events')).toEqual('all', 'pointer event');
+            expect(window.getComputedStyle(node).cursor).toBe(cursor, 'cursor ' + cursor);
+            expect(node.style.pointerEvents).toEqual('all', 'pointer event');
             expect(!!node.onmousedown).toBe(isActive, 'mousedown handler');
         }
 
@@ -227,11 +230,12 @@ describe('relayout', function() {
 
             return Plotly.relayout(gd, 'yaxis.fixedrange', true);
         }).then(function() {
-            assertMainDrag('pointer', false);
+            // still active with fixedrange because we're handling clicks here too.
+            assertMainDrag('pointer', true);
 
             return Plotly.relayout(gd, 'dragmode', 'drag');
         }).then(function() {
-            assertMainDrag('pointer', false);
+            assertMainDrag('pointer', true);
 
             return Plotly.relayout(gd, 'dragmode', 'lasso');
         }).then(function() {

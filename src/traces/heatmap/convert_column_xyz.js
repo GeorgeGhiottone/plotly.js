@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -13,27 +13,15 @@ var Lib = require('../../lib');
 var BADNUM = require('../../constants/numerical').BADNUM;
 
 module.exports = function convertColumnData(trace, ax1, ax2, var1Name, var2Name, arrayVarNames) {
-    var1Name = var1Name || 'x';
-    var2Name = var2Name || 'y';
-    arrayVarNames = arrayVarNames || ['z'];
-
-    var col1 = trace[var1Name].slice(),
-        col2 = trace[var2Name].slice(),
-        textCol = trace.text,
-        colLen = Math.min(col1.length, col2.length),
-        hasColumnText = (textCol !== undefined && !Array.isArray(textCol[0])),
-        col1Calendar = trace[var1Name + 'calendar'],
-        col2Calendar = trace[var2Name + 'calendar'];
+    var colLen = trace._length;
+    var col1 = trace[var1Name].slice(0, colLen);
+    var col2 = trace[var2Name].slice(0, colLen);
+    var textCol = trace.text;
+    var hasColumnText = (textCol !== undefined && Lib.isArray1D(textCol));
+    var col1Calendar = trace[var1Name + 'calendar'];
+    var col2Calendar = trace[var2Name + 'calendar'];
 
     var i, j, arrayVar, newArray, arrayVarName;
-
-    for(i = 0; i < arrayVarNames.length; i++) {
-        arrayVar = trace[arrayVarNames[i]];
-        if(arrayVar) colLen = Math.min(colLen, arrayVar.length);
-    }
-
-    if(colLen < col1.length) col1 = col1.slice(0, colLen);
-    if(colLen < col2.length) col2 = col2.slice(0, colLen);
 
     for(i = 0; i < colLen; i++) {
         col1[i] = ax1.d2c(col1[i], 0, col1Calendar);
@@ -70,10 +58,10 @@ module.exports = function convertColumnData(trace, ax1, ax2, var1Name, var2Name,
         }
     }
 
-    trace[var1Name] = col1vals;
-    trace[var2Name] = col2vals;
+    trace['_' + var1Name] = col1vals;
+    trace['_' + var2Name] = col2vals;
     for(j = 0; j < arrayVarNames.length; j++) {
-        trace[arrayVarNames[j]] = newArrays[j];
+        trace['_' + arrayVarNames[j]] = newArrays[j];
     }
-    if(hasColumnText) trace.text = text;
+    if(hasColumnText) trace._text = text;
 };

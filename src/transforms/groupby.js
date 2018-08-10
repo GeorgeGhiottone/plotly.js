@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -11,6 +11,7 @@
 var Lib = require('../lib');
 var PlotSchema = require('../plot_api/plot_schema');
 var Plots = require('../plots/plots');
+var pointsAccessorFunction = require('./helpers').pointsAccessorFunction;
 
 exports.moduleType = 'transform';
 
@@ -20,6 +21,8 @@ exports.attributes = {
     enabled: {
         valType: 'boolean',
         dflt: true,
+        role: 'info',
+        editType: 'calc',
         description: [
             'Determines whether this group-by transform is enabled or disabled.'
         ].join(' ')
@@ -27,6 +30,8 @@ exports.attributes = {
     groups: {
         valType: 'data_array',
         dflt: [],
+        role: 'info',
+        editType: 'calc',
         description: [
             'Sets the groups in which the trace data will be split.',
             'For example, with `x` set to *[1, 2, 3, 4]* and',
@@ -37,6 +42,8 @@ exports.attributes = {
     },
     nameformat: {
         valType: 'string',
+        role: 'info',
+        editType: 'calc',
         description: [
             'Pattern by which grouped traces are named. If only one trace is present,',
             'defaults to the group name (`"%{group}"`), otherwise defaults to the group name',
@@ -51,6 +58,7 @@ exports.attributes = {
         target: {
             valType: 'string',
             role: 'info',
+            editType: 'calc',
             description: [
                 'The group value which receives these styles.'
             ].join(' ')
@@ -59,14 +67,18 @@ exports.attributes = {
             valType: 'any',
             role: 'info',
             dflt: {},
+            editType: 'calc',
             description: [
                 'Sets each group styles.',
                 'For example, with `groups` set to *[\'a\', \'b\', \'a\', \'b\']*',
                 'and `styles` set to *[{target: \'a\', value: { marker: { color: \'red\' } }}]',
                 'marker points in group *\'a\'* will be drawn in red.'
-            ].join(' ')
+            ].join(' '),
+            _compareAsJSON: true
         },
-    }
+        editType: 'calc'
+    },
+    editType: 'calc'
 };
 
 /**
@@ -104,9 +116,15 @@ exports.supplyDefaults = function(transformIn, traceOut, layout) {
 
     if(styleIn) {
         for(i = 0; i < styleIn.length; i++) {
-            styleOut[i] = {};
+            var thisStyle = styleOut[i] = {};
             Lib.coerce(styleIn[i], styleOut[i], exports.attributes.styles, 'target');
-            Lib.coerce(styleIn[i], styleOut[i], exports.attributes.styles, 'value');
+            var value = Lib.coerce(styleIn[i], styleOut[i], exports.attributes.styles, 'value');
+
+            // so that you can edit value in place and have Plotly.react notice it, or
+            // rebuild it every time and have Plotly.react NOT think it changed:
+            // use _compareAsJSON to say we should diff the _JSON_value
+            if(Lib.isPlainObject(value)) thisStyle.value = Lib.extendDeep({}, value);
+            else if(value) delete thisStyle.value;
         }
     }
 
@@ -150,7 +168,9 @@ function transformOne(trace, state) {
     var groupNameObj;
 
     var opts = state.transform;
-    var groups = trace.transforms[state.transformIndex].groups;
+    var transformIndex = state.transformIndex;
+    var groups = trace.transforms[transformIndex].groups;
+    var originalPointsAccessor = pointsAccessorFunction(trace.transforms, opts);
 
     if(!(Array.isArray(groups)) || groups.length === 0) {
         return [trace];
@@ -174,21 +194,27 @@ function transformOne(trace, state) {
 
     // An index to map group name --> expanded trace index
     var indexLookup = {};
+    var indexCnts = {};
 
     for(i = 0; i < groupNames.length; i++) {
         groupName = groupNames[i];
         indexLookup[groupName] = i;
+        indexCnts[groupName] = 0;
 
         // Start with a deep extend that just copies array references.
         newTrace = newData[i] = Lib.extendDeepNoArrays({}, trace);
         newTrace._group = groupName;
+        // helper function for when we need to push updates back to the input,
+        // outside of the normal restyle/relayout pathway, like filling in auto values
+        newTrace.updateStyle = styleUpdater(groupName, transformIndex);
+        newTrace.transforms[transformIndex]._indexToPoints = {};
 
         var suppliedName = null;
         if(groupNameObj) {
             suppliedName = groupNameObj.get(groupName);
         }
 
-        if(suppliedName) {
+        if(suppliedName || suppliedName === '') {
             newTrace.name = suppliedName;
         } else {
             newTrace.name = Lib.templateString(opts.nameformat, {
@@ -236,6 +262,14 @@ function transformOne(trace, state) {
         }
     }
 
+    for(j = 0; j < len; j++) {
+        newTrace = newData[indexLookup[groups[j]]];
+
+        var indexToPoints = newTrace.transforms[transformIndex]._indexToPoints;
+        indexToPoints[indexCnts[groups[j]]] = originalPointsAccessor(j);
+        indexCnts[groups[j]]++;
+    }
+
     for(i = 0; i < groupNames.length; i++) {
         groupName = groupNames[i];
         newTrace = newData[i];
@@ -248,4 +282,15 @@ function transformOne(trace, state) {
     }
 
     return newData;
+}
+
+function styleUpdater(groupName, transformIndex) {
+    return function(trace, attr, value) {
+        Lib.keyedContainer(
+            trace,
+            'transforms[' + transformIndex + '].styles',
+            'target',
+            'value.' + attr
+        ).set(String(groupName), value);
+    };
 }

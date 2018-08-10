@@ -2,12 +2,9 @@ var Plotly = require('@lib/index');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
-var customMatchers = require('../assets/custom_matchers');
 
 describe('aggregate', function() {
     var gd;
-
-    beforeAll(function() { jasmine.addMatchers(customMatchers);});
 
     beforeEach(function() { gd = createGraphDiv(); });
 
@@ -18,6 +15,7 @@ describe('aggregate', function() {
         Plotly.newPlot(gd, [{
             x: [1, 2, 3, 4, 'fail'],
             y: [1.1, 2.2, 3.3, 'nope', 5.5],
+            customdata: [4, 'nope', 3, 2, 1],
             marker: {
                 size: ['2001-01-01', 0.2, 0.1, 0.4, 0.5],
                 color: [2, 4, '', 10, 8],
@@ -37,6 +35,7 @@ describe('aggregate', function() {
                     {target: 'x', func: 'sum'},
                     // non-numerics will not count toward numerator or denominator for avg
                     {target: 'y', func: 'avg'},
+                    {target: 'customdata', func: 'change'},
                     {target: 'marker.size', func: 'min'},
                     {target: 'marker.color', func: 'max'},
                     // marker.opacity doesn't have an entry, but it will default to first
@@ -57,11 +56,16 @@ describe('aggregate', function() {
 
         expect(traceOut.x).toEqual([8, 2]);
         expect(traceOut.y).toBeCloseToArray([3.3, 2.2], 5);
+        expect(traceOut.customdata).toEqual([-3, undefined]);
         expect(traceOut.marker.size).toEqual([0.1, 0.2]);
         expect(traceOut.marker.color).toEqual([10, 4]);
         expect(traceOut.marker.opacity).toEqual([0.6, 'boo']);
         expect(traceOut.marker.line.color).toEqual(['the end', 3.3]);
         expect(traceOut.marker.line.width).toEqual([4, 1]);
+
+        var transform = traceOut.transforms[0];
+        var inverseMapping = transform._indexToPoints;
+        expect(inverseMapping).toEqual({0: [0, 2, 3, 4], 1: [1]});
     });
 
     it('handles all funcs except sum for date data', function() {
@@ -166,6 +170,10 @@ describe('aggregate', function() {
         expect(traceOut.y).toEqual(['b', undefined]);
         // category average: can result in fractional categories -> rounds (0.5 rounds to 1)
         expect(traceOut.text).toEqual(['b', 'b']);
+
+        var transform = traceOut.transforms[0];
+        var inverseMapping = transform._indexToPoints;
+        expect(inverseMapping).toEqual({0: [0, 1], 1: [2, 3]});
     });
 
     it('can aggregate on an existing data array', function() {
@@ -188,17 +196,45 @@ describe('aggregate', function() {
         expect(traceOut.x).toEqual([8, 7]);
         expect(traceOut.y).toBeCloseToArray([16 / 3, 7], 5);
         expect(traceOut.marker.size).toEqual([10, 20]);
+
+        var transform = traceOut.transforms[0];
+        var inverseMapping = transform._indexToPoints;
+        expect(inverseMapping).toEqual({0: [0, 1, 4], 1: [2, 3]});
     });
 
-    it('handles median, mode, rms, & stddev for numeric data', function() {
+    it('can handle case where aggregation array is missing', function() {
+        Plotly.newPlot(gd, [{
+            x: [1, 2, 3, 4, 5],
+            y: [2, 4, 6, 8, 10],
+            marker: {size: [10, 10, 20, 20, 10]},
+            transforms: [{
+                type: 'aggregate',
+                groups: 'marker.size'
+            }]
+        }]);
+
+        var traceOut = gd._fullData[0];
+
+        expect(traceOut.x).toEqual([1, 3]);
+        expect(traceOut.y).toEqual([2, 6]);
+        expect(traceOut.marker.size).toEqual([10, 20]);
+
+        var transform = traceOut.transforms[0];
+        var inverseMapping = transform._indexToPoints;
+        expect(inverseMapping).toEqual({0: [0, 1, 4], 1: [2, 3]});
+    });
+
+    it('handles median, mode, rms, stddev, change & range for numeric data', function() {
         // again, nothing is going to barf with non-numeric data, but sometimes it
         // won't make much sense.
 
         Plotly.newPlot(gd, [{
             x: [1, 1, 2, 2, 1],
             y: [1, 2, 3, 4, 5],
+            customdata: [5, 4, 3, 2, 1],
             marker: {
                 size: [1, 2, 3, 4, 5],
+                opacity: [0.6, 0.5, 0.2, 0.8, 1.0],
                 line: {width: [1, 1, 2, 2, 1]},
                 color: [1, 1, 2, 2, 1]
             },
@@ -208,7 +244,9 @@ describe('aggregate', function() {
                 aggregations: [
                     {target: 'x', func: 'mode'},
                     {target: 'y', func: 'median'},
+                    {target: 'customdata', func: 'change'},
                     {target: 'marker.size', func: 'rms'},
+                    {target: 'marker.opacity', func: 'range'},
                     {target: 'marker.line.width', func: 'stddev', funcmode: 'population'},
                     {target: 'marker.color', func: 'stddev'}
                 ]
@@ -221,8 +259,86 @@ describe('aggregate', function() {
         // but 2 gets to that count first
         expect(traceOut.x).toEqual([2, 1]);
         expect(traceOut.y).toBeCloseToArray([3.5, 2], 5);
+        expect(traceOut.customdata).toEqual([-4, 0]);
         expect(traceOut.marker.size).toBeCloseToArray([Math.sqrt(51 / 4), 2], 5);
+        expect(traceOut.marker.opacity).toEqual([0.8, 0]);
         expect(traceOut.marker.line.width).toBeCloseToArray([0.5, 0], 5);
         expect(traceOut.marker.color).toBeCloseToArray([Math.sqrt(1 / 3), 0], 5);
+    });
+
+    it('handles ragged data - extra groups are ignored', function() {
+        Plotly.newPlot(gd, [{
+            x: [1, 1, 2, 2, 1, 3, 4],
+            y: [1, 2, 3, 4, 5], // shortest array controls all
+            transforms: [{
+                type: 'aggregate',
+                groups: [1, 2, 1, 1, 1, 3, 3, 4, 4, 5],
+                aggregations: [
+                    {target: 'x', func: 'mode'},
+                    {target: 'y', func: 'median'},
+                ]
+            }]
+        }]);
+
+        var traceOut = gd._fullData[0];
+
+        expect(traceOut.x).toEqual([2, 1]);
+        expect(traceOut.y).toBeCloseToArray([3.5, 2], 5);
+    });
+
+    it('handles ragged data - groups is the shortest, others are ignored', function() {
+        Plotly.newPlot(gd, [{
+            x: [1, 1, 2, 2, 1, 3, 4],
+            y: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            transforms: [{
+                type: 'aggregate',
+                groups: [1, 2, 1, 1, 1], // shortest array controls all
+                aggregations: [
+                    {target: 'x', func: 'mode'},
+                    {target: 'y', func: 'median'},
+                ]
+            }]
+        }]);
+
+        var traceOut = gd._fullData[0];
+
+        expect(traceOut.x).toEqual([2, 1]);
+        expect(traceOut.y).toBeCloseToArray([3.5, 2], 5);
+    });
+
+    it('links fullData aggregations to userData via _index', function() {
+        Plotly.newPlot(gd, [{
+            x: [1, 2, 3, 4, 5],
+            y: [2, 4, 6, 8, 10],
+            marker: {
+                size: [10, 10, 20, 20, 10],
+                color: ['red', 'green', 'blue', 'yellow', 'white']
+            },
+            transforms: [{
+                type: 'aggregate',
+                groups: 'marker.size',
+                aggregations: [
+                    {target: 'x', func: 'sum'},
+                    {target: 'x', func: 'avg'},
+                    {target: 'y', func: 'avg'}
+                ]
+            }]
+        }]);
+
+        var traceOut = gd._fullData[0];
+        var fullAggregation = traceOut.transforms[0];
+        var fullAggregations = fullAggregation.aggregations;
+        var enabledAggregations = fullAggregations.filter(function(agg) {
+            return agg.enabled;
+        });
+
+        expect(enabledAggregations[0].target).toEqual('x');
+        expect(enabledAggregations[0]._index).toEqual(0);
+
+        expect(enabledAggregations[1].target).toEqual('y');
+        expect(enabledAggregations[1]._index).toEqual(2);
+
+        expect(enabledAggregations[2].target).toEqual('marker.color');
+        expect(enabledAggregations[2]._index).toEqual(-1);
     });
 });

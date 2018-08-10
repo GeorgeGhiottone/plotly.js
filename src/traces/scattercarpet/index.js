@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2017, Plotly, Inc.
+* Copyright 2012-2018, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -12,17 +12,19 @@ var ScatterCarpet = {};
 
 ScatterCarpet.attributes = require('./attributes');
 ScatterCarpet.supplyDefaults = require('./defaults');
-ScatterCarpet.colorbar = require('../scatter/colorbar');
+ScatterCarpet.colorbar = require('../scatter/marker_colorbar');
 ScatterCarpet.calc = require('./calc');
 ScatterCarpet.plot = require('./plot');
-ScatterCarpet.style = require('./style');
+ScatterCarpet.style = require('../scatter/style').style;
+ScatterCarpet.styleOnSelect = require('../scatter/style').styleOnSelect;
 ScatterCarpet.hoverPoints = require('./hover');
-ScatterCarpet.selectPoints = require('./select');
+ScatterCarpet.selectPoints = require('../scatter/select');
+ScatterCarpet.eventData = require('./event_data');
 
 ScatterCarpet.moduleType = 'trace';
 ScatterCarpet.name = 'scattercarpet';
 ScatterCarpet.basePlotModule = require('../../plots/cartesian');
-ScatterCarpet.categories = ['carpet', 'symbols', 'markerColorscale', 'showLegend', 'carpetDependent'];
+ScatterCarpet.categories = ['svg', 'carpet', 'symbols', 'showLegend', 'carpetDependent', 'zoomScale'];
 ScatterCarpet.meta = {
     hrName: 'scatter_carpet',
     description: [

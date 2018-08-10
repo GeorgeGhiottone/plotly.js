@@ -7,11 +7,17 @@ var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var fail = require('../assets/fail_test');
 var mouseEvent = require('../assets/mouse_event');
+var supplyAllDefaults = require('../assets/supply_defaults');
 
 describe('Test sort transform defaults:', function() {
     function _supply(trace, layout) {
         layout = layout || {};
-        return Plots.supplyTraceDefaults(trace, 0, layout);
+        Lib.extendDeep(layout, {
+            _subplots: {cartesian: ['xy'], xaxis: ['x'], yaxis: ['y']},
+            _modules: [],
+            _basePlotModules: []
+        });
+        return Plots.supplyTraceDefaults(trace, {type: trace.type || 'scatter'}, 0, layout);
     }
 
     it('should coerce all attributes', function() {
@@ -76,7 +82,7 @@ describe('Test sort transform calc:', function() {
             layout: layout || {}
         };
 
-        Plots.supplyDefaults(gd);
+        supplyAllDefaults(gd);
         Plots.doCalcdata(gd);
 
         return gd.calcdata.map(calcDatatoTrace);
@@ -90,6 +96,15 @@ describe('Test sort transform calc:', function() {
         expect(out[0].ids).toEqual(['n0', 'n2', 'n1', 'z', 'p1', 'p3', 'p2']);
         expect(out[0].marker.color).toEqual([0.1, 0.3, 0.2, 0.1, 0.2, 0.4, 0.3]);
         expect(out[0].marker.size).toEqual([10, 5, 20, 1, 6, 10, 0]);
+        expect(out[0].transforms[0]._indexToPoints).toEqual({
+            0: [0],
+            1: [2],
+            2: [1],
+            3: [3],
+            4: [4],
+            5: [6],
+            6: [5]
+        });
     });
 
     it('should sort all array attributes (descending case)', function() {
@@ -104,6 +119,15 @@ describe('Test sort transform calc:', function() {
         expect(out[0].ids).toEqual(['p2', 'p1', 'p3', 'z', 'n1', 'n0', 'n2']);
         expect(out[0].marker.color).toEqual([0.3, 0.2, 0.4, 0.1, 0.2, 0.1, 0.3]);
         expect(out[0].marker.size).toEqual([0, 6, 10, 1, 20, 10, 5]);
+        expect(out[0].transforms[0]._indexToPoints).toEqual({
+            0: [5],
+            1: [4],
+            2: [6],
+            3: [3],
+            4: [1],
+            5: [0],
+            6: [2]
+        });
     });
 
     it('should sort via nested targets', function() {
@@ -119,6 +143,15 @@ describe('Test sort transform calc:', function() {
         expect(out[0].ids).toEqual(['n1', 'n0', 'p3', 'p1', 'n2', 'z', 'p2']);
         expect(out[0].marker.color).toEqual([0.2, 0.1, 0.4, 0.2, 0.3, 0.1, 0.3]);
         expect(out[0].marker.size).toEqual([20, 10, 10, 6, 5, 1, 0]);
+        expect(out[0].transforms[0]._indexToPoints).toEqual({
+            0: [1],
+            1: [0],
+            2: [6],
+            3: [4],
+            4: [2],
+            5: [3],
+            6: [5]
+        });
     });
 
     it('should sort via dates targets', function() {
@@ -181,12 +214,14 @@ describe('Test sort transform calc:', function() {
         expect(out[0].ids).toEqual(['n1', 'n0']);
         expect(out[0].marker.color).toEqual([0.2, 0.1]);
         expect(out[0].marker.size).toEqual([20, 10]);
+        expect(out[0]._length).toBe(2);
 
         expect(out[1].x).toEqual([-2, -1]);
         expect(out[1].y).toEqual([1, 2]);
         expect(out[1].ids).toEqual(['n0', 'n1']);
         expect(out[1].marker.color).toEqual([0.1, 0.2]);
         expect(out[1].marker.size).toEqual([10, 20]);
+        expect(out[1]._length).toBe(2);
     });
 
     it('should truncate transformed arrays to target array length (long target case)', function() {
@@ -202,17 +237,19 @@ describe('Test sort transform calc:', function() {
             transforms: [{ target: 'text' }]
         })]);
 
-        expect(out[0].x).toEqual([1, undefined, -2, 3, undefined, -1, 1, undefined, -2, 0, undefined]);
-        expect(out[0].y).toEqual([1, undefined, 3, 3, undefined, 2, 2, undefined, 1, 1, undefined]);
-        expect(out[0].ids).toEqual(['p3', undefined, 'n2', 'p2', undefined, 'n1', 'p1', undefined, 'n0', 'z', undefined]);
-        expect(out[0].marker.color).toEqual([0.4, undefined, 0.3, 0.3, undefined, 0.2, 0.2, undefined, 0.1, 0.1, undefined]);
-        expect(out[0].marker.size).toEqual([10, undefined, 5, 0, undefined, 20, 6, undefined, 10, 1, undefined]);
+        expect(out[0].x).toEqual([1, -2, 3, -1, 1, -2, 0]);
+        expect(out[0].y).toEqual([1, 3, 3, 2, 2, 1, 1]);
+        expect(out[0].ids).toEqual(['p3', 'n2', 'p2', 'n1', 'p1', 'n0', 'z']);
+        expect(out[0].marker.color).toEqual([0.4, 0.3, 0.3, 0.2, 0.2, 0.1, 0.1]);
+        expect(out[0].marker.size).toEqual([10, 5, 0, 20, 6, 10, 1]);
+        expect(out[0]._length).toBe(7);
 
-        expect(out[1].x).toEqual([-2, -1, -2, 0, 1, 3, 1, undefined, undefined]);
-        expect(out[1].y).toEqual([1, 2, 3, 1, 2, 3, 1, undefined, undefined]);
-        expect(out[1].ids).toEqual(['n0', 'n1', 'n2', 'z', 'p1', 'p2', 'p3', undefined, undefined]);
-        expect(out[1].marker.color).toEqual([0.1, 0.2, 0.3, 0.1, 0.2, 0.3, 0.4, undefined, undefined]);
-        expect(out[1].marker.size).toEqual([10, 20, 5, 1, 6, 0, 10, undefined, undefined]);
+        expect(out[1].x).toEqual([-2, -1, -2, 0, 1, 3, 1]);
+        expect(out[1].y).toEqual([1, 2, 3, 1, 2, 3, 1]);
+        expect(out[1].ids).toEqual(['n0', 'n1', 'n2', 'z', 'p1', 'p2', 'p3']);
+        expect(out[1].marker.color).toEqual([0.1, 0.2, 0.3, 0.1, 0.2, 0.3, 0.4]);
+        expect(out[1].marker.size).toEqual([10, 20, 5, 1, 6, 0, 10]);
+        expect(out[1]._length).toBe(7);
     });
 });
 
@@ -275,7 +312,7 @@ describe('Test sort transform interactions:', function() {
         function hover(gd, id) {
             return new Promise(function(resolve, reject) {
                 gd.once('plotly_hover', function(eventData) {
-                    delete gd._lastHoverTime;
+                    Lib.clearThrottle();
                     resolve(eventData);
                 });
 
