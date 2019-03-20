@@ -7,7 +7,7 @@ var Drawing = require('@src/components/drawing');
 
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
-var fail = require('../assets/fail_test');
+var failTest = require('../assets/fail_test');
 var mouseEvent = require('../assets/mouse_event');
 var touchEvent = require('../assets/touch_event');
 var selectButton = require('../assets/modebar_button');
@@ -21,10 +21,11 @@ function countCanvases() {
     return d3.selectAll('canvas').size();
 }
 
-describe('@gl Test gl3d plots', function() {
+describe('Test gl3d plots', function() {
     var gd, ptData;
 
     var mock = require('@mocks/gl3d_marker-arrays.json');
+    var multipleScatter3dMock = require('@mocks/gl3d_multiple-scatter3d-traces.json');
 
     // lines, markers, text, error bars and surfaces each
     // correspond to one glplot object
@@ -74,7 +75,36 @@ describe('@gl Test gl3d plots', function() {
         destroyGraphDiv();
     });
 
-    it('@noCI should display correct hover labels and emit correct event data (scatter3d case)', function(done) {
+    it('@noCI @gl should display correct hover labels of the second point of the very first scatter3d trace', function(done) {
+        var _mock = Lib.extendDeep({}, multipleScatter3dMock);
+
+        function _hover() {
+            mouseEvent('mouseover', 300, 200);
+            return delay(20)();
+        }
+
+        Plotly.plot(gd, _mock)
+        .then(delay(20))
+        .then(function() {
+            gd.on('plotly_hover', function(eventData) {
+                ptData = eventData.points[0];
+            });
+        })
+        .then(_hover)
+        .then(delay(20))
+        .then(function() {
+            assertHoverLabelContent(
+                {
+                    nums: ['x: 0', 'y: 0', 'z: 0'].join('\n'),
+                    name: 'trace 0'
+                }
+            );
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@noCI @gl should display correct hover labels and emit correct event data (scatter3d case)', function(done) {
         var _mock = Lib.extendDeep({}, mock2);
 
         function _hover() {
@@ -92,11 +122,11 @@ describe('@gl Test gl3d plots', function() {
         .then(_hover)
         .then(delay(20))
         .then(function() {
-            assertHoverText('x: 140.72', 'y: −96.97', 'z: −96.97');
-            assertEventData(140.72, -96.97, -96.97, 0, 2, {
-                'marker.symbol': 'cross',
-                'marker.size': 30,
-                'marker.color': 'orange',
+            assertHoverText('x: 134.03', 'y: −163.59', 'z: −163.59');
+            assertEventData(134.03, -163.59, -163.59, 0, 3, {
+                'marker.symbol': undefined,
+                'marker.size': 40,
+                'marker.color': 'black',
                 'marker.line.color': undefined
             });
             assertHoverLabelStyle(d3.selectAll('g.hovertext'), {
@@ -113,7 +143,7 @@ describe('@gl Test gl3d plots', function() {
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: Jan 1, 2017', 'y: −96.97', 'z: −96.97');
+            assertHoverText('x: Feb 1, 2017', 'y: −163.59', 'z: −163.59');
 
             return Plotly.restyle(gd, {
                 x: [[new Date(2017, 2, 1), new Date(2017, 2, 2), new Date(2017, 2, 3), new Date(2017, 2, 4)]]
@@ -121,7 +151,7 @@ describe('@gl Test gl3d plots', function() {
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: Mar 3, 2017', 'y: −96.97', 'z: −96.97');
+            assertHoverText('x: Mar 4, 2017', 'y: −163.59', 'z: −163.59');
 
             return Plotly.update(gd, {
                 y: [['a', 'b', 'c', 'd']],
@@ -132,25 +162,25 @@ describe('@gl Test gl3d plots', function() {
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: Mar 3, 2017', 'y: c', 'z: 100k');
+            assertHoverText('x: Mar 4, 2017', 'y: d', 'z: 10B');
 
             return Plotly.relayout(gd, 'scene.xaxis.calendar', 'chinese');
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: 二 6, 2017', 'y: c', 'z: 100k');
+            assertHoverText('x: 二 7, 2017', 'y: d', 'z: 10B');
 
             return Plotly.restyle(gd, 'text', [['A', 'B', 'C', 'D']]);
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: 二 6, 2017', 'y: c', 'z: 100k', 'C');
+            assertHoverText('x: 二 7, 2017', 'y: d', 'z: 10B', 'D');
 
             return Plotly.restyle(gd, 'hovertext', [['Apple', 'Banana', 'Clementine', 'Dragon fruit']]);
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: 二 6, 2017', 'y: c', 'z: 100k', 'Clementine');
+            assertHoverText('x: 二 7, 2017', 'y: d', 'z: 10B', 'Dragon fruit');
 
             return Plotly.restyle(gd, {
                 'hoverlabel.bgcolor': [['red', 'blue', 'green', 'yellow']],
@@ -160,11 +190,11 @@ describe('@gl Test gl3d plots', function() {
         .then(_hover)
         .then(function() {
             assertHoverLabelStyle(d3.selectAll('g.hovertext'), {
-                bgcolor: 'rgb(0, 128, 0)',
-                bordercolor: 'rgb(255, 255, 255)',
+                bgcolor: 'rgb(255, 255, 0)',
+                bordercolor: 'rgb(68, 68, 68)',
                 fontSize: 20,
                 fontFamily: 'Arial',
-                fontColor: 'rgb(255, 255, 255)'
+                fontColor: 'rgb(68, 68, 68)'
             }, 'restyled');
 
             return Plotly.relayout(gd, {
@@ -176,7 +206,7 @@ describe('@gl Test gl3d plots', function() {
         .then(_hover)
         .then(function() {
             assertHoverLabelStyle(d3.selectAll('g.hovertext'), {
-                bgcolor: 'rgb(0, 128, 0)',
+                bgcolor: 'rgb(255, 255, 0)',
                 bordercolor: 'rgb(255, 255, 0)',
                 fontSize: 20,
                 fontFamily: 'Roboto',
@@ -190,18 +220,18 @@ describe('@gl Test gl3d plots', function() {
             var label = d3.selectAll('g.hovertext');
 
             expect(label.size()).toEqual(1);
-            expect(label.select('text').text()).toEqual('c');
+            expect(label.select('text').text()).toEqual('x: 二 7, 2017y: dz: 10BDragon fruit');
 
             return Plotly.restyle(gd, 'hoverinfo', [[null, null, 'dont+know', null]]);
         })
         .then(_hover)
         .then(function() {
-            assertHoverText('x: 二 6, 2017', 'y: c', 'z: 100k', 'Clementine');
+            assertHoverText('x: 二 7, 2017', 'y: d', 'z: 10B', 'Dragon fruit');
 
             return Plotly.restyle(gd, 'hoverinfo', 'text');
         })
         .then(function() {
-            assertHoverText(null, null, null, 'Clementine');
+            assertHoverText(null, null, null, 'Dragon fruit');
 
             return Plotly.restyle(gd, 'hovertext', 'HEY');
         })
@@ -211,13 +241,18 @@ describe('@gl Test gl3d plots', function() {
             return Plotly.restyle(gd, 'hoverinfo', 'z');
         })
         .then(function() {
-            assertHoverText(null, null, '100k');
+            assertHoverText(null, null, '10B');
+
+            return Plotly.restyle(gd, 'hovertemplate', 'THIS Y -- %{y}<extra></extra>');
         })
-        .catch(fail)
+        .then(function() {
+            assertHoverText(null, null, null, 'THIS Y -- d');
+        })
+        .catch(failTest)
         .then(done);
     });
 
-    it('@noCI should display correct hover labels and emit correct event data (surface case)', function(done) {
+    it('@noCI @gl should display correct hover labels and emit correct event data (surface case)', function(done) {
         var _mock = Lib.extendDeep({}, mock3);
 
         function _hover() {
@@ -307,19 +342,33 @@ describe('@gl Test gl3d plots', function() {
 
             return Plotly.restyle(gd, 'text', 'yo!');
         })
+        .then(_hover)
         .then(function() {
             assertHoverText(null, null, null, 'yo!');
+
+            return Plotly.restyle(gd, 'hovertext', 'ONE TWO');
+        })
+        .then(function() {
+            assertHoverText(null, null, null, 'ONE TWO');
+
+            return Plotly.restyle(gd, 'hovertemplate', '!!! %{z} !!!<extra></extra>');
+        })
+        .then(function() {
+            assertHoverText(null, null, null, '!!! 43 !!!');
         })
         .then(done);
     });
 
-    it('@noCI should emit correct event data on click (scatter3d case)', function(done) {
+    it('@noCI @gl should emit correct event data on click (scatter3d case)', function(done) {
         var _mock = Lib.extendDeep({}, mock2);
 
         // N.B. gl3d click events are 'mouseover' events
         // with button 1 pressed
         function _click() {
-            mouseEvent('mouseover', 605, 271, {buttons: 1});
+            var x = 605;
+            var y = 271;
+            mouseEvent('mousemove', x, y);
+            mouseEvent('mouseover', x, y, {buttons: 1});
             return delay(20)();
         }
 
@@ -333,12 +382,12 @@ describe('@gl Test gl3d plots', function() {
         .then(_click)
         .then(delay(20))
         .then(function() {
-            assertEventData(140.72, -96.97, -96.97, 0, 2);
+            assertEventData(134.03, -163.59, -163.59, 0, 3);
         })
         .then(done);
     });
 
-    it('should display correct hover labels (mesh3d case)', function(done) {
+    it('@gl should display correct hover labels (mesh3d case)', function(done) {
         var x = [1, 1, 2, 3, 4, 2];
         var y = [2, 1, 3, 4, 5, 3];
         var z = [3, 7, 4, 5, 3.5, 2];
@@ -368,19 +417,19 @@ describe('@gl Test gl3d plots', function() {
         .then(delay(20))
         .then(_hover)
         .then(function() {
-            assertHoverText('x: 3', 'y: 4', 'z: 5', 'ts: 3\nhz: 4\nftt:5');
+            assertHoverText('x: 4', 'y: 5', 'z: 3.5', 'ts: 4\nhz: 5\nftt:3.5');
         })
         .then(function() {
             return Plotly.restyle(gd, 'hoverinfo', 'x+y');
         })
         .then(function() {
-            assertHoverText('(3, 4)');
+            assertHoverText('(4, 5)');
         })
         .then(function() {
             return Plotly.restyle(gd, 'hoverinfo', 'text');
         })
         .then(function() {
-            assertHoverText('ts: 3\nhz: 4\nftt:5');
+            assertHoverText('ts: 4\nhz: 5\nftt:3.5');
         })
         .then(function() {
             return Plotly.restyle(gd, 'text', 'yo!');
@@ -388,11 +437,254 @@ describe('@gl Test gl3d plots', function() {
         .then(function() {
             assertHoverText(null, null, null, 'yo!');
         })
-        .catch(fail)
+        .then(function() {
+            return Plotly.restyle(gd, 'hovertext', [
+                text.map(function(tx) { return tx + ' !!'; })
+            ]);
+        })
+        .then(function() {
+            assertHoverText(null, null, null, 'ts: 4\nhz: 5\nftt:3.5 !!');
+        })
+        .then(function() {
+            return Plotly.restyle(gd, 'hovertemplate', '%{x}-%{y}-%{z}<extra></extra>');
+        })
+        .then(function() {
+            assertHoverText(null, null, null, '4-5-3.5');
+        })
+        .catch(failTest)
         .then(done);
     });
 
-    it('should be able to reversibly change trace type', function(done) {
+    it('@gl should set the camera dragmode to orbit if the camera.up.z vector is set to be tilted', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                        up: {
+                            x: -0.5777,
+                            y: -0.5777,
+                            z: 0.5777
+                        }
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.dragmode === 'orbit').toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should set the camera dragmode to turntable if the camera.up.z vector is set to be upwards', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                        up: {
+                            x: -0.0001,
+                            y: 0,
+                            z: 123.45
+                        }
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.dragmode === 'turntable').toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should set the camera dragmode to turntable if the camera.up is not set', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.dragmode === 'turntable').toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should set the camera dragmode to turntable if any of camera.up.[x|y|z] is missing', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                        up: {
+                            x: null,
+                            y: 0.5,
+                            z: 0.5
+                        }
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.dragmode === 'turntable').toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should not set the camera dragmode to turntable if camera.up.z is zero.', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                        up: {
+                            x: 1,
+                            y: 0,
+                            z: 0
+                        }
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.dragmode === 'turntable').not.toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should set the camera projection type to perspective if the camera.projection.type is not set', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.camera.projection.type === 'perspective').toBe(true);
+            expect(gd._fullLayout.scene._scene.glplot.camera._ortho === false).toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should set the camera projection type to orthographic if the camera.projection.type is set to orthographic', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                        projection: {
+                            type: 'orthographic'
+                        }
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            expect(gd._fullLayout.scene.camera.projection.type === 'orthographic').toBe(true);
+            expect(gd._fullLayout.scene._scene.glplot.camera._ortho === true).toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should enable orthographic & perspective projections using relayout', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'scatter3d',
+                x: [1, 2, 3],
+                y: [2, 3, 1],
+                z: [3, 1, 2]
+            }],
+            layout: {
+                scene: {
+                    camera: {
+                        projection: {
+                            type: 'perspective'
+                        }
+                    }
+                }
+            }
+        })
+        .then(delay(20))
+        .then(function() {
+            return Plotly.relayout(gd, 'scene.camera.projection.type', 'orthographic');
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene.camera.projection.type === 'orthographic').toBe(true);
+            expect(gd._fullLayout.scene._scene.glplot.camera._ortho === true).toBe(true);
+        })
+        .then(function() {
+            return Plotly.relayout(gd, 'scene.camera.eye.z', 2);
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene.camera.projection.type === 'orthographic').toBe(true);
+            expect(gd._fullLayout.scene._scene.glplot.camera._ortho === true).toBe(true);
+        })
+        .then(function() {
+            return Plotly.relayout(gd, 'scene.camera.projection.type', 'perspective');
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene.camera.projection.type === 'perspective').toBe(true);
+            expect(gd._fullLayout.scene._scene.glplot.camera._ortho === false).toBe(true);
+        })
+        .then(function() {
+            return Plotly.relayout(gd, 'scene.camera.eye.z', 3);
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene.camera.projection.type === 'perspective').toBe(true);
+            expect(gd._fullLayout.scene._scene.glplot.camera._ortho === false).toBe(true);
+        })
+        .then(done);
+    });
+
+    it('@gl should be able to reversibly change trace type', function(done) {
         var _mock = Lib.extendDeep({}, mock2);
         var sceneLayout = { aspectratio: { x: 1, y: 1, z: 1 } };
 
@@ -405,6 +697,7 @@ describe('@gl Test gl3d plots', function() {
             expect(gd.layout.yaxis === undefined).toBe(true);
             expect(gd._fullLayout._has('gl3d')).toBe(true);
             expect(gd._fullLayout.scene._scene).toBeDefined();
+            expect(gd._fullLayout.scene._scene.camera).toBeDefined(true);
 
             return Plotly.restyle(gd, 'type', 'scatter');
         })
@@ -430,7 +723,7 @@ describe('@gl Test gl3d plots', function() {
         .then(done);
     });
 
-    it('should be able to delete the last trace', function(done) {
+    it('@gl should be able to delete the last trace', function(done) {
         var _mock = Lib.extendDeep({}, mock2);
 
         Plotly.plot(gd, _mock)
@@ -446,7 +739,7 @@ describe('@gl Test gl3d plots', function() {
         .then(done);
     });
 
-    it('should be able to toggle visibility', function(done) {
+    it('@gl should be able to toggle visibility', function(done) {
         var _mock = Lib.extendDeep({}, mock2);
         _mock.data[0].x = [0, 1, 3];
         _mock.data[0].y = [0, 1, 2];
@@ -510,9 +803,110 @@ describe('@gl Test gl3d plots', function() {
         .then(done);
     });
 
+    it('@gl should avoid passing blank texts to webgl', function(done) {
+        function assertIsFilled(msg) {
+            var fullLayout = gd._fullLayout;
+            expect(fullLayout.scene._scene.glplot.objects[0].glyphBuffer.length).not.toBe(0, msg);
+        }
+        Plotly.plot(gd, [{
+            type: 'scatter3d',
+            mode: 'text',
+            x: [1, 2, 3],
+            y: [2, 3, 1],
+            z: [3, 1, 2]
+        }])
+        .then(function() {
+            assertIsFilled('not to be empty text');
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl should avoid passing empty lines to webgl', function(done) {
+        var obj;
+
+        Plotly.plot(gd, [{
+            type: 'scatter3d',
+            mode: 'lines',
+            x: [1],
+            y: [2],
+            z: [3]
+        }])
+        .then(function() {
+            obj = gd._fullLayout.scene._scene.glplot.objects[0];
+            spyOn(obj.vao, 'draw').and.callThrough();
+
+            expect(obj.vertexCount).toBe(0, '# of vertices');
+
+            return Plotly.restyle(gd, 'line.color', 'red');
+        })
+        .then(function() {
+            expect(obj.vertexCount).toBe(0, '# of vertices');
+            // calling this with no vertex causes WebGL warnings,
+            // see https://github.com/plotly/plotly.js/issues/1976
+            expect(obj.vao.draw).toHaveBeenCalledTimes(0);
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl should only accept texts for textposition otherwise textposition is set to middle center before passing to webgl', function(done) {
+        Plotly.plot(gd, [{
+            type: 'scatter3d',
+            mode: 'markers+text+lines',
+            x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            y: [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16],
+            z: [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+            text: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'],
+            textposition: ['left top', 'right top', 'left bottom', 'right bottom', null, undefined, true, false, [], {}, NaN, Infinity, 0, 1.2]
+        }])
+        .then(function() {
+            var AllTextpositions = gd._fullData[0].textposition;
+
+            expect(AllTextpositions[0]).toBe('top left', 'is not top left');
+            expect(AllTextpositions[1]).toBe('top right', 'is not top right');
+            expect(AllTextpositions[2]).toBe('bottom left', 'is not bottom left');
+            expect(AllTextpositions[3]).toBe('bottom right', 'is not bottom right');
+            for(var i = 4; i < AllTextpositions.length; i++) {
+                expect(AllTextpositions[i]).toBe('middle center', 'is not middle center');
+            }
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl should not set _length to NaN and dtick should be defined.', function(done) {
+        Plotly.plot(gd,
+            {
+                data: [{
+                    type: 'scatter3d',
+                    mode: 'markers',
+                    x: [1, 2],
+                    y: [3, 4],
+                    z: [0.000000005, 0.000000006]
+                }],
+                layout: {
+                    scene: {
+                        camera: {
+                            eye: {x: 1, y: 1, z: 0},
+                            center: {x: 0.5, y: 0.5, z: 1},
+                            up: {x: 0, y: 0, z: 1}
+                        }
+                    }
+                }
+            }
+        )
+        .then(function() {
+            var zaxis = gd._fullLayout.scene.zaxis;
+            expect(isNaN(zaxis._length)).toBe(false);
+            expect(zaxis.dtick === undefined).toBe(false);
+        })
+        .catch(failTest)
+        .then(done);
+    });
 });
 
-describe('@gl Test gl3d modebar handlers', function() {
+describe('Test gl3d modebar handlers', function() {
     var gd, modeBar;
 
     function assertScenes(cont, attr, val) {
@@ -562,7 +956,7 @@ describe('@gl Test gl3d modebar handlers', function() {
         destroyGraphDiv();
     });
 
-    it('button zoom3d should updates the scene dragmode and dragmode button', function() {
+    it('@gl button zoom3d should updates the scene dragmode and dragmode button', function() {
         var buttonTurntable = selectButton(modeBar, 'tableRotation');
         var buttonZoom3d = selectButton(modeBar, 'zoom3d');
 
@@ -583,9 +977,9 @@ describe('@gl Test gl3d modebar handlers', function() {
         expect(buttonZoom3d.isActive()).toBe(false);
     });
 
-    it('button pan3d should updates the scene dragmode and dragmode button', function() {
-        var buttonTurntable = selectButton(modeBar, 'tableRotation'),
-            buttonPan3d = selectButton(modeBar, 'pan3d');
+    it('@gl button pan3d should updates the scene dragmode and dragmode button', function() {
+        var buttonTurntable = selectButton(modeBar, 'tableRotation');
+        var buttonPan3d = selectButton(modeBar, 'pan3d');
 
         assertScenes(gd._fullLayout, 'dragmode', 'turntable');
         expect(buttonTurntable.isActive()).toBe(true);
@@ -604,9 +998,9 @@ describe('@gl Test gl3d modebar handlers', function() {
         expect(buttonPan3d.isActive()).toBe(false);
     });
 
-    it('button orbitRotation should updates the scene dragmode and dragmode button', function() {
-        var buttonTurntable = selectButton(modeBar, 'tableRotation'),
-            buttonOrbit = selectButton(modeBar, 'orbitRotation');
+    it('@gl button orbitRotation should updates the scene dragmode and dragmode button', function() {
+        var buttonTurntable = selectButton(modeBar, 'tableRotation');
+        var buttonOrbit = selectButton(modeBar, 'orbitRotation');
 
         assertScenes(gd._fullLayout, 'dragmode', 'turntable');
         expect(buttonTurntable.isActive()).toBe(true);
@@ -625,7 +1019,7 @@ describe('@gl Test gl3d modebar handlers', function() {
         expect(buttonOrbit.isActive()).toBe(false);
     });
 
-    it('button hoverClosest3d should update the scene hovermode and spikes', function() {
+    it('@gl button hoverClosest3d should update the scene hovermode and spikes', function() {
         var buttonHover = selectButton(modeBar, 'hoverClosest3d');
 
         assertScenes(gd._fullLayout, 'hovermode', 'closest');
@@ -646,11 +1040,11 @@ describe('@gl Test gl3d modebar handlers', function() {
         expect(buttonHover.isActive()).toBe(true);
     });
 
-    it('button resetCameraDefault3d should reset camera to default', function(done) {
+    it('@gl button resetCameraDefault3d should reset camera to default', function(done) {
         var buttonDefault = selectButton(modeBar, 'resetCameraDefault3d');
 
-        expect(gd._fullLayout.scene._scene.cameraInitial.eye).toEqual({ x: 0.1, y: 0.1, z: 1 });
-        expect(gd._fullLayout.scene2._scene.cameraInitial.eye).toEqual({ x: 2.5, y: 2.5, z: 2.5 });
+        expect(gd._fullLayout.scene._scene.viewInitial.eye).toEqual({ x: 0.1, y: 0.1, z: 1 });
+        expect(gd._fullLayout.scene2._scene.viewInitial.eye).toEqual({ x: 2.5, y: 2.5, z: 2.5 });
 
         gd.once('plotly_relayout', function() {
             assertScenes(gd._fullLayout, 'camera.eye.x', 1.25);
@@ -666,7 +1060,7 @@ describe('@gl Test gl3d modebar handlers', function() {
         buttonDefault.click();
     });
 
-    it('button resetCameraLastSave3d should reset camera to default', function(done) {
+    it('@gl button resetCameraLastSave3d should reset camera to default', function(done) {
         var buttonDefault = selectButton(modeBar, 'resetCameraDefault3d');
         var buttonLastSave = selectButton(modeBar, 'resetCameraLastSave3d');
 
@@ -705,8 +1099,8 @@ describe('@gl Test gl3d modebar handlers', function() {
             assertCameraEye(gd._fullLayout.scene, 0.1, 0.1, 1);
             assertCameraEye(gd._fullLayout.scene2, 2.5, 2.5, 2.5);
 
-            delete gd._fullLayout.scene._scene.cameraInitial;
-            delete gd._fullLayout.scene2._scene.cameraInitial;
+            delete gd._fullLayout.scene._scene.viewInitial;
+            delete gd._fullLayout.scene2._scene.viewInitial;
 
             Plotly.relayout(gd, {
                 'scene.bgcolor': '#d3d3d3',
@@ -740,7 +1134,7 @@ describe('@gl Test gl3d modebar handlers', function() {
     });
 });
 
-describe('@gl Test gl3d drag and wheel interactions', function() {
+describe('Test gl3d drag and wheel interactions', function() {
     var gd;
 
     function scroll(target, amt) {
@@ -778,7 +1172,7 @@ describe('@gl Test gl3d drag and wheel interactions', function() {
         destroyGraphDiv();
     });
 
-    it('should not scroll document while panning', function(done) {
+    it('@gl should not scroll document while panning', function(done) {
         var mock = {
             data: [
                 { type: 'scatter3d' }
@@ -790,7 +1184,8 @@ describe('@gl Test gl3d drag and wheel interactions', function() {
             }
         };
 
-        var sceneTarget, relayoutCallback = jasmine.createSpy('relayoutCallback');
+        var sceneTarget;
+        var relayoutCallback = jasmine.createSpy('relayoutCallback');
 
         function assertEvent(e) {
             expect(e.defaultPrevented).toEqual(true);
@@ -817,11 +1212,11 @@ describe('@gl Test gl3d drag and wheel interactions', function() {
         .then(function() {
             expect(relayoutCallback).toHaveBeenCalledTimes(3);
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should update the scene camera', function(done) {
+    it('@gl should update the scene camera - perspective case', function(done) {
         var sceneLayout, sceneLayout2, sceneTarget, sceneTarget2, relayoutCallback;
 
         var mock = {
@@ -834,6 +1229,11 @@ describe('@gl Test gl3d drag and wheel interactions', function() {
                 scene2: { camera: { eye: { x: 2.5, y: 2.5, z: 2.5 }}}
             }
         };
+
+        function _assertAndReset(cnt) {
+            expect(relayoutCallback).toHaveBeenCalledTimes(cnt);
+            relayoutCallback.calls.reset();
+        }
 
         Plotly.plot(gd, mock)
         .then(function() {
@@ -849,52 +1249,40 @@ describe('@gl Test gl3d drag and wheel interactions', function() {
                 .toEqual({x: 0.1, y: 0.1, z: 1});
             expect(sceneLayout2.camera.eye)
                 .toEqual({x: 2.5, y: 2.5, z: 2.5});
+            expect(sceneLayout.camera.projection)
+                .toEqual({type: 'perspective'});
+            expect(sceneLayout2.camera.projection)
+                .toEqual({type: 'perspective'});
 
             return scroll(sceneTarget);
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(1);
-            relayoutCallback.calls.reset();
-
+            _assertAndReset(1);
             return scroll(sceneTarget2);
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(1);
-            relayoutCallback.calls.reset();
-
+            _assertAndReset(1);
             return drag(sceneTarget2, [0, 0], [100, 100]);
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(1);
-            relayoutCallback.calls.reset();
-
+            _assertAndReset(1);
             return drag(sceneTarget, [0, 0], [100, 100]);
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(1);
-            relayoutCallback.calls.reset();
-
-            return Plotly.relayout(gd, {
-                'scene.dragmode': false,
-                'scene2.dragmode': false
-            });
+            _assertAndReset(1);
+            return Plotly.relayout(gd, {'scene.dragmode': false, 'scene2.dragmode': false});
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(1);
-            relayoutCallback.calls.reset();
-
+            _assertAndReset(1);
             return drag(sceneTarget, [0, 0], [100, 100]);
         })
         .then(function() {
             return drag(sceneTarget2, [0, 0], [100, 100]);
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(0);
+            _assertAndReset(0);
 
-            return Plotly.relayout(gd, {
-                'scene.dragmode': 'orbit',
-                'scene2.dragmode': 'turntable'
-            });
+            return Plotly.relayout(gd, {'scene.dragmode': 'orbit', 'scene2.dragmode': 'turntable'});
         })
         .then(function() {
             expect(relayoutCallback).toHaveBeenCalledTimes(1);
@@ -906,14 +1294,138 @@ describe('@gl Test gl3d drag and wheel interactions', function() {
             return drag(sceneTarget2, [0, 0], [100, 100]);
         })
         .then(function() {
-            expect(relayoutCallback).toHaveBeenCalledTimes(2);
+            _assertAndReset(2);
+            return Plotly.plot(gd, [], {}, {scrollZoom: false});
         })
-        .catch(fail)
+        .then(function() {
+            return scroll(sceneTarget);
+        })
+        .then(function() {
+            return scroll(sceneTarget2);
+        })
+        .then(function() {
+            _assertAndReset(0);
+            return Plotly.plot(gd, [], {}, {scrollZoom: 'gl3d'});
+        })
+        .then(function() {
+            return scroll(sceneTarget);
+        })
+        .then(function() {
+            return scroll(sceneTarget2);
+        })
+        .then(function() {
+            _assertAndReset(2);
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl should update the scene camera - orthographic case', function(done) {
+        var sceneLayout, sceneLayout2, sceneTarget, sceneTarget2, relayoutCallback;
+
+        var mock = {
+            data: [
+                { type: 'scatter3d', x: [1, 2, 3], y: [2, 3, 1], z: [3, 1, 2] },
+                { type: 'surface', scene: 'scene2', x: [1, 2], y: [2, 1], z: [[1, 2], [2, 1]] }
+            ],
+            layout: {
+                scene: { camera: { projection: {type: 'orthographic'}, eye: { x: 0.1, y: 0.1, z: 1 }}},
+                scene2: { camera: { projection: {type: 'orthographic'}, eye: { x: 2.5, y: 2.5, z: 2.5 }}}
+            }
+        };
+
+        function _assertAndReset(cnt) {
+            expect(relayoutCallback).toHaveBeenCalledTimes(cnt);
+            relayoutCallback.calls.reset();
+        }
+
+        Plotly.plot(gd, mock)
+        .then(function() {
+            relayoutCallback = jasmine.createSpy('relayoutCallback');
+            gd.on('plotly_relayout', relayoutCallback);
+
+            sceneLayout = gd._fullLayout.scene;
+            sceneLayout2 = gd._fullLayout.scene2;
+            sceneTarget = gd.querySelector('.svg-container .gl-container #scene  canvas');
+            sceneTarget2 = gd.querySelector('.svg-container .gl-container #scene2 canvas');
+
+            expect(sceneLayout.camera.eye)
+                .toEqual({x: 0.1, y: 0.1, z: 1});
+            expect(sceneLayout2.camera.eye)
+                .toEqual({x: 2.5, y: 2.5, z: 2.5});
+            expect(sceneLayout.camera.projection)
+                .toEqual({type: 'orthographic'});
+            expect(sceneLayout2.camera.projection)
+                .toEqual({type: 'orthographic'});
+
+            return scroll(sceneTarget);
+        })
+        .then(function() {
+            _assertAndReset(1);
+            return scroll(sceneTarget2);
+        })
+        .then(function() {
+            _assertAndReset(1);
+            return drag(sceneTarget2, [0, 0], [100, 100]);
+        })
+        .then(function() {
+            _assertAndReset(1);
+            return drag(sceneTarget, [0, 0], [100, 100]);
+        })
+        .then(function() {
+            _assertAndReset(1);
+            return Plotly.relayout(gd, {'scene.dragmode': false, 'scene2.dragmode': false});
+        })
+        .then(function() {
+            _assertAndReset(1);
+            return drag(sceneTarget, [0, 0], [100, 100]);
+        })
+        .then(function() {
+            return drag(sceneTarget2, [0, 0], [100, 100]);
+        })
+        .then(function() {
+            _assertAndReset(0);
+
+            return Plotly.relayout(gd, {'scene.dragmode': 'orbit', 'scene2.dragmode': 'turntable'});
+        })
+        .then(function() {
+            expect(relayoutCallback).toHaveBeenCalledTimes(1);
+            relayoutCallback.calls.reset();
+
+            return drag(sceneTarget, [0, 0], [100, 100]);
+        })
+        .then(function() {
+            return drag(sceneTarget2, [0, 0], [100, 100]);
+        })
+        .then(function() {
+            _assertAndReset(2);
+            return Plotly.plot(gd, [], {}, {scrollZoom: false});
+        })
+        .then(function() {
+            return scroll(sceneTarget);
+        })
+        .then(function() {
+            return scroll(sceneTarget2);
+        })
+        .then(function() {
+            _assertAndReset(0);
+            return Plotly.plot(gd, [], {}, {scrollZoom: 'gl3d'});
+        })
+        .then(function() {
+            return scroll(sceneTarget);
+        })
+        .then(function() {
+            return scroll(sceneTarget2);
+        })
+        .then(function() {
+            _assertAndReset(2);
+        })
+        .catch(failTest)
         .then(done);
     });
 });
 
-describe('@gl Test gl3d relayout calls', function() {
+describe('Test gl3d relayout calls', function() {
     var gd;
 
     beforeEach(function() {
@@ -925,7 +1437,7 @@ describe('@gl Test gl3d relayout calls', function() {
         destroyGraphDiv();
     });
 
-    it('should be able to adjust margins', function(done) {
+    it('@gl should be able to adjust margins', function(done) {
         var w = 500;
         var h = 500;
 
@@ -956,11 +1468,11 @@ describe('@gl Test gl3d relayout calls', function() {
         .then(function() {
             assertMargins(0, 0, 0, 0);
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should skip root-level axis objects', function(done) {
+    it('@gl should skip root-level axis objects', function(done) {
         Plotly.newPlot(gd, [{
             type: 'scatter3d',
             x: [1, 2, 3],
@@ -974,12 +1486,109 @@ describe('@gl Test gl3d relayout calls', function() {
                 zaxis: {}
             });
         })
-        .catch(fail)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl should maintain projection type when resetCamera buttons clicked after switching projection type from perspective to orthographic', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'surface',
+                x: [0, 1],
+                y: [0, 1],
+                z: [[0, 1], [1, 0]]
+            }],
+            layout: {
+                width: 300,
+                height: 200,
+                scene: {
+                    camera: {
+                        eye: {
+                            x: 2,
+                            y: 1,
+                            z: 0.5
+                        }
+                    }
+                }
+            }
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(false, 'perspective');
+        })
+        .then(function() {
+            return Plotly.relayout(gd, 'scene.camera.projection.type', 'orthographic');
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(true, 'orthographic');
+        })
+        .then(function() {
+            return selectButton(gd._fullLayout._modeBar, 'resetCameraLastSave3d').click();
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(true, 'orthographic');
+        })
+        .then(function() {
+            return selectButton(gd._fullLayout._modeBar, 'resetCameraDefault3d').click();
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(true, 'orthographic');
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl should maintain projection type when resetCamera buttons clicked after switching projection type from orthographic to perspective', function(done) {
+        Plotly.plot(gd, {
+            data: [{
+                type: 'surface',
+                x: [0, 1],
+                y: [0, 1],
+                z: [[0, 1], [1, 0]]
+            }],
+            layout: {
+                width: 300,
+                height: 200,
+                scene: {
+                    camera: {
+                        eye: {
+                            x: 2,
+                            y: 1,
+                            z: 0.5
+                        },
+                        projection: {
+                            type: 'orthographic'
+                        }
+                    }
+                }
+            }
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(true, 'orthographic');
+        })
+        .then(function() {
+            return Plotly.relayout(gd, 'scene.camera.projection.type', 'perspective');
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(false, 'perspective');
+        })
+        .then(function() {
+            return selectButton(gd._fullLayout._modeBar, 'resetCameraLastSave3d').click();
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(false, 'perspective');
+        })
+        .then(function() {
+            return selectButton(gd._fullLayout._modeBar, 'resetCameraDefault3d').click();
+        })
+        .then(function() {
+            expect(gd._fullLayout.scene._scene.camera._ortho).toEqual(false, 'perspective');
+        })
+        .catch(failTest)
         .then(done);
     });
 });
 
-describe('@gl Test gl3d annotations', function() {
+describe('Test gl3d annotations', function() {
     var gd;
 
     beforeEach(function() {
@@ -1029,7 +1638,7 @@ describe('@gl Test gl3d annotations', function() {
         return delay(500)();
     }
 
-    it('should move with camera', function(done) {
+    it('@gl should move with camera', function(done) {
         Plotly.plot(gd, [{
             type: 'scatter3d',
             x: [1, 2, 3],
@@ -1063,11 +1672,11 @@ describe('@gl Test gl3d annotations', function() {
         .then(function() {
             assertAnnotationsXY([[262, 199], [257, 135], [325, 233]], 'base 0');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should be removed when beyond the scene axis ranges', function(done) {
+    it('@gl should be removed when beyond the scene axis ranges', function(done) {
         var mock = Lib.extendDeep({}, require('@mocks/gl3d_annotations'));
 
         // replace text with something easier to identify
@@ -1096,11 +1705,11 @@ describe('@gl Test gl3d annotations', function() {
         .then(function() {
             assertAnnotationText(['0', '1', '2', '3', '4', '5', '6'], 'back to base after zaxis range relayout');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should be able to add/remove and hide/unhide themselves via relayout', function(done) {
+    it('@gl should be able to add/remove and hide/unhide themselves via relayout', function(done) {
         var mock = Lib.extendDeep({}, require('@mocks/gl3d_annotations'));
 
         // replace text with something easier to identify
@@ -1146,11 +1755,11 @@ describe('@gl Test gl3d annotations', function() {
         .then(function() {
             assertAnnotationText(['new!'], 'after add new (2)');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should work across multiple scenes', function(done) {
+    it('@gl should work across multiple scenes', function(done) {
         function assertAnnotationCntPerScene(id, cnt) {
             expect(d3.selectAll('g.annotation-' + id).size()).toEqual(cnt);
         }
@@ -1199,11 +1808,11 @@ describe('@gl Test gl3d annotations', function() {
             assertAnnotationCntPerScene('scene', 1);
             assertAnnotationCntPerScene('scene2', 2);
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should contribute to scene axis autorange', function(done) {
+    it('@gl should contribute to scene axis autorange', function(done) {
         function assertSceneAxisRanges(xRange, yRange, zRange) {
             var sceneLayout = gd._fullLayout.scene;
 
@@ -1233,11 +1842,11 @@ describe('@gl Test gl3d annotations', function() {
         .then(function() {
             assertSceneAxisRanges([0.9375, 3.0625], [0.9375, 3.0625], [0.7187, 10.2813]);
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should allow text and tail position edits under `editable: true`', function(done) {
+    it('@gl should allow text and tail position edits under `editable: true`', function(done) {
         function editText(newText, expectation) {
             return new Promise(function(resolve) {
                 gd.once('plotly_relayout', function(eventData) {
@@ -1302,11 +1911,11 @@ describe('@gl Test gl3d annotations', function() {
                 'scene.annotations[0].ay': -80
             });
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
-    it('should display hover labels and trigger *plotly_clickannotation* event', function(done) {
+    it('@gl should display hover labels and trigger *plotly_clickannotation* event', function(done) {
         function dispatch(eventType) {
             var target = d3.select('g.annotation-text-g').select('g').node();
             target.dispatchEvent(new MouseEvent(eventType));
@@ -1352,12 +1961,12 @@ describe('@gl Test gl3d annotations', function() {
                 dispatch('click');
             });
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 });
 
-describe('@gl Test removal of gl contexts', function() {
+describe('Test removal of gl contexts', function() {
     var gd;
 
     beforeEach(function() {
@@ -1366,7 +1975,7 @@ describe('@gl Test removal of gl contexts', function() {
 
     afterEach(destroyGraphDiv);
 
-    it('Plots.cleanPlot should remove gl context from the graph div of a gl3d plot', function(done) {
+    it('@gl Plots.cleanPlot should remove gl context from the graph div of a gl3d plot', function(done) {
         Plotly.plot(gd, [{
             type: 'scatter3d',
             x: [1, 2, 3],
@@ -1382,7 +1991,7 @@ describe('@gl Test removal of gl contexts', function() {
         .then(done);
     });
 
-    it('Plotly.newPlot should remove gl context from the graph div of a gl3d plot', function(done) {
+    it('@gl Plotly.newPlot should remove gl context from the graph div of a gl3d plot', function(done) {
         var firstGlplotObject, firstGlContext, firstCanvas;
 
         Plotly.plot(gd, [{
@@ -1423,6 +2032,27 @@ describe('@gl Test removal of gl contexts', function() {
                 firstCanvas !== secondCanvas && firstGlContext.isContextLost()
             );
         })
+        .then(done);
+    });
+
+    it('@gl should fire *plotly_webglcontextlost* when on webgl context lost', function(done) {
+        var _mock = Lib.extendDeep({}, require('@mocks/gl3d_marker-arrays.json'));
+
+        Plotly.plot(gd, _mock).then(function() {
+            return new Promise(function(resolve, reject) {
+                gd.on('plotly_webglcontextlost', resolve);
+                setTimeout(reject, 10);
+
+                var ev = new window.WebGLContextEvent('webglcontextlost');
+                var canvas = gd.querySelector('div#scene > canvas');
+                canvas.dispatchEvent(ev);
+            });
+        })
+        .then(function(eventData) {
+            expect((eventData || {}).event).toBeDefined();
+            expect((eventData || {}).layer).toBe('scene');
+        })
+        .catch(failTest)
         .then(done);
     });
 });

@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -16,37 +16,29 @@ module.exports = function plot(gd, plotinfo, cdOHLC, ohlcLayer) {
     var xa = plotinfo.xaxis;
     var ya = plotinfo.yaxis;
 
-    var traces = ohlcLayer.selectAll('g.trace')
-        .data(cdOHLC, function(d) { return d[0].trace.uid; });
-
-    traces.enter().append('g')
-        .attr('class', 'trace ohlc');
-
-    traces.exit().remove();
-
-    traces.order();
-
-    traces.each(function(d) {
-        var cd0 = d[0];
+    Lib.makeTraceGroups(ohlcLayer, cdOHLC, 'trace ohlc').each(function(cd) {
+        var plotGroup = d3.select(this);
+        var cd0 = cd[0];
         var t = cd0.t;
         var trace = cd0.trace;
-        var sel = d3.select(this);
-        if(!plotinfo.isRangePlot) cd0.node3 = sel;
+        if(!plotinfo.isRangePlot) cd0.node3 = plotGroup;
 
         if(trace.visible !== true || t.empty) {
-            sel.remove();
+            plotGroup.remove();
             return;
         }
 
         var tickLen = t.tickLen;
 
-        var paths = sel.selectAll('path').data(Lib.identity);
+        var paths = plotGroup.selectAll('path').data(Lib.identity);
 
         paths.enter().append('path');
 
         paths.exit().remove();
 
         paths.attr('d', function(d) {
+            if(d.empty) return 'M0,0Z';
+
             var x = xa.c2p(d.pos, true);
             var xo = xa.c2p(d.pos - tickLen, true);
             var xc = xa.c2p(d.pos + tickLen, true);

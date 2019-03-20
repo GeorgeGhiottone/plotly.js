@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -36,6 +36,7 @@ module.exports = extendFlat({
     b0: heatmapAttrs.y0,
     db: heatmapAttrs.dy,
     text: heatmapAttrs.text,
+    hovertext: heatmapAttrs.hovertext,
     transpose: heatmapAttrs.transpose,
     atype: heatmapAttrs.xtype,
     btype: heatmapAttrs.ytype,
@@ -90,7 +91,8 @@ module.exports = extendFlat({
             ].join(' ')
         }),
         editType: 'plot'
-    }
+    },
+    transforms: undefined
 },
 
     colorscaleAttrs('', {

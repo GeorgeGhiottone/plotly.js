@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -54,9 +54,6 @@ module.exports = function supplyDefaults(traceIn, traceOut, defaultColor, layout
 
         coerce('text');
         var isConstraint = (coerce('contours.type') === 'constraint');
-
-        // trace-level showlegend has already been set, but is only allowed if this is a constraint
-        if(!isConstraint) delete traceOut.showlegend;
 
         if(isConstraint) {
             handleConstraintDefaults(traceIn, traceOut, coerce, layout, defaultColor, {hasHover: false});

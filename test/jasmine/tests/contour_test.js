@@ -1,29 +1,33 @@
+var d3 = require('d3');
+
 var Plotly = require('@lib/index');
 var Plots = require('@src/plots/plots');
 var Lib = require('@src/lib');
 
 var Contour = require('@src/traces/contour');
 var makeColorMap = require('@src/traces/contour/make_color_map');
-var colorScales = require('@src/components/colorscale/scales');
+var colorScales = require('@src/components/colorscale/scales').scales;
 
-var fail = require('../assets/fail_test');
+var failTest = require('../assets/fail_test');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
-var checkTicks = require('../assets/custom_assertions').checkTicks;
+var customAssertions = require('../assets/custom_assertions');
+var checkTicks = customAssertions.checkTicks;
+var assertNodeOrder = customAssertions.assertNodeOrder;
 var supplyAllDefaults = require('../assets/supply_defaults');
 
 
 describe('contour defaults', function() {
     'use strict';
 
-    var traceIn,
-        traceOut;
+    var traceIn;
+    var traceOut;
 
-    var defaultColor = '#444',
-        layout = {
-            font: Plots.layoutAttributes.font,
-            _dfltTitle: {colorbar: 'cb'}
-        };
+    var defaultColor = '#444';
+    var layout = {
+        font: Plots.layoutAttributes.font,
+        _dfltTitle: {colorbar: 'cb'}
+    };
 
     var supplyDefaults = Contour.supplyDefaults;
 
@@ -180,9 +184,9 @@ describe('contour calc', function() {
     'use strict';
 
     function _calc(opts) {
-        var base = { type: 'contour' },
-            trace = Lib.extendFlat({}, base, opts),
-            gd = { data: [trace] };
+        var base = { type: 'contour' };
+        var trace = Lib.extendFlat({}, base, opts);
+        var gd = { data: [trace] };
 
         supplyAllDefaults(gd);
         var fullTrace = gd._fullData[0];
@@ -305,14 +309,7 @@ describe('contour calc', function() {
 
                 ['start', 'end', 'size'].forEach(function(attr) {
                     expect(out.contours[attr]).toBe(spec[attr], [contoursIn, spec.inputNcontours, attr]);
-                    // all these get copied back to the input trace
-                    expect(out._input.contours[attr]).toBe(spec[attr], [contoursIn, spec.inputNcontours, attr]);
                 });
-
-                expect(out._input.autocontour).toBe(true);
-                expect(out._input.zauto).toBe(true);
-                expect(out._input.zmin).toBe(0);
-                expect(out._input.zmax).toBe(5);
             });
         });
     });
@@ -329,9 +326,9 @@ describe('contour calc', function() {
                 [spec.start, spec.end, 'normal'],
                 [spec.end, spec.start, 'reversed']
             ].forEach(function(v) {
-                var startIn = v[0],
-                    endIn = v[1],
-                    order = v[2];
+                var startIn = v[0];
+                var endIn = v[1];
+                var order = v[2];
 
                 var out = _calc({
                     z: [[1, 2], [3, 4]],
@@ -386,7 +383,7 @@ describe('contour plotting and editing', function() {
             checkTicks('y', ['Jan 102016', 'Jan 24', 'Feb 7', 'Feb 21'], 'date y #2');
             expect(gd._fullLayout.yaxis.type).toBe('date');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -405,30 +402,17 @@ describe('contour plotting and editing', function() {
         .then(function() {
             expect(gd.querySelector('.contourlabels text').textContent).toBe('0.41');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
     it('should always draw heatmap coloring layer below contour lines', function(done) {
-        var cnt = 0;
-
-        function _assert(exp) {
-            var msg = ' index in <g.contourlayer> (call #' + cnt + ')';
-            var contourLayer = gd.querySelector('.xy > .plot > .contourlayer');
-            var hmIndex = -1;
-            var contoursIndex = -1;
-
-            for(var i in contourLayer.children) {
-                var child = contourLayer.children[i];
-                if(child.querySelector) {
-                    if(child.querySelector('.hm')) hmIndex = +i;
-                    else if(child.querySelector('.contourlevel')) contoursIndex = +i;
-                }
-            }
-
-            expect(hmIndex).toBe(exp.hmIndex, 'heatmap' + msg);
-            expect(contoursIndex).toBe(exp.contoursIndex, 'contours' + msg);
-            cnt++;
+        function _assertNoHeatmap(msg) {
+            msg = ' (' + msg + ')';
+            // all we care about here *really* is that there are contour levels
+            // *somewhere* on the plot, and there is no heatmap anywhere.
+            expect(gd.querySelector('.hm')).toBe(null, 'heatmap exists' + msg);
+            expect(gd.querySelector('.contourlevel')).not.toBe(null, 'missing contours' + msg);
         }
 
         Plotly.newPlot(gd, [{
@@ -437,26 +421,17 @@ describe('contour plotting and editing', function() {
             contours: {coloring: 'heatmap'}
         }])
         .then(function() {
-            _assert({
-                hmIndex: 0,
-                contoursIndex: 1
-            });
+            assertNodeOrder('.hm', '.contourlevel', 'initial heatmap coloring');
             return Plotly.restyle(gd, 'contours.coloring', 'lines');
         })
         .then(function() {
-            _assert({
-                hmIndex: -1,
-                contoursIndex: 1
-            });
+            _assertNoHeatmap('line coloring');
             return Plotly.restyle(gd, 'contours.coloring', 'heatmap');
         })
         .then(function() {
-            _assert({
-                hmIndex: 0,
-                contoursIndex: 1
-            });
+            assertNodeOrder('.hm', '.contourlevel', 'back to heatmap coloring');
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 
@@ -498,7 +473,37 @@ describe('contour plotting and editing', function() {
             expect(gd.calcdata[0][0].z).toEqual([[1, 2], [2, 4], [1, 2.5]]);
             expect(gd.calcdata[0][0].zmask).toEqual([[1, 1], [0, 1], [1, 0]]);
         })
-        .catch(fail)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('keeps the correct ordering after hide and show', function(done) {
+        function getIndices() {
+            var out = [];
+            d3.selectAll('.contour').each(function(d) { out.push(d[0].trace.index); });
+            return out;
+        }
+
+        Plotly.newPlot(gd, [{
+            type: 'contour',
+            z: [[1, 2], [3, 4]]
+        }, {
+            type: 'contour',
+            z: [[2, 1], [4, 3]],
+            contours: {coloring: 'lines'}
+        }])
+        .then(function() {
+            expect(getIndices()).toEqual([0, 1]);
+            return Plotly.restyle(gd, 'visible', false, [0]);
+        })
+        .then(function() {
+            expect(getIndices()).toEqual([1]);
+            return Plotly.restyle(gd, 'visible', true, [0]);
+        })
+        .then(function() {
+            expect(getIndices()).toEqual([0, 1]);
+        })
+        .catch(failTest)
         .then(done);
     });
 });

@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -9,6 +9,7 @@
 'use strict';
 
 var scatterAttrs = require('../scatter/attributes');
+var barAttrs = require('../bar/attributes');
 var colorAttrs = require('../../components/color/attributes');
 var extendFlat = require('../../lib/extend').extendFlat;
 
@@ -71,6 +72,9 @@ module.exports = {
             'this trace\'s (x,y) coordinates.',
             'To be seen, trace `hoverinfo` must contain a *text* flag.'
         ].join(' ')
+    }),
+    hovertext: extendFlat({}, scatterAttrs.hovertext, {
+        description: 'Same as `text`.'
     }),
     whiskerwidth: {
         valType: 'number',
@@ -171,6 +175,20 @@ module.exports = {
             'the vertical (horizontal).'
         ].join(' ')
     },
+
+    width: {
+        valType: 'number',
+        min: 0,
+        role: 'info',
+        dflt: 0,
+        editType: 'calc',
+        description: [
+            'Sets the width of the box in data coordinate',
+            'If *0* (default value) the width is automatically selected based on the positions',
+            'of other box traces in the same subplot.'
+        ].join(' ')
+    },
+
     marker: {
         outliercolor: {
             valType: 'color',
@@ -236,6 +254,9 @@ module.exports = {
     },
     fillcolor: scatterAttrs.fillcolor,
 
+    offsetgroup: barAttrs.offsetgroup,
+    alignmentgroup: barAttrs.alignmentgroup,
+
     selected: {
         marker: scatterAttrs.selected.marker,
         editType: 'style'
@@ -244,7 +265,6 @@ module.exports = {
         marker: scatterAttrs.unselected.marker,
         editType: 'style'
     },
-
     hoveron: {
         valType: 'flaglist',
         flags: ['boxes', 'points'],

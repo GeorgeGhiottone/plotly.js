@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -13,6 +13,7 @@ var Box = {};
 Box.attributes = require('./attributes');
 Box.layoutAttributes = require('./layout_attributes');
 Box.supplyDefaults = require('./defaults').supplyDefaults;
+Box.crossTraceDefaults = require('./defaults').crossTraceDefaults;
 Box.supplyLayoutDefaults = require('./layout_defaults').supplyLayoutDefaults;
 Box.calc = require('./calc');
 Box.crossTraceCalc = require('./cross_trace_calc').crossTraceCalc;
@@ -20,6 +21,7 @@ Box.plot = require('./plot').plot;
 Box.style = require('./style').style;
 Box.styleOnSelect = require('./style').styleOnSelect;
 Box.hoverPoints = require('./hover').hoverPoints;
+Box.eventData = require('./event_data');
 Box.selectPoints = require('./select');
 
 Box.moduleType = 'trace';

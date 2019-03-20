@@ -16,15 +16,15 @@ var failTest = require('../assets/fail_test');
 describe('heatmap supplyDefaults', function() {
     'use strict';
 
-    var traceIn,
-        traceOut;
+    var traceIn;
+    var traceOut;
 
-    var defaultColor = '#444',
-        layout = {
-            font: Plots.layoutAttributes.font,
-            _dfltTitle: {colorbar: 'cb'},
-            _subplots: {cartesian: ['xy'], xaxis: ['x'], yaxis: ['y']}
-        };
+    var defaultColor = '#444';
+    var layout = {
+        font: Plots.layoutAttributes.font,
+        _dfltTitle: {colorbar: 'cb'},
+        _subplots: {cartesian: ['xy'], xaxis: ['x'], yaxis: ['y']}
+    };
 
     var supplyDefaults = Heatmap.supplyDefaults;
 
@@ -164,15 +164,10 @@ describe('heatmap convertColumnXYZ', function() {
     'use strict';
 
     var trace;
-
-    function makeMockAxis() {
-        return {
-            d2c: function(v) { return v; }
-        };
-    }
-
-    var xa = makeMockAxis();
-    var ya = makeMockAxis();
+    var xa = {type: 'linear'};
+    var ya = {type: 'linear'};
+    setConvert(xa);
+    setConvert(ya);
 
     function checkConverted(trace, x, y, z) {
         trace._length = Math.min(trace.x.length, trace.y.length, trace.z.length);
@@ -293,15 +288,22 @@ describe('heatmap calc', function() {
     'use strict';
 
     function _calc(opts) {
-        var base = { type: 'heatmap' },
-            trace = Lib.extendFlat({}, base, opts),
-            gd = { data: [trace] };
+        var base = { type: 'heatmap' };
+        var trace = Lib.extendFlat({}, base, opts);
+        var gd = { data: [trace] };
 
         supplyAllDefaults(gd);
         var fullTrace = gd._fullData[0];
         var fullLayout = gd._fullLayout;
 
         fullTrace._extremes = {};
+
+        // we used to call ax.setScale during supplyDefaults, and this had a
+        // fallback to provide _categories and _categoriesMap. Now neither of
+        // those is true... anyway the right way to do this though is
+        // ax.clearCalc.
+        fullLayout.xaxis.clearCalc();
+        fullLayout.yaxis.clearCalc();
 
         var out = Heatmap.calc(gd, fullTrace)[0];
         out._xcategories = fullLayout.xaxis._categories;
@@ -479,15 +481,20 @@ describe('heatmap calc', function() {
 describe('heatmap plot', function() {
     'use strict';
 
+    var gd;
+
+    beforeEach(function() {
+        gd = createGraphDiv();
+    });
+
     afterEach(destroyGraphDiv);
 
     it('should not draw traces that are off-screen', function(done) {
-        var mock = require('@mocks/heatmap_multi-trace.json'),
-            mockCopy = Lib.extendDeep({}, mock),
-            gd = createGraphDiv();
+        var mock = require('@mocks/heatmap_multi-trace.json');
+        var mockCopy = Lib.extendDeep({}, mock);
 
         function assertImageCnt(cnt) {
-            var images = d3.selectAll('.hm').select('image');
+            var images = d3.selectAll('.hm image');
 
             expect(images.size()).toEqual(cnt);
         }
@@ -502,15 +509,44 @@ describe('heatmap plot', function() {
             return Plotly.relayout(gd, 'xaxis.autorange', true);
         }).then(function() {
             assertImageCnt(5);
+        })
+        .catch(failTest)
+        .then(done);
+    });
 
-            done();
-        });
+    it('keeps the correct ordering after hide and show', function(done) {
+        function getIndices() {
+            var out = [];
+            d3.selectAll('.hm image').each(function(d) { out.push(d.trace.index); });
+            return out;
+        }
+
+        Plotly.newPlot(gd, [{
+            type: 'heatmap',
+            z: [[1, 2], [3, 4]]
+        }, {
+            type: 'heatmap',
+            z: [[2, 1], [4, 3]],
+            contours: {coloring: 'lines'}
+        }])
+        .then(function() {
+            expect(getIndices()).toEqual([0, 1]);
+            return Plotly.restyle(gd, 'visible', false, [0]);
+        })
+        .then(function() {
+            expect(getIndices()).toEqual([1]);
+            return Plotly.restyle(gd, 'visible', true, [0]);
+        })
+        .then(function() {
+            expect(getIndices()).toEqual([0, 1]);
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('should be able to restyle', function(done) {
-        var mock = require('@mocks/13.json'),
-            mockCopy = Lib.extendDeep({}, mock),
-            gd = createGraphDiv();
+        var mock = require('@mocks/13.json');
+        var mockCopy = Lib.extendDeep({}, mock);
 
         function getImageURL() {
             return d3.select('.hm > image').attr('href');
@@ -538,19 +574,18 @@ describe('heatmap plot', function() {
             imageURLs.push(getImageURL());
 
             expect(imageURLs[1]).toEqual(imageURLs[3]);
-
-            done();
-        });
+        })
+        .catch(failTest)
+        .then(done);
     });
 
     it('draws canvas with correct margins', function(done) {
-        var mockWithPadding = require('@mocks/heatmap_brick_padding.json'),
-            mockWithoutPadding = Lib.extendDeep({}, mockWithPadding),
-            gd = createGraphDiv(),
-            getContextStub = {
-                fillRect: jasmine.createSpy()
-            },
-            originalCreateElement = document.createElement;
+        var mockWithPadding = require('@mocks/heatmap_brick_padding.json');
+        var mockWithoutPadding = Lib.extendDeep({}, mockWithPadding);
+        var getContextStub = {
+            fillRect: jasmine.createSpy()
+        };
+        var originalCreateElement = document.createElement;
 
         mockWithoutPadding.data[0].xgap = 0;
         mockWithoutPadding.data[0].ygap = 0;
@@ -563,8 +598,8 @@ describe('heatmap plot', function() {
             return element;
         });
 
-        var argumentsWithoutPadding = [],
-            argumentsWithPadding = [];
+        var argumentsWithoutPadding = [];
+        var argumentsWithPadding = [];
         Plotly.plot(gd, mockWithoutPadding.data, mockWithoutPadding.layout).then(function() {
             argumentsWithoutPadding = getContextStub.fillRect.calls.allArgs().slice(0);
             return Plotly.plot(gd, mockWithPadding.data, mockWithPadding.layout);
@@ -591,7 +626,6 @@ describe('heatmap plot', function() {
     });
 
     it('can change z values with connected gaps', function(done) {
-        var gd = createGraphDiv();
         Plotly.newPlot(gd, [{
             type: 'heatmap', connectgaps: true,
             z: [[1, 2], [null, 4], [1, 2]]
@@ -615,7 +649,7 @@ describe('heatmap plot', function() {
         .then(function() {
             expect(gd.calcdata[0][0].z).toEqual([[1, 2], [2, 4], [1, 2]]);
         })
-        .catch(fail)
+        .catch(failTest)
         .then(done);
     });
 });
@@ -626,9 +660,9 @@ describe('heatmap hover', function() {
     var gd;
 
     function _hover(gd, xval, yval) {
-        var fullLayout = gd._fullLayout,
-            calcData = gd.calcdata,
-            hoverData = [];
+        var fullLayout = gd._fullLayout;
+        var calcData = gd.calcdata;
+        var hoverData = [];
 
         for(var i = 0; i < calcData.length; i++) {
             var pointData = {
@@ -659,8 +693,8 @@ describe('heatmap hover', function() {
         beforeAll(function(done) {
             gd = createGraphDiv();
 
-            var mock = require('@mocks/heatmap_multi-trace.json'),
-                mockCopy = Lib.extendDeep({}, mock);
+            var mock = require('@mocks/heatmap_multi-trace.json');
+            var mockCopy = Lib.extendDeep({}, mock);
 
             Plotly.plot(gd, mockCopy.data, mockCopy.layout).then(done);
         });

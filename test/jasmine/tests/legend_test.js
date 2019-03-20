@@ -6,7 +6,6 @@ var DBLCLICKDELAY = require('@src/constants/interactions').DBLCLICKDELAY;
 var Legend = require('@src/components/legend');
 var getLegendData = require('@src/components/legend/get_legend_data');
 var helpers = require('@src/components/legend/helpers');
-var anchorUtils = require('@src/components/legend/anchor_utils');
 
 var d3 = require('d3');
 var failTest = require('../assets/fail_test');
@@ -15,6 +14,10 @@ var delay = require('../assets/delay');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var assertPlotSize = require('../assets/custom_assertions').assertPlotSize;
+
+var mock = require('@mocks/legend_horizontal.json');
+
+var Drawing = require('@src/components/drawing');
 
 describe('legend defaults', function() {
     'use strict';
@@ -33,12 +36,81 @@ describe('legend defaults', function() {
         };
     });
 
+    function allShown(fullData) {
+        return fullData.map(function(trace) {
+            return Lib.extendDeep({
+                visible: true,
+                showlegend: true,
+                _dfltShowLegend: true,
+                _input: {}
+            }, trace);
+        });
+    }
+
+    it('hides by default if there is only one legend item by default', function() {
+        fullData = allShown([
+            {type: 'scatter'},
+            {type: 'scatter', visible: false}, // ignored
+            {type: 'contour', _dfltShowLegend: false, showlegend: false} // hidden by default
+        ]);
+
+        supplyLayoutDefaults({}, layoutOut, fullData);
+        expect(layoutOut.showlegend).toBe(false);
+    });
+
+    it('shows if there are two legend items by default but only one is shown', function() {
+        fullData = allShown([
+            {type: 'scatter'},
+            {type: 'scatter', showlegend: false} // not shown but still triggers legend
+        ]);
+
+        supplyLayoutDefaults({}, layoutOut, fullData);
+        expect(layoutOut.showlegend).toBe(true);
+    });
+
+    it('hides if no items are actually shown', function() {
+        fullData = allShown([
+            {type: 'scatter', showlegend: false},
+            {type: 'scatter', showlegend: false}
+        ]);
+
+        supplyLayoutDefaults({}, layoutOut, fullData);
+        expect(layoutOut.showlegend).toBe(false);
+    });
+
+    it('shows with one visible pie', function() {
+        fullData = allShown([
+            {type: 'pie'}
+        ]);
+
+        supplyLayoutDefaults({}, layoutOut, fullData);
+        expect(layoutOut.showlegend).toBe(true);
+    });
+
+    it('does not show with a hidden pie', function() {
+        fullData = allShown([
+            {type: 'pie', showlegend: false}
+        ]);
+
+        supplyLayoutDefaults({}, layoutOut, fullData);
+        expect(layoutOut.showlegend).toBe(false);
+    });
+
+    it('shows if even a default hidden single item is explicitly shown', function() {
+        fullData = allShown([
+            {type: 'contour', _dfltShowLegend: false, _input: {showlegend: true}}
+        ]);
+
+        supplyLayoutDefaults({}, layoutOut, fullData);
+        expect(layoutOut.showlegend).toBe(true);
+    });
+
     it('should default traceorder to reversed for stack bar charts', function() {
-        fullData = [
-            { type: 'bar' },
-            { type: 'bar' },
-            { type: 'scatter' }
-        ];
+        fullData = allShown([
+            {type: 'bar', visible: 'legendonly'},
+            {type: 'bar', visible: 'legendonly'},
+            {type: 'scatter'}
+        ]);
 
         supplyLayoutDefaults(layoutIn, layoutOut, fullData);
         expect(layoutOut.legend.traceorder).toEqual('normal');
@@ -50,20 +122,20 @@ describe('legend defaults', function() {
     });
 
     it('should default traceorder to reversed for filled tonext scatter charts', function() {
-        fullData = [
-            { type: 'scatter' },
-            { type: 'scatter', fill: 'tonexty' }
-        ];
+        fullData = allShown([
+            {type: 'scatter'},
+            {type: 'scatter', fill: 'tonexty'}
+        ]);
 
         supplyLayoutDefaults(layoutIn, layoutOut, fullData);
         expect(layoutOut.legend.traceorder).toEqual('reversed');
     });
 
     it('should default traceorder to grouped when a group is present', function() {
-        fullData = [
-            { type: 'scatter', legendgroup: 'group' },
-            { type: 'scatter'}
-        ];
+        fullData = allShown([
+            {type: 'scatter', legendgroup: 'group'},
+            {type: 'scatter'}
+        ]);
 
         supplyLayoutDefaults(layoutIn, layoutOut, fullData);
         expect(layoutOut.legend.traceorder).toEqual('grouped');
@@ -72,6 +144,27 @@ describe('legend defaults', function() {
 
         supplyLayoutDefaults(layoutIn, layoutOut, fullData);
         expect(layoutOut.legend.traceorder).toEqual('grouped+reversed');
+    });
+
+    it('does not consider invisible traces for traceorder default', function() {
+        fullData = allShown([
+            {type: 'bar', visible: false},
+            {type: 'bar', visible: false},
+            {type: 'scatter'}
+        ]);
+
+        layoutOut.barmode = 'stack';
+
+        supplyLayoutDefaults(layoutIn, layoutOut, fullData);
+        expect(layoutOut.legend.traceorder).toEqual('normal');
+
+        fullData = allShown([
+            {type: 'scatter', legendgroup: 'group', visible: false},
+            {type: 'scatter'}
+        ]);
+
+        supplyLayoutDefaults(layoutIn, layoutOut, fullData);
+        expect(layoutOut.legend.traceorder).toEqual('normal');
     });
 
     it('should default orientation to vertical', function() {
@@ -382,24 +475,6 @@ describe('legend getLegendData', function() {
 describe('legend helpers:', function() {
     'use strict';
 
-    describe('legendGetsTraces', function() {
-        var legendGetsTrace = helpers.legendGetsTrace;
-
-        it('should return true when trace is visible and supports legend', function() {
-            expect(legendGetsTrace({ visible: true, showlegend: true })).toBe(true);
-            expect(legendGetsTrace({ visible: false, showlegend: true })).toBe(false);
-            expect(legendGetsTrace({ visible: 'legendonly', showlegend: true })).toBe(true);
-
-            expect(legendGetsTrace({ visible: true, showlegend: false })).toBe(true);
-            expect(legendGetsTrace({ visible: false, showlegend: false })).toBe(false);
-            expect(legendGetsTrace({ visible: 'legendonly', showlegend: false })).toBe(true);
-
-            expect(legendGetsTrace({ visible: true })).toBe(false);
-            expect(legendGetsTrace({ visible: false })).toBe(false);
-            expect(legendGetsTrace({ visible: 'legendonly' })).toBe(false);
-        });
-    });
-
     describe('isGrouped', function() {
         var isGrouped = helpers.isGrouped;
 
@@ -429,7 +504,7 @@ describe('legend anchor utils:', function() {
     'use strict';
 
     describe('isRightAnchor', function() {
-        var isRightAnchor = anchorUtils.isRightAnchor;
+        var isRightAnchor = Lib.isRightAnchor;
         var threshold = 2 / 3;
 
         it('should return true when \'xanchor\' is set to \'right\'', function() {
@@ -450,7 +525,7 @@ describe('legend anchor utils:', function() {
     });
 
     describe('isCenterAnchor', function() {
-        var isCenterAnchor = anchorUtils.isCenterAnchor;
+        var isCenterAnchor = Lib.isCenterAnchor;
         var threshold0 = 1 / 3;
         var threshold1 = 2 / 3;
 
@@ -472,7 +547,7 @@ describe('legend anchor utils:', function() {
     });
 
     describe('isBottomAnchor', function() {
-        var isBottomAnchor = anchorUtils.isBottomAnchor;
+        var isBottomAnchor = Lib.isBottomAnchor;
         var threshold = 1 / 3;
 
         it('should return true when \'yanchor\' is set to \'right\'', function() {
@@ -493,7 +568,7 @@ describe('legend anchor utils:', function() {
     });
 
     describe('isMiddleAnchor', function() {
-        var isMiddleAnchor = anchorUtils.isMiddleAnchor;
+        var isMiddleAnchor = Lib.isMiddleAnchor;
         var threshold0 = 1 / 3;
         var threshold1 = 2 / 3;
 
@@ -593,6 +668,43 @@ describe('legend relayout update', function() {
         .catch(failTest)
         .then(done);
     });
+
+    describe('should update legend valign', function() {
+        var mock = require('@mocks/legend_valign_top.json');
+        var gd;
+
+        beforeEach(function() {
+            gd = createGraphDiv();
+        });
+        afterEach(destroyGraphDiv);
+
+        function markerOffsetY() {
+            var translate = Drawing.getTranslate(d3.select('.legend .traces .layers'));
+            return translate.y;
+        }
+
+        it('it should translate markers', function(done) {
+            var mockCopy = Lib.extendDeep({}, mock);
+
+            var top, middle, bottom;
+            Plotly.plot(gd, mockCopy.data, mockCopy.layout)
+            .then(function() {
+                top = markerOffsetY();
+                return Plotly.relayout(gd, 'legend.valign', 'middle');
+            })
+            .then(function() {
+                middle = markerOffsetY();
+                expect(middle).toBeGreaterThan(top);
+                return Plotly.relayout(gd, 'legend.valign', 'bottom');
+            })
+            .then(function() {
+                bottom = markerOffsetY();
+                expect(bottom).toBeGreaterThan(middle);
+            })
+            .catch(failTest)
+            .then(done);
+        });
+    });
 });
 
 describe('legend orientation change:', function() {
@@ -601,9 +713,9 @@ describe('legend orientation change:', function() {
     afterEach(destroyGraphDiv);
 
     it('should update plot background', function(done) {
-        var mock = require('@mocks/legend_horizontal_autowrap.json'),
-            gd = createGraphDiv(),
-            initialLegendBGColor;
+        var mock = require('@mocks/legend_horizontal_autowrap.json');
+        var gd = createGraphDiv();
+        var initialLegendBGColor;
 
         Plotly.plot(gd, mock.data, mock.layout).then(function() {
             initialLegendBGColor = gd._fullLayout.legend.bgcolor;
@@ -624,9 +736,9 @@ describe('legend restyle update', function() {
     afterEach(destroyGraphDiv);
 
     it('should update trace toggle background rectangle', function(done) {
-        var mock = require('@mocks/0.json'),
-            mockCopy = Lib.extendDeep({}, mock),
-            gd = createGraphDiv();
+        var mock = require('@mocks/0.json');
+        var mockCopy = Lib.extendDeep({}, mock);
+        var gd = createGraphDiv();
 
         mockCopy.data[0].visible = false;
         mockCopy.data[0].showlegend = false;
@@ -1527,5 +1639,30 @@ describe('legend interaction', function() {
                 .then(done);
             });
         });
+    });
+});
+
+describe('legend DOM', function() {
+    'use strict';
+
+    afterEach(destroyGraphDiv);
+
+    it('draws `legendtoggle` last to make sure it is unobstructed', function(done) {
+        var gd = createGraphDiv();
+        Plotly.newPlot(gd, mock)
+        .then(function() {
+            // Find legend in figure
+            var legend = document.getElementsByClassName('legend')[0];
+
+            // For each legend item
+            var legendItems = legend.getElementsByClassName('traces');
+            Array.prototype.slice.call(legendItems).forEach(function(legendItem) {
+                // Check that the last element is our `legendtoggle`
+                var lastEl = legendItem.children[legendItem.children.length - 1];
+                expect(lastEl.getAttribute('class')).toBe('legendtoggle');
+            });
+        })
+        .catch(failTest)
+        .then(done);
     });
 });

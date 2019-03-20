@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -16,7 +16,6 @@ var Drawing = require('../../components/drawing');
 var svgTextUtils = require('../../lib/svg_text_utils');
 var Axes = require('../../plots/cartesian/axes');
 var setConvert = require('../../plots/cartesian/set_convert');
-var getUidsFromCalcData = require('../../plots/get_data').getUidsFromCalcData;
 
 var heatmapPlot = require('../heatmap/plot');
 var makeCrossings = require('./make_crossings');
@@ -28,84 +27,58 @@ var constants = require('./constants');
 var costConstants = constants.LABELOPTIMIZER;
 
 exports.plot = function plot(gd, plotinfo, cdcontours, contourLayer) {
-    var uidLookup = getUidsFromCalcData(cdcontours);
-
-    contourLayer.selectAll('g.contour').each(function(d) {
-        if(!uidLookup[d.trace.uid]) {
-            d3.select(this).remove();
-        }
-    });
-
-    for(var i = 0; i < cdcontours.length; i++) {
-        plotOne(gd, plotinfo, cdcontours[i], contourLayer);
-    }
-};
-
-function plotOne(gd, plotinfo, cd, contourLayer) {
-    var trace = cd[0].trace;
-    var x = cd[0].x;
-    var y = cd[0].y;
-    var contours = trace.contours;
-    var id = 'contour' + trace.uid;
     var xa = plotinfo.xaxis;
     var ya = plotinfo.yaxis;
-    var fullLayout = gd._fullLayout;
-    var pathinfo = emptyPathinfo(contours, plotinfo, cd[0]);
 
-    // use a heatmap to fill - draw it behind the lines
-    var heatmapColoringLayer = Lib.ensureSingle(contourLayer, 'g', 'heatmapcoloring');
-    var cdheatmaps = [];
-    if(contours.coloring === 'heatmap') {
-        if(trace.zauto && (trace.autocontour === false)) {
-            trace._input.zmin = trace.zmin =
-                contours.start - contours.size / 2;
-            trace._input.zmax = trace.zmax =
-                trace.zmin + pathinfo.length * contours.size;
+    Lib.makeTraceGroups(contourLayer, cdcontours, 'contour').each(function(cd) {
+        var plotGroup = d3.select(this);
+        var cd0 = cd[0];
+        var trace = cd0.trace;
+        var x = cd0.x;
+        var y = cd0.y;
+        var contours = trace.contours;
+        var pathinfo = emptyPathinfo(contours, plotinfo, cd0);
+
+        // use a heatmap to fill - draw it behind the lines
+        var heatmapColoringLayer = Lib.ensureSingle(plotGroup, 'g', 'heatmapcoloring');
+        var cdheatmaps = [];
+        if(contours.coloring === 'heatmap') {
+            if(trace.zauto && (trace.autocontour === false)) {
+                trace._input.zmin = trace.zmin =
+                    contours.start - contours.size / 2;
+                trace._input.zmax = trace.zmax =
+                    trace.zmin + pathinfo.length * contours.size;
+            }
+            cdheatmaps = [cd];
         }
-        cdheatmaps = [cd];
-    }
-    heatmapPlot(gd, plotinfo, cdheatmaps, heatmapColoringLayer);
+        heatmapPlot(gd, plotinfo, cdheatmaps, heatmapColoringLayer);
 
-    makeCrossings(pathinfo);
-    findAllPaths(pathinfo);
+        makeCrossings(pathinfo);
+        findAllPaths(pathinfo);
 
-    var leftedge = xa.c2p(x[0], true),
-        rightedge = xa.c2p(x[x.length - 1], true),
-        bottomedge = ya.c2p(y[0], true),
-        topedge = ya.c2p(y[y.length - 1], true),
-        perimeter = [
+        var leftedge = xa.c2p(x[0], true);
+        var rightedge = xa.c2p(x[x.length - 1], true);
+        var bottomedge = ya.c2p(y[0], true);
+        var topedge = ya.c2p(y[y.length - 1], true);
+        var perimeter = [
             [leftedge, topedge],
             [rightedge, topedge],
             [rightedge, bottomedge],
             [leftedge, bottomedge]
         ];
 
-    var fillPathinfo = pathinfo;
-    if(contours.type === 'constraint') {
-        fillPathinfo = convertToConstraints(pathinfo, contours._operation);
-        closeBoundaries(fillPathinfo, contours._operation, perimeter, trace);
-    }
+        var fillPathinfo = pathinfo;
+        if(contours.type === 'constraint') {
+            fillPathinfo = convertToConstraints(pathinfo, contours._operation);
+            closeBoundaries(fillPathinfo, contours._operation, perimeter, trace);
+        }
 
-    // draw everything
-    var plotGroup = exports.makeContourGroup(contourLayer, cd, id);
-    makeBackground(plotGroup, perimeter, contours);
-    makeFills(plotGroup, fillPathinfo, perimeter, contours);
-    makeLinesAndLabels(plotGroup, pathinfo, gd, cd[0], contours, perimeter);
-    clipGaps(plotGroup, plotinfo, fullLayout._clips, cd[0], perimeter);
-}
-
-exports.makeContourGroup = function(layer, cd, id) {
-    var plotgroup = layer
-        .selectAll('g.contour.' + id)
-        .data(cd);
-
-    plotgroup.enter().append('g')
-        .classed('contour', true)
-        .classed(id, true);
-
-    plotgroup.exit().remove();
-
-    return plotgroup;
+        // draw everything
+        makeBackground(plotGroup, perimeter, contours);
+        makeFills(plotGroup, fillPathinfo, perimeter, contours);
+        makeLinesAndLabels(plotGroup, pathinfo, gd, cd0, contours, perimeter);
+        clipGaps(plotGroup, plotinfo, gd, cd0, perimeter);
+    });
 };
 
 function makeBackground(plotgroup, perimeter, contours) {
@@ -156,16 +129,16 @@ function initFullPath(pi, perimeter) {
 }
 
 function joinAllPaths(pi, perimeter) {
-    var fullpath = initFullPath(pi, perimeter),
-        i = 0,
-        startsleft = pi.edgepaths.map(function(v, i) { return i; }),
-        newloop = true,
-        endpt,
-        newendpt,
-        cnt,
-        nexti,
-        possiblei,
-        addpath;
+    var fullpath = initFullPath(pi, perimeter);
+    var i = 0;
+    var startsleft = pi.edgepaths.map(function(v, i) { return i; });
+    var newloop = true;
+    var endpt;
+    var newendpt;
+    var cnt;
+    var nexti;
+    var possiblei;
+    var addpath;
 
     function istop(pt) { return Math.abs(pt[1] - perimeter[0][1]) < 0.01; }
     function isbottom(pt) { return Math.abs(pt[1] - perimeter[2][1]) < 0.01; }
@@ -256,8 +229,7 @@ function makeLinesAndLabels(plotgroup, pathinfo, gd, cd0, contours, perimeter) {
     // In this case we'll remove the lines after making the labels.
     var linegroup = exports.createLines(lineContainer, showLines || showLabels, pathinfo);
 
-    var lineClip = exports.createLineClip(lineContainer, clipLinesForLabels,
-        gd._fullLayout._clips, cd0.trace.uid);
+    var lineClip = exports.createLineClip(lineContainer, clipLinesForLabels, gd, cd0.trace.uid);
 
     var labelGroup = plotgroup.selectAll('g.contourlabels')
         .data(showLabels ? [0] : []);
@@ -268,8 +240,7 @@ function makeLinesAndLabels(plotgroup, pathinfo, gd, cd0, contours, perimeter) {
         .classed('contourlabels', true);
 
     if(showLabels) {
-        var labelClipPathData = [perimeter];
-
+        var labelClipPathData = [];
         var labelData = [];
 
         // invalidate the getTextLocation cache in case paths changed
@@ -281,19 +252,46 @@ function makeLinesAndLabels(plotgroup, pathinfo, gd, cd0, contours, perimeter) {
             .attr('data-notex', 1)
             .call(Drawing.font, contours.labelfont);
 
-        var xLen = pathinfo[0].xaxis._length;
-        var yLen = pathinfo[0].yaxis._length;
+        var xa = pathinfo[0].xaxis;
+        var ya = pathinfo[0].yaxis;
+        var xLen = xa._length;
+        var yLen = ya._length;
+        var xRng = xa.range;
+        var yRng = ya.range;
+        var x0 = Math.max(perimeter[0][0], 0);
+        var x1 = Math.min(perimeter[2][0], xLen);
+        var y0 = Math.max(perimeter[0][1], 0);
+        var y1 = Math.min(perimeter[2][1], yLen);
 
         // visible bounds of the contour trace (and the midpoints, to
         // help with cost calculations)
-        var bounds = {
-            left: Math.max(perimeter[0][0], 0),
-            right: Math.min(perimeter[2][0], xLen),
-            top: Math.max(perimeter[0][1], 0),
-            bottom: Math.min(perimeter[2][1], yLen)
-        };
+        var bounds = {};
+
+        if(xRng[0] < xRng[1]) {
+            bounds.left = x0;
+            bounds.right = x1;
+        } else {
+            bounds.left = x1;
+            bounds.right = x0;
+        }
+
+        if(yRng[0] < yRng[1]) {
+            bounds.top = y0;
+            bounds.bottom = y1;
+        } else {
+            bounds.top = y1;
+            bounds.bottom = y0;
+        }
+
         bounds.middle = (bounds.top + bounds.bottom) / 2;
         bounds.center = (bounds.left + bounds.right) / 2;
+
+        labelClipPathData.push([
+            [bounds.left, bounds.top],
+            [bounds.right, bounds.top],
+            [bounds.right, bounds.bottom],
+            [bounds.left, bounds.bottom]
+        ]);
 
         var plotDiagonal = Math.sqrt(xLen * xLen + yLen * yLen);
 
@@ -379,7 +377,8 @@ exports.createLines = function(lineContainer, makeLines, pathinfo) {
     return linegroup;
 };
 
-exports.createLineClip = function(lineContainer, clipLinesForLabels, clips, uid) {
+exports.createLineClip = function(lineContainer, clipLinesForLabels, gd, uid) {
+    var clips = gd._fullLayout._clips;
     var clipId = clipLinesForLabels ? ('clipline' + uid) : null;
 
     var lineClip = clips.selectAll('#' + clipId)
@@ -390,7 +389,7 @@ exports.createLineClip = function(lineContainer, clipLinesForLabels, clips, uid)
         .classed('contourlineclip', true)
         .attr('id', clipId);
 
-    Drawing.setClipUrl(lineContainer, clipId);
+    Drawing.setClipUrl(lineContainer, clipId, gd);
 
     return lineClip;
 };
@@ -621,7 +620,8 @@ exports.drawLabels = function(labelGroup, labelData, gd, lineClip, labelClipPath
     }
 };
 
-function clipGaps(plotGroup, plotinfo, clips, cd0, perimeter) {
+function clipGaps(plotGroup, plotinfo, gd, cd0, perimeter) {
+    var clips = gd._fullLayout._clips;
     var clipId = 'clip' + cd0.trace.uid;
 
     var clipPath = clips.selectAll('#' + clipId)
@@ -660,19 +660,17 @@ function clipGaps(plotGroup, plotinfo, clips, cd0, perimeter) {
     }
     else clipId = null;
 
-    plotGroup.call(Drawing.setClipUrl, clipId);
-    plotinfo.plot.selectAll('.hm' + cd0.trace.uid)
-        .call(Drawing.setClipUrl, clipId);
+    Drawing.setClipUrl(plotGroup, clipId, gd);
 }
 
 function makeClipMask(cd0) {
-    var empties = cd0.trace._emptypoints,
-        z = [],
-        m = cd0.z.length,
-        n = cd0.z[0].length,
-        i,
-        row = [],
-        emptyPoint;
+    var empties = cd0.trace._emptypoints;
+    var z = [];
+    var m = cd0.z.length;
+    var n = cd0.z[0].length;
+    var i;
+    var row = [];
+    var emptyPoint;
 
     for(i = 0; i < n; i++) row.push(1);
     for(i = 0; i < m; i++) z.push(row.slice());

@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -40,7 +40,7 @@ proto.handlePick = function(selection) {
             Math.sqrt(uu * uu + vv * vv + ww * ww)
         ];
 
-        var text = this.data.text;
+        var text = this.data.hovertext || this.data.text;
         if(Array.isArray(text) && text[selectIndex] !== undefined) {
             selection.textLabel = text[selectIndex];
         } else if(text) {
@@ -80,7 +80,7 @@ function convert(scene, trace) {
         trace._len
     );
 
-    coneOpts.colormap = parseColorScale(trace.colorscale);
+    coneOpts.colormap = parseColorScale(trace);
     coneOpts.vertexIntensityBounds = [trace.cmin / trace._normMax, trace.cmax / trace._normMax];
     coneOpts.coneOffset = anchor2coneOffset[trace.anchor];
 

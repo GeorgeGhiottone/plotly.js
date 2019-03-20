@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -169,6 +169,10 @@ function hoverOnBoxes(pointData, xval, yval, hovermode) {
         pointData2[vLetter + 'LabelVal'] = val;
         pointData2[vLetter + 'Label'] = (t.labels ? t.labels[attr] + ' ' : '') + Axes.hoverLabelText(vAxis, val);
 
+        // Note: introduced to be able to distinguish a
+        // clicked point from a box during click-to-select
+        pointData2.hoverOnBox = true;
+
         if(attr === 'mean' && ('sd' in di) && trace.boxmean === 'sd') {
             pointData2[vLetter + 'err'] = di.sd;
         }
@@ -236,15 +240,25 @@ function hoverOnPoints(pointData, xval, yval) {
         name: trace.name,
         x0: xc - rad,
         x1: xc + rad,
-        xLabelVal: pt.x,
         y0: yc - rad,
         y1: yc + rad,
-        yLabelVal: pt.y,
         spikeDistance: pointData.distance
     });
-    var pLetter = trace.orientation === 'h' ? 'y' : 'x';
-    var pa = trace.orientation === 'h' ? ya : xa;
+
+    var pa;
+    if(trace.orientation === 'h') {
+        pa = ya;
+        closePtData.xLabelVal = pt.x;
+        closePtData.yLabelVal = di.pos;
+    } else {
+        pa = xa;
+        closePtData.xLabelVal = di.pos;
+        closePtData.yLabelVal = pt.y;
+    }
+
+    var pLetter = pa._id.charAt(0);
     closePtData[pLetter + 'Spike'] = pa.c2p(di.pos, true);
+
     fillHoverText(pt, trace, closePtData);
 
     return closePtData;
