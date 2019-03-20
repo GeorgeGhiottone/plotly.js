@@ -96,8 +96,7 @@ function untestableFilter(mockName) {
     var cond = !(
         mockName === 'font-wishlist' ||
         mockName.indexOf('gl2d_') !== -1 ||
-        mockName.indexOf('mapbox_') !== -1 ||
-        mockName.indexOf('gl3d_cone-') !== -1
+        mockName.indexOf('mapbox_') !== -1
     );
 
     if(!cond) console.log(' -', mockName);
@@ -186,9 +185,9 @@ function runInQueue(mockList) {
 }
 
 function comparePixels(mockName, cb) {
-    var requestOpts = getRequestOpts({ mockName: mockName }),
-        imagePaths = getImagePaths(mockName),
-        saveImageStream = fs.createWriteStream(imagePaths.test);
+    var requestOpts = getRequestOpts({ mockName: mockName });
+    var imagePaths = getImagePaths(mockName);
+    var saveImageStream = fs.createWriteStream(imagePaths.test);
 
     function log(msg) {
         process.stdout.write('Error for', mockName + ':', msg);

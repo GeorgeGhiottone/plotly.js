@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -13,6 +13,8 @@ var d3 = require('d3');
 
 var Registry = require('../../registry');
 var Lib = require('../../lib');
+var ensureSingle = Lib.ensureSingle;
+var identity = Lib.identity;
 var Drawing = require('../../components/drawing');
 
 var subTypes = require('./subtypes');
@@ -21,15 +23,18 @@ var linkTraces = require('./link_traces');
 var polygonTester = require('../../lib/polygon').tester;
 
 module.exports = function plot(gd, plotinfo, cdscatter, scatterLayer, transitionOpts, makeOnCompleteCallback) {
-    var i, uids, join, onComplete;
+    var join, onComplete;
 
     // If transition config is provided, then it is only a partial replot and traces not
     // updated are removed.
     var isFullReplot = !transitionOpts;
     var hasTransition = !!transitionOpts && transitionOpts.duration > 0;
 
+    // Link traces so the z-order of fill layers is correct
+    var cdscatterSorted = linkTraces(gd, plotinfo, cdscatter);
+
     join = scatterLayer.selectAll('g.trace')
-        .data(cdscatter, function(d) { return d[0].trace.uid; });
+        .data(cdscatterSorted, function(d) { return d[0].trace.uid; });
 
     // Append new traces:
     join.enter().append('g')
@@ -37,26 +42,9 @@ module.exports = function plot(gd, plotinfo, cdscatter, scatterLayer, transition
             return 'trace scatter trace' + d[0].trace.uid;
         })
         .style('stroke-miterlimit', 2);
+    join.order();
 
-    // After the elements are created but before they've been draw, we have to perform
-    // this extra step of linking the traces. This allows appending of fill layers so that
-    // the z-order of fill layers is correct.
-    linkTraces(gd, plotinfo, cdscatter);
-
-    createFills(gd, scatterLayer, plotinfo);
-
-    // Sort the traces, once created, so that the ordering is preserved even when traces
-    // are shown and hidden. This is needed since we're not just wiping everything out
-    // and recreating on every update.
-    for(i = 0, uids = {}; i < cdscatter.length; i++) {
-        uids[cdscatter[i][0].trace.uid] = i;
-    }
-
-    scatterLayer.selectAll('g.trace').sort(function(a, b) {
-        var idx1 = uids[a[0].trace.uid];
-        var idx2 = uids[b[0].trace.uid];
-        return idx1 > idx2 ? 1 : -1;
-    });
+    createFills(gd, join, plotinfo);
 
     if(hasTransition) {
         if(makeOnCompleteCallback) {
@@ -80,12 +68,12 @@ module.exports = function plot(gd, plotinfo, cdscatter, scatterLayer, transition
             // Must run the selection again since otherwise enters/updates get grouped together
             // and these get executed out of order. Except we need them in order!
             scatterLayer.selectAll('g.trace').each(function(d, i) {
-                plotOne(gd, i, plotinfo, d, cdscatter, this, transitionOpts);
+                plotOne(gd, i, plotinfo, d, cdscatterSorted, this, transitionOpts);
             });
         });
     } else {
-        scatterLayer.selectAll('g.trace').each(function(d, i) {
-            plotOne(gd, i, plotinfo, d, cdscatter, this, transitionOpts);
+        join.each(function(d, i) {
+            plotOne(gd, i, plotinfo, d, cdscatterSorted, this, transitionOpts);
         });
     }
 
@@ -97,51 +85,36 @@ module.exports = function plot(gd, plotinfo, cdscatter, scatterLayer, transition
     scatterLayer.selectAll('path:not([d])').remove();
 };
 
-function createFills(gd, scatterLayer, plotinfo) {
-    var trace;
+function createFills(gd, traceJoin, plotinfo) {
+    traceJoin.each(function(d) {
+        var fills = ensureSingle(d3.select(this), 'g', 'fills');
+        Drawing.setClipUrl(fills, plotinfo.layerClipId, gd);
 
-    scatterLayer.selectAll('g.trace').each(function(d) {
-        var tr = d3.select(this);
+        var trace = d[0].trace;
 
-        // Loop only over the traces being redrawn:
-        trace = d[0].trace;
+        var fillData = [];
+        if(trace._ownfill) fillData.push('_ownFill');
+        if(trace._nexttrace) fillData.push('_nextFill');
 
-        // make the fill-to-next path now for the NEXT trace, so it shows
-        // behind both lines.
-        if(trace._nexttrace) {
-            trace._nextFill = tr.select('.js-fill.js-tonext');
-            if(!trace._nextFill.size()) {
+        var fillJoin = fills.selectAll('g').data(fillData, identity);
 
-                // If there is an existing tozero fill, we must insert this *after* that fill:
-                var loc = ':first-child';
-                if(tr.select('.js-fill.js-tozero').size()) {
-                    loc += ' + *';
-                }
+        fillJoin.enter().append('g');
 
-                trace._nextFill = tr.insert('path', loc).attr('class', 'js-fill js-tonext');
-            }
-        } else {
-            tr.selectAll('.js-fill.js-tonext').remove();
-            trace._nextFill = null;
-        }
+        fillJoin.exit()
+            .each(function(d) { trace[d] = null; })
+            .remove();
 
-        if(trace.fill && (trace.fill.substr(0, 6) === 'tozero' || trace.fill === 'toself' ||
-                (trace.fill.substr(0, 2) === 'to' && !trace._prevtrace))) {
-            trace._ownFill = tr.select('.js-fill.js-tozero');
-            if(!trace._ownFill.size()) {
-                trace._ownFill = tr.insert('path', ':first-child').attr('class', 'js-fill js-tozero');
-            }
-        } else {
-            tr.selectAll('.js-fill.js-tozero').remove();
-            trace._ownFill = null;
-        }
-
-        tr.selectAll('.js-fill').call(Drawing.setClipUrl, plotinfo.layerClipId);
+        fillJoin.order().each(function(d) {
+            // make a path element inside the fill group, just so
+            // we can give it its own data later on and the group can
+            // keep its simple '_*Fill' data
+            trace[d] = ensureSingle(d3.select(this), 'path', 'js-fill');
+        });
     });
 }
 
 function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transitionOpts) {
-    var join, i;
+    var i;
 
     // Since this has been reorganized and we're executing this on individual traces,
     // we need to pass it the full list of cdscatter as well as this trace's index (idx)
@@ -154,15 +127,20 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         return hasTransition ? selection.transition() : selection;
     }
 
-    var xa = plotinfo.xaxis,
-        ya = plotinfo.yaxis;
+    var xa = plotinfo.xaxis;
+    var ya = plotinfo.yaxis;
 
-    var trace = cdscatter[0].trace,
-        line = trace.line,
-        tr = d3.select(element);
+    var trace = cdscatter[0].trace;
+    var line = trace.line;
+    var tr = d3.select(element);
+
+    var errorBarGroup = ensureSingle(tr, 'g', 'errorbars');
+    var lines = ensureSingle(tr, 'g', 'lines');
+    var points = ensureSingle(tr, 'g', 'points');
+    var text = ensureSingle(tr, 'g', 'text');
 
     // error bars are at the bottom
-    Registry.getComponentMethod('errorbars', 'plot')(tr, plotinfo, transitionOpts);
+    Registry.getComponentMethod('errorbars', 'plot')(gd, errorBarGroup, plotinfo, transitionOpts);
 
     if(trace.visible !== true) return;
 
@@ -186,21 +164,21 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         prevPolygons = prevtrace._polygons;
     }
 
-    var thispath,
-        thisrevpath,
-        // fullpath is all paths for this curve, joined together straight
-        // across gaps, for filling
-        fullpath = '',
-        // revpath is fullpath reversed, for fill-to-next
-        revpath = '',
-        // functions for converting a point array to a path
-        pathfn, revpathbase, revpathfn,
-        // variables used before and after the data join
-        pt0, lastSegment, pt1, thisPolygons;
+    var thispath;
+    var thisrevpath;
+    // fullpath is all paths for this curve, joined together straight
+    // across gaps, for filling
+    var fullpath = '';
+    // revpath is fullpath reversed, for fill-to-next
+    var revpath = '';
+    // functions for converting a point array to a path
+    var pathfn, revpathbase, revpathfn;
+    // variables used before and after the data join
+    var pt0, lastSegment, pt1, thisPolygons;
 
     // initialize line join data / method
-    var segments = [],
-        makeUpdate = Lib.noop;
+    var segments = [];
+    var makeUpdate = Lib.noop;
 
     ownFillEl3 = trace._ownFill;
 
@@ -303,7 +281,7 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         };
     }
 
-    var lineJoin = tr.selectAll('.js-line').data(segments);
+    var lineJoin = lines.selectAll('.js-line').data(segments);
 
     transition(lineJoin.exit())
         .style('opacity', 0)
@@ -317,7 +295,7 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         .call(Drawing.lineGroupStyle)
         .each(makeUpdate(true));
 
-    Drawing.setClipUrl(lineJoin, plotinfo.layerClipId);
+    Drawing.setClipUrl(lineJoin, plotinfo.layerClipId, gd);
 
     function clearFill(selection) {
         transition(selection).attr('d', 'M0,0Z');
@@ -325,6 +303,7 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
 
     if(segments.length) {
         if(ownFillEl3) {
+            ownFillEl3.datum(cdscatter);
             if(pt0 && pt1) {
                 if(ownFillDir) {
                     if(ownFillDir === 'y') {
@@ -386,7 +365,15 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
 
 
     function visFilter(d) {
+        return d.filter(function(v) { return !v.gap && v.vis; });
+    }
+
+    function visFilterWithGaps(d) {
         return d.filter(function(v) { return v.vis; });
+    }
+
+    function gapFilter(d) {
+        return d.filter(function(v) { return !v.gap; });
     }
 
     function keyFunc(d) {
@@ -404,11 +391,10 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         return false;
     }
 
-    function makePoints(d) {
+    function makePoints(points, text, cdscatter) {
         var join, selection, hasNode;
 
-        var trace = d[0].trace;
-        var s = d3.select(this);
+        var trace = cdscatter[0].trace;
         var showMarkers = subTypes.hasMarkers(trace);
         var showText = subTypes.hasText(trace);
 
@@ -416,17 +402,29 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         var markerFilter = hideFilter;
         var textFilter = hideFilter;
 
-        if(showMarkers) {
-            markerFilter = (trace.marker.maxdisplayed || trace._needsCull) ? visFilter : Lib.identity;
-        }
+        if(showMarkers || showText) {
+            var showFilter = identity;
+            // if we're stacking, "infer zero" gap mode gets markers in the
+            // gap points - because we've inferred a zero there - but other
+            // modes (currently "interpolate", later "interrupt" hopefully)
+            // we don't draw generated markers
+            var stackGroup = trace.stackgroup;
+            var isInferZero = stackGroup && (
+                gd._fullLayout._scatterStackOpts[xa._id + ya._id][stackGroup].stackgaps === 'infer zero');
+            if(trace.marker.maxdisplayed || trace._needsCull) {
+                showFilter = isInferZero ? visFilterWithGaps : visFilter;
+            }
+            else if(stackGroup && !isInferZero) {
+                showFilter = gapFilter;
+            }
 
-        if(showText) {
-            textFilter = (trace.marker.maxdisplayed || trace._needsCull) ? visFilter : Lib.identity;
+            if(showMarkers) markerFilter = showFilter;
+            if(showText) textFilter = showFilter;
         }
 
         // marker points
 
-        selection = s.selectAll('path.point');
+        selection = points.selectAll('path.point');
 
         join = selection.data(markerFilter, keyFunc);
 
@@ -478,7 +476,7 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         }
 
         // text points
-        selection = s.selectAll('g');
+        selection = text.selectAll('g');
         join = selection.data(textFilter, keyFunc);
 
         // each text needs to go in its own 'g' in case
@@ -517,35 +515,23 @@ function plotOne(gd, idx, plotinfo, cdscatter, cdscatterAll, element, transition
         join.exit().remove();
     }
 
-    // NB: selectAll is evaluated on instantiation:
-    var pointSelection = tr.selectAll('.points');
-
-    // Join with new data
-    join = pointSelection.data([cdscatter]);
-
-    // Transition existing, but don't defer this to an async .transition since
-    // there's no timing involved:
-    pointSelection.each(makePoints);
-
-    join.enter().append('g')
-        .classed('points', true)
-        .each(makePoints);
-
-    join.exit().remove();
+    points.datum(cdscatter);
+    text.datum(cdscatter);
+    makePoints(points, text, cdscatter);
 
     // lastly, clip points groups of `cliponaxis !== false` traces
     // on `plotinfo._hasClipOnAxisFalse === true` subplots
-    join.each(function(d) {
-        var hasClipOnAxisFalse = d[0].trace.cliponaxis === false;
-        Drawing.setClipUrl(d3.select(this), hasClipOnAxisFalse ? null : plotinfo.layerClipId);
-    });
+    var hasClipOnAxisFalse = trace.cliponaxis === false;
+    var clipUrl = hasClipOnAxisFalse ? null : plotinfo.layerClipId;
+    Drawing.setClipUrl(points, clipUrl, gd);
+    Drawing.setClipUrl(text, clipUrl, gd);
 }
 
 function selectMarkers(gd, idx, plotinfo, cdscatter, cdscatterAll) {
-    var xa = plotinfo.xaxis,
-        ya = plotinfo.yaxis,
-        xr = d3.extent(Lib.simpleMap(xa.range, xa.r2c)),
-        yr = d3.extent(Lib.simpleMap(ya.range, ya.r2c));
+    var xa = plotinfo.xaxis;
+    var ya = plotinfo.yaxis;
+    var xr = d3.extent(Lib.simpleMap(xa.range, xa.r2c));
+    var yr = d3.extent(Lib.simpleMap(ya.range, ya.r2c));
 
     var trace = cdscatter[0].trace;
     if(!subTypes.hasMarkers(trace)) return;
@@ -557,10 +543,10 @@ function selectMarkers(gd, idx, plotinfo, cdscatter, cdscatterAll) {
     if(mnum === 0) return;
 
     var cd = cdscatter.filter(function(v) {
-            return v.x >= xr[0] && v.x <= xr[1] && v.y >= yr[0] && v.y <= yr[1];
-        }),
-        inc = Math.ceil(cd.length / mnum),
-        tnum = 0;
+        return v.x >= xr[0] && v.x <= xr[1] && v.y >= yr[0] && v.y <= yr[1];
+    });
+    var inc = Math.ceil(cd.length / mnum);
+    var tnum = 0;
     cdscatterAll.forEach(function(cdj, j) {
         var tracei = cdj[0].trace;
         if(subTypes.hasMarkers(tracei) &&

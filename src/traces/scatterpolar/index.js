@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -15,7 +15,7 @@ module.exports = {
     categories: ['polar', 'symbols', 'showLegend', 'scatter-like'],
 
     attributes: require('./attributes'),
-    supplyDefaults: require('./defaults'),
+    supplyDefaults: require('./defaults').supplyDefaults,
     colorbar: require('../scatter/marker_colorbar'),
     calc: require('./calc'),
     plot: require('./plot'),

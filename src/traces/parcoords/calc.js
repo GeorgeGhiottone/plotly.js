@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -8,18 +8,28 @@
 
 'use strict';
 
-var hasColorscale = require('../../components/colorscale/has_colorscale');
+var hasColorscale = require('../../components/colorscale/helpers').hasColorscale;
 var calcColorscale = require('../../components/colorscale/calc');
 var Lib = require('../../lib');
 var wrap = require('../../lib/gup').wrap;
 
 module.exports = function calc(gd, trace) {
-    var cs = !!trace.line.colorscale && Lib.isArrayOrTypedArray(trace.line.color);
+
+    for(var i = 0; i < trace.dimensions.length; i++) {
+        trace.dimensions[i].values = convertTypedArray(trace.dimensions[i].values);
+    }
+    trace.line.color = convertTypedArray(trace.line.color);
+
+    var cs = !!trace.line.colorscale && Array.isArray(trace.line.color);
     var color = cs ? trace.line.color : constHalf(trace._length);
     var cscale = cs ? trace.line.colorscale : [[0, trace.line.color], [1, trace.line.color]];
 
     if(hasColorscale(trace, 'line')) {
-        calcColorscale(trace, color, 'line', 'c');
+        calcColorscale(gd, trace, {
+            vals: color,
+            containerStr: 'line',
+            cLetter: 'c'
+        });
     }
 
     return wrap({
@@ -34,4 +44,8 @@ function constHalf(len) {
         out[i] = 0.5;
     }
     return out;
+}
+
+function convertTypedArray(a) {
+    return (Lib.isTypedArray(a)) ? Array.prototype.slice.call(a) : a;
 }

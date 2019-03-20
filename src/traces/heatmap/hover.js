@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -69,10 +69,10 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode, hoverLay
         ny = Math.max(0, Math.min(y2.length - 2, Lib.findBin(yval, y2)));
     }
 
-    var x0 = xa.c2p(x[nx]),
-        x1 = xa.c2p(x[nx + 1]),
-        y0 = ya.c2p(y[ny]),
-        y1 = ya.c2p(y[ny + 1]);
+    var x0 = xa.c2p(x[nx]);
+    var x1 = xa.c2p(x[nx + 1]);
+    var y0 = ya.c2p(y[ny]);
+    var y1 = ya.c2p(y[ny + 1]);
 
     if(contour) {
         x1 = x0;
@@ -93,7 +93,9 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode, hoverLay
     if(zmask && !zmask[ny][nx]) zVal = undefined;
 
     var text;
-    if(Array.isArray(cd0.text) && Array.isArray(cd0.text[ny])) {
+    if(Array.isArray(cd0.hovertext) && Array.isArray(cd0.hovertext[ny])) {
+        text = cd0.hovertext[ny][nx];
+    } else if(Array.isArray(cd0.text) && Array.isArray(cd0.text[ny])) {
         text = cd0.text[ny][nx];
     }
 

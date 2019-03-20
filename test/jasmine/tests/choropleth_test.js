@@ -8,6 +8,7 @@ var d3 = require('d3');
 var createGraphDiv = require('../assets/create_graph_div');
 var destroyGraphDiv = require('../assets/destroy_graph_div');
 var mouseEvent = require('../assets/mouse_event');
+var failTest = require('../assets/fail_test');
 
 var customAssertions = require('../assets/custom_assertions');
 var assertHoverLabelStyle = customAssertions.assertHoverLabelStyle;
@@ -17,14 +18,14 @@ describe('Test choropleth', function() {
     'use strict';
 
     describe('supplyDefaults', function() {
-        var traceIn,
-            traceOut;
+        var traceIn;
+        var traceOut;
 
-        var defaultColor = '#444',
-            layout = {
-                font: Plots.layoutAttributes.font,
-                _dfltTitle: {colorbar: 'cb'}
-            };
+        var defaultColor = '#444';
+        var layout = {
+            font: Plots.layoutAttributes.font,
+            _dfltTitle: {colorbar: 'cb'}
+        };
 
         beforeEach(function() {
             traceOut = {};
@@ -113,6 +114,18 @@ describe('Test choropleth hover:', function() {
         .then(done);
     });
 
+    it('should use the hovertemplate', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/geo_first.json'));
+        fig.data[1].hovertemplate = 'tpl %{z}<extra>x</extra>';
+
+        run(
+            [400, 160],
+            fig,
+            ['tpl 10', 'x']
+        )
+        .then(done);
+    });
+
     it('should generate hover label info (\'text\' single value case)', function(done) {
         var fig = Lib.extendDeep({}, require('@mocks/geo_first.json'));
         fig.data[1].text = 'tExT';
@@ -129,6 +142,20 @@ describe('Test choropleth hover:', function() {
     it('should generate hover label info (\'text\' array case)', function(done) {
         var fig = Lib.extendDeep({}, require('@mocks/geo_first.json'));
         fig.data[1].text = ['tExT', 'TeXt', '-text-'];
+        fig.data[1].hoverinfo = 'text';
+
+        run(
+            [400, 160],
+            fig,
+            ['-text-', null]
+        )
+        .then(done);
+    });
+
+    it('should generate hover labels from `hovertext`', function(done) {
+        var fig = Lib.extendDeep({}, require('@mocks/geo_first.json'));
+        fig.data[1].hovertext = ['tExT', 'TeXt', '-text-'];
+        fig.data[1].text = ['N', 'O', 'P'];
         fig.data[1].hoverinfo = 'text';
 
         run(
@@ -175,7 +202,7 @@ describe('Test choropleth hover:', function() {
     });
 });
 
-describe('choropleth bad data', function() {
+describe('choropleth drawing', function() {
     var gd;
 
     beforeEach(function() {
@@ -196,7 +223,38 @@ describe('choropleth bad data', function() {
             // only utopia logs - others are silently ignored
             expect(Lib.log).toHaveBeenCalledTimes(1);
         })
-        .catch(fail)
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('preserves order after hide/show', function(done) {
+        function getIndices() {
+            var out = [];
+            d3.selectAll('.choropleth').each(function(d) { out.push(d[0].trace.index); });
+            return out;
+        }
+
+        Plotly.newPlot(gd, [{
+            type: 'choropleth',
+            locations: ['CAN', 'USA'],
+            z: [1, 2]
+        }, {
+            type: 'choropleth',
+            locations: ['CAN', 'USA'],
+            z: [2, 1]
+        }])
+        .then(function() {
+            expect(getIndices()).toEqual([0, 1]);
+            return Plotly.restyle(gd, 'visible', false, [0]);
+        })
+        .then(function() {
+            expect(getIndices()).toEqual([1]);
+            return Plotly.restyle(gd, 'visible', true, [0]);
+        })
+        .then(function() {
+            expect(getIndices()).toEqual([0, 1]);
+        })
+        .catch(failTest)
         .then(done);
     });
 });

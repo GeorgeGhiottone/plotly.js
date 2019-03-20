@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -9,7 +9,9 @@
 'use strict';
 
 var histogramAttrs = require('../histogram/attributes');
+var makeBinAttrs = require('../histogram/bin_attributes');
 var heatmapAttrs = require('../heatmap/attributes');
+var hovertemplateAttrs = require('../../components/fx/hovertemplate_attributes');
 var colorscaleAttrs = require('../../components/colorscale/attributes');
 var colorbarAttrs = require('../../components/colorbar/attributes');
 
@@ -36,17 +38,18 @@ module.exports = extendFlat(
 
         histnorm: histogramAttrs.histnorm,
         histfunc: histogramAttrs.histfunc,
-        autobinx: histogramAttrs.autobinx,
         nbinsx: histogramAttrs.nbinsx,
-        xbins: histogramAttrs.xbins,
-        autobiny: histogramAttrs.autobiny,
+        xbins: makeBinAttrs('x'),
         nbinsy: histogramAttrs.nbinsy,
-        ybins: histogramAttrs.ybins,
+        ybins: makeBinAttrs('y'),
+        autobinx: histogramAttrs.autobinx,
+        autobiny: histogramAttrs.autobiny,
 
         xgap: heatmapAttrs.xgap,
         ygap: heatmapAttrs.ygap,
         zsmooth: heatmapAttrs.zsmooth,
-        zhoverformat: heatmapAttrs.zhoverformat
+        zhoverformat: heatmapAttrs.zhoverformat,
+        hovertemplate: hovertemplateAttrs({}, {keys: 'z'})
     },
     colorscaleAttrs('', {
         cLetter: 'z',

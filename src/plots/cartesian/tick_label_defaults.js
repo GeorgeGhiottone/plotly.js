@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -25,10 +25,11 @@ module.exports = function handleTickLabelDefaults(containerIn, containerOut, coe
     var showTickLabels = coerce('showticklabels');
     if(showTickLabels) {
         var font = options.font || {};
+        var contColor = containerOut.color;
         // as with titlefont.color, inherit axis.color only if one was
         // explicitly provided
-        var dfltFontColor = (containerOut.color !== layoutAttributes.color.dflt) ?
-            containerOut.color : font.color;
+        var dfltFontColor = (contColor && contColor !== layoutAttributes.color.dflt) ?
+            contColor : font.color;
         Lib.coerceFont(coerce, 'tickfont', {
             family: font.family,
             size: font.size,
@@ -70,15 +71,13 @@ module.exports = function handleTickLabelDefaults(containerIn, containerOut, coe
  *
  */
 function getShowAttrDflt(containerIn) {
-    var showAttrsAll = ['showexponent',
-            'showtickprefix',
-            'showticksuffix'],
-        showAttrs = showAttrsAll.filter(function(a) {
-            return containerIn[a] !== undefined;
-        }),
-        sameVal = function(a) {
-            return containerIn[a] === containerIn[showAttrs[0]];
-        };
+    var showAttrsAll = ['showexponent', 'showtickprefix', 'showticksuffix'];
+    var showAttrs = showAttrsAll.filter(function(a) {
+        return containerIn[a] !== undefined;
+    });
+    var sameVal = function(a) {
+        return containerIn[a] === containerIn[showAttrs[0]];
+    };
 
     if(showAttrs.every(sameVal) || showAttrs.length === 1) {
         return containerIn[showAttrs[0]];

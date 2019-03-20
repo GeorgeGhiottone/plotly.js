@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -15,7 +15,6 @@ var d3 = require('d3');
 
 var Lib = require('../lib');
 var xmlnsNamespaces = require('../constants/xmlns_namespaces');
-var stringMappings = require('../constants/string_mappings');
 var LINE_SPACING = require('../constants/alignment').LINE_SPACING;
 
 // text converter
@@ -117,13 +116,13 @@ exports.convertToTspans = function(_context, gd, _callback) {
                 var fill = _context.node().style.fill || 'black';
                 newSvg.select('g').attr({fill: fill, stroke: fill});
 
-                var newSvgW = getSize(newSvg, 'width'),
-                    newSvgH = getSize(newSvg, 'height'),
-                    newX = +_context.attr('x') - newSvgW *
-                        {start: 0, middle: 0.5, end: 1}[_context.attr('text-anchor') || 'start'],
-                    // font baseline is about 1/4 fontSize below centerline
-                    textHeight = fontSize || getSize(_context, 'height'),
-                    dy = -textHeight / 4;
+                var newSvgW = getSize(newSvg, 'width');
+                var newSvgH = getSize(newSvg, 'height');
+                var newX = +_context.attr('x') - newSvgW *
+                    {start: 0, middle: 0.5, end: 1}[_context.attr('text-anchor') || 'start'];
+                // font baseline is about 1/4 fontSize below centerline
+                var textHeight = fontSize || getSize(_context, 'height');
+                var dy = -textHeight / 4;
 
                 if(svgClass[0] === 'y') {
                     mathjaxGroup.attr({
@@ -135,7 +134,7 @@ exports.convertToTspans = function(_context, gd, _callback) {
                 else if(svgClass[0] === 'l') {
                     newSvg.attr({x: _context.attr('x'), y: dy - (newSvgH / 2)});
                 }
-                else if(svgClass[0] === 'a') {
+                else if(svgClass[0] === 'a' && svgClass.indexOf('atitle') !== 0) {
                     newSvg.attr({x: 0, y: dy});
                 }
                 else {
@@ -164,14 +163,48 @@ function cleanEscapesForTex(s) {
 }
 
 function texToSVG(_texString, _config, _callback) {
-    var randomID = 'math-output-' + Lib.randstr({}, 64);
-    var tmpDiv = d3.select('body').append('div')
-        .attr({id: randomID})
-        .style({visibility: 'hidden', position: 'absolute'})
-        .style({'font-size': _config.fontSize + 'px'})
-        .text(cleanEscapesForTex(_texString));
 
-    MathJax.Hub.Queue(['Typeset', MathJax.Hub, tmpDiv.node()], function() {
+    var originalRenderer,
+        originalConfig,
+        originalProcessSectionDelay,
+        tmpDiv;
+
+    MathJax.Hub.Queue(
+    function() {
+        originalConfig = Lib.extendDeepAll({}, MathJax.Hub.config);
+
+        originalProcessSectionDelay = MathJax.Hub.processSectionDelay;
+        if(MathJax.Hub.processSectionDelay !== undefined) {
+            // MathJax 2.5+
+            MathJax.Hub.processSectionDelay = 0;
+        }
+
+        return MathJax.Hub.Config({
+            messageStyle: 'none',
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            displayAlign: 'left',
+        });
+    },
+    function() {
+        // Get original renderer
+        originalRenderer = MathJax.Hub.config.menuSettings.renderer;
+        if(originalRenderer !== 'SVG') {
+            return MathJax.Hub.setRenderer('SVG');
+        }
+    },
+    function() {
+        var randomID = 'math-output-' + Lib.randstr({}, 64);
+        tmpDiv = d3.select('body').append('div')
+            .attr({id: randomID})
+            .style({visibility: 'hidden', position: 'absolute'})
+            .style({'font-size': _config.fontSize + 'px'})
+            .text(cleanEscapesForTex(_texString));
+
+        return MathJax.Hub.Typeset(tmpDiv.node());
+    },
+    function() {
         var glyphDefs = d3.select('body').select('#MathJax_SVG_glyphs');
 
         if(tmpDiv.select('.MathJax_SVG').empty() || !tmpDiv.select('svg').node()) {
@@ -184,6 +217,16 @@ function texToSVG(_texString, _config, _callback) {
         }
 
         tmpDiv.remove();
+
+        if(originalRenderer !== 'SVG') {
+            return MathJax.Hub.setRenderer(originalRenderer);
+        }
+    },
+    function() {
+        if(originalProcessSectionDelay !== undefined) {
+            MathJax.Hub.processSectionDelay = originalProcessSectionDelay;
+        }
+        return MathJax.Hub.Config(originalConfig);
     });
 }
 
@@ -221,15 +264,6 @@ var ZERO_WIDTH_SPACE = '\u200b';
  */
 var PROTOCOLS = ['http:', 'https:', 'mailto:', '', undefined, ':'];
 
-var STRIP_TAGS = new RegExp('</?(' + Object.keys(TAG_STYLES).join('|') + ')( [^>]*)?/?>', 'g');
-
-var ENTITY_TO_UNICODE = Object.keys(stringMappings.entityToUnicode).map(function(k) {
-    return {
-        regExp: new RegExp('&' + k + ';', 'g'),
-        sub: stringMappings.entityToUnicode[k]
-    };
-});
-
 var NEWLINES = /(\r\n?|\n)/g;
 
 var SPLIT_TAGS = /(<[^<>]*>)/;
@@ -254,6 +288,14 @@ var BR_TAG = /<br(\s+.*)?>/i;
  *
  * Because we hack in other attributes with style (sub & sup), drop any trailing
  * semicolon in user-supplied styles so we can consistently append the tag-dependent style
+ *
+ * These are for tag attributes; Chrome anyway will convert entities in
+ * attribute values, but not in attribute names
+ * you can test this by for example:
+ * > p = document.createElement('p')
+ * > p.innerHTML = '<span styl&#x65;="font-color:r&#x65;d;">Hi</span>'
+ * > p.innerHTML
+ * <- '<span styl&#x65;="font-color:red;">Hi</span>'
  */
 var STYLEMATCH = /(^|[\s"'])style\s*=\s*("([^"]*);?"|'([^']*);?')/i;
 var HREFMATCH = /(^|[\s"'])href\s*=\s*("([^"]*)"|'([^']*)')/i;
@@ -265,30 +307,138 @@ var POPUPMATCH = /(^|[\s"'])popup\s*=\s*("([\w=,]*)"|'([\w=,]*)')/i;
 function getQuotedMatch(_str, re) {
     if(!_str) return null;
     var match = _str.match(re);
-    return match && (match[3] || match[4]);
+    var result = match && (match[3] || match[4]);
+    return result && convertEntities(result);
 }
 
 var COLORMATCH = /(^|;)\s*color:/;
 
-exports.plainText = function(_str) {
-    // strip out our pseudo-html so we have a readable
-    // version to put into text fields
-    return (_str || '').replace(STRIP_TAGS, ' ');
-};
+/**
+ * Strip string of tags
+ *
+ * @param {string} _str : input string
+ * @param {object} opts :
+ * - maxLen {number} max length of output string
+ * - allowedTags {array} list of pseudo-html tags to NOT strip
+ * @return {string}
+ */
+exports.plainText = function(_str, opts) {
+    opts = opts || {};
 
-function replaceFromMapObject(_str, list) {
-    if(!_str) return '';
+    var len = (opts.len !== undefined && opts.len !== -1) ? opts.len : Infinity;
+    var allowedTags = opts.allowedTags !== undefined ? opts.allowedTags : ['br'];
 
-    for(var i = 0; i < list.length; i++) {
-        var item = list[i];
-        _str = _str.replace(item.regExp, item.sub);
+    var ellipsis = '...';
+    var eLen = ellipsis.length;
+
+    var oldParts = _str.split(SPLIT_TAGS);
+    var newParts = [];
+    var prevTag = '';
+    var l = 0;
+
+    for(var i = 0; i < oldParts.length; i++) {
+        var p = oldParts[i];
+        var match = p.match(ONE_TAG);
+        var tagType = match && match[2].toLowerCase();
+
+        if(tagType) {
+            // N.B. tags do not count towards string length
+            if(allowedTags.indexOf(tagType) !== -1) {
+                newParts.push(p);
+                prevTag = tagType;
+            }
+        } else {
+            var pLen = p.length;
+
+            if((l + pLen) < len) {
+                newParts.push(p);
+                l += pLen;
+            } else if(l < len) {
+                var pLen2 = len - l;
+
+                if(prevTag && (prevTag !== 'br' || pLen2 <= eLen || pLen <= eLen)) {
+                    newParts.pop();
+                }
+
+                if(len > eLen) {
+                    newParts.push(p.substr(0, pLen2 - eLen) + ellipsis);
+                } else {
+                    newParts.push(p.substr(0, pLen2));
+                }
+                break;
+            }
+
+            prevTag = '';
+        }
     }
 
-    return _str;
-}
+    return newParts.join('');
+};
 
+/*
+ * N.B. HTML entities are listed without the leading '&' and trailing ';'
+ * https://www.freeformatter.com/html-entities.html
+ *
+ * FWIW if we wanted to support the full set, it has 2261 entries:
+ * https://www.w3.org/TR/html5/entities.json
+ * though I notice that some of these are duplicates and/or are missing ";"
+ * eg: "&amp;", "&amp", "&AMP;", and "&AMP" all map to "&"
+ * We no longer need to include numeric entities here, these are now handled
+ * by String.fromCodePoint/fromCharCode
+ *
+ * Anyway the only ones that are really important to allow are the HTML special
+ * chars <, >, and &, because these ones can trigger special processing if not
+ * replaced by the corresponding entity.
+ */
+var entityToUnicode = {
+    mu: 'μ',
+    amp: '&',
+    lt: '<',
+    gt: '>',
+    nbsp: ' ',
+    times: '×',
+    plusmn: '±',
+    deg: '°'
+};
+
+// NOTE: in general entities can contain uppercase too (so [a-zA-Z]) but all the
+// ones we support use only lowercase. If we ever change that, update the regex.
+var ENTITY_MATCH = /&(#\d+|#x[\da-fA-F]+|[a-z]+);/g;
 function convertEntities(_str) {
-    return replaceFromMapObject(_str, ENTITY_TO_UNICODE);
+    return _str.replace(ENTITY_MATCH, function(fullMatch, innerMatch) {
+        var outChar;
+        if(innerMatch.charAt(0) === '#') {
+            // cannot use String.fromCodePoint in IE
+            outChar = fromCodePoint(
+                innerMatch.charAt(1) === 'x' ?
+                    parseInt(innerMatch.substr(2), 16) :
+                    parseInt(innerMatch.substr(1), 10)
+            );
+        }
+        else outChar = entityToUnicode[innerMatch];
+
+        // as in regular HTML, if we didn't decode the entity just
+        // leave the raw text in place.
+        return outChar || fullMatch;
+    });
+}
+exports.convertEntities = convertEntities;
+
+function fromCodePoint(code) {
+    // Don't allow overflow. In Chrome this turns into � but I feel like it's
+    // more useful to just not convert it at all.
+    if(code > 0x10FFFF) return;
+    var stringFromCodePoint = String.fromCodePoint;
+    if(stringFromCodePoint) return stringFromCodePoint(code);
+
+    // IE doesn't have String.fromCodePoint
+    // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/fromCodePoint
+    var stringFromCharCode = String.fromCharCode;
+    if(code <= 0xFFFF) return stringFromCharCode(code);
+    return stringFromCharCode(
+        (code >> 10) + 0xD7C0,
+        (code % 0x400) + 0xDC00
+    );
 }
 
 /*
@@ -302,15 +452,14 @@ function convertEntities(_str) {
  *   somewhat differently if it does, so just keep track of this when it happens.
  */
 function buildSVGText(containerNode, str) {
-    str = convertEntities(str)
-        /*
-         * Normalize behavior between IE and others wrt newlines and whitespace:pre
-         * this combination makes IE barf https://github.com/plotly/plotly.js/issues/746
-         * Chrome and FF display \n, \r, or \r\n as a space in this mode.
-         * I feel like at some point we turned these into <br> but currently we don't so
-         * I'm just going to cement what we do now in Chrome and FF
-         */
-        .replace(NEWLINES, ' ');
+    /*
+     * Normalize behavior between IE and others wrt newlines and whitespace:pre
+     * this combination makes IE barf https://github.com/plotly/plotly.js/issues/746
+     * Chrome and FF display \n, \r, or \r\n as a space in this mode.
+     * I feel like at some point we turned these into <br> but currently we don't so
+     * I'm just going to cement what we do now in Chrome and FF
+     */
+    str = str.replace(NEWLINES, ' ');
 
     var hasLink = false;
 
@@ -435,7 +584,7 @@ function buildSVGText(containerNode, str) {
             newLine();
         }
         else if(tagStyle === undefined) {
-            addTextNode(currentNode, parti);
+            addTextNode(currentNode, convertEntities(parti));
         }
         else {
             // tag - open or close
@@ -517,13 +666,13 @@ exports.positionText = function positionText(s, x, y) {
 };
 
 function alignHTMLWith(_base, container, options) {
-    var alignH = options.horizontalAlign,
-        alignV = options.verticalAlign || 'top',
-        bRect = _base.node().getBoundingClientRect(),
-        cRect = container.node().getBoundingClientRect(),
-        thisRect,
-        getTop,
-        getLeft;
+    var alignH = options.horizontalAlign;
+    var alignV = options.verticalAlign || 'top';
+    var bRect = _base.node().getBoundingClientRect();
+    var cRect = container.node().getBoundingClientRect();
+    var thisRect;
+    var getTop;
+    var getLeft;
 
     if(alignV === 'bottom') {
         getTop = function() { return bRect.bottom - thisRect.height; };
@@ -581,8 +730,8 @@ exports.makeEditable = function(context, options) {
         appendEditable();
         context.style({opacity: 0});
         // also hide any mathjax svg
-        var svgClass = handlerElement.attr('class'),
-            mathjaxClass;
+        var svgClass = handlerElement.attr('class');
+        var mathjaxClass;
         if(svgClass) mathjaxClass = '.' + svgClass.split(' ')[0] + '-math-group';
         else mathjaxClass = '[class*=-math-group]';
         if(mathjaxClass) {
@@ -630,8 +779,8 @@ exports.makeEditable = function(context, options) {
                 gd._editing = false;
                 context.text(this.textContent)
                     .style({opacity: 1});
-                var svgClass = d3.select(this).attr('class'),
-                    mathjaxClass;
+                var svgClass = d3.select(this).attr('class');
+                var mathjaxClass;
                 if(svgClass) mathjaxClass = '.' + svgClass.split(' ')[0] + '-math-group';
                 else mathjaxClass = '[class*=-math-group]';
                 if(mathjaxClass) {

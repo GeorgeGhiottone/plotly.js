@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -10,6 +10,8 @@
 
 var Lib = require('../../lib');
 var Color = require('../../components/color');
+var Template = require('../../plot_api/plot_template');
+
 var handleSubplotDefaults = require('../subplot_defaults');
 var getSubplotData = require('../get_data').getSubplotData;
 
@@ -19,10 +21,9 @@ var handleTickLabelDefaults = require('../cartesian/tick_label_defaults');
 var handleCategoryOrderDefaults = require('../cartesian/category_order_defaults');
 var handleLineGridDefaults = require('../cartesian/line_grid_defaults');
 var autoType = require('../cartesian/axis_autotype');
-var setConvert = require('../cartesian/set_convert');
 
-var setConvertAngular = require('./helpers').setConvertAngular;
 var layoutAttributes = require('./layout_attributes');
+var setConvert = require('./set_convert');
 var constants = require('./constants');
 var axisNames = constants.axisNames;
 
@@ -31,6 +32,7 @@ function handleDefaults(contIn, contOut, coerce, opts) {
     opts.bgColor = Color.combine(bgColor, opts.paper_bgcolor);
 
     var sector = coerce('sector');
+    coerce('hole');
 
     // could optimize, subplotData is not always needed!
     var subplotData = getSubplotData(opts.fullData, constants.name, opts.id);
@@ -49,12 +51,9 @@ function handleDefaults(contIn, contOut, coerce, opts) {
         }
 
         var axIn = contIn[axName];
-        // Note: does not need template propagation, since coerceAxis is still
-        // based on the subplot-wide coerce function. Though it may be more
-        // efficient to make a new coerce function, then we *would* need to
-        // propagate the template.
-        var axOut = contOut[axName] = {};
+        var axOut = Template.newContainer(contOut, axName);
         axOut._id = axOut._name = axName;
+        axOut._attr = opts.id + '.' + axName;
         axOut._traceIndices = subplotData.map(function(t) { return t._expandedIndex; });
 
         var dataAttr = constants.axisName2dataArray[axName];
@@ -66,7 +65,9 @@ function handleDefaults(contIn, contOut, coerce, opts) {
         });
 
         var visible = coerceAxis('visible');
-        setConvert(axOut, layoutOut);
+        setConvert(axOut, contOut, layoutOut);
+
+        coerceAxis('uirevision', contOut.uirevision);
 
         var dfltColor;
         var dfltFontColor;
@@ -92,7 +93,7 @@ function handleDefaults(contIn, contOut, coerce, opts) {
             case 'radialaxis':
                 var autoRange = coerceAxis('autorange', !axOut.isValidRange(axIn.range));
                 axIn.autorange = autoRange;
-                if(autoRange) coerceAxis('rangemode');
+                if(autoRange && (axType === 'linear' || axType === '-')) coerceAxis('rangemode');
                 if(autoRange === 'reversed') axOut._m = -1;
 
                 coerceAxis('range');
@@ -102,8 +103,8 @@ function handleDefaults(contIn, contOut, coerce, opts) {
                     coerceAxis('side');
                     coerceAxis('angle', sector[0]);
 
-                    coerceAxis('title');
-                    Lib.coerceFont(coerceAxis, 'titlefont', {
+                    coerceAxis('title.text');
+                    Lib.coerceFont(coerceAxis, 'title.font', {
                         family: opts.font.family,
                         size: Math.round(opts.font.size * 1.2),
                         color: dfltFontColor
@@ -140,8 +141,6 @@ function handleDefaults(contIn, contOut, coerce, opts) {
 
                 var direction = coerceAxis('direction');
                 coerceAxis('rotation', {counterclockwise: 0, clockwise: 90}[direction]);
-
-                setConvertAngular(axOut);
                 break;
         }
 
@@ -201,7 +200,7 @@ function handleAxisTypeDefaults(axIn, axOut, coerce, subplotData, dataAttr) {
             }
         }
 
-        if(trace) {
+        if(trace && trace[dataAttr]) {
             axOut.type = autoType(trace[dataAttr], 'gregorian');
         }
 

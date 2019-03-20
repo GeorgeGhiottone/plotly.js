@@ -98,8 +98,8 @@ describe('Test shapes defaults:', function() {
         Axes.setConvert(fullLayout.xaxis2);
         Axes.setConvert(fullLayout.yaxis2);
 
-        var shape1In = {type: 'rect'},
-            shape2In = {type: 'circle', xref: 'x2', yref: 'y2'};
+        var shape1In = {type: 'rect'};
+        var shape2In = {type: 'circle', xref: 'x2', yref: 'y2'};
 
         var layoutIn = {
             shapes: [shape1In, shape2In]
@@ -107,8 +107,8 @@ describe('Test shapes defaults:', function() {
 
         _supply(layoutIn, fullLayout);
 
-        var shape1Out = fullLayout.shapes[0],
-            shape2Out = fullLayout.shapes[1];
+        var shape1Out = fullLayout.shapes[0];
+        var shape2Out = fullLayout.shapes[1];
 
         // default positions are 1/4 and 3/4 of the full range of that axis
         expect(shape1Out.x0).toBe(5);
@@ -190,8 +190,8 @@ describe('Test shapes:', function() {
     beforeEach(function(done) {
         gd = createGraphDiv();
 
-        var mockData = Lib.extendDeep([], mock.data),
-            mockLayout = Lib.extendDeep({}, mock.layout);
+        var mockData = Lib.extendDeep([], mock.data);
+        var mockLayout = Lib.extendDeep({}, mock.layout);
 
         Plotly.plot(gd, mockData, mockLayout).then(done);
     });
@@ -367,6 +367,8 @@ describe('Test shapes:', function() {
         });
 
         it('can replace the shapes array', function(done) {
+            spyOn(Lib, 'warn');
+
             Plotly.relayout(gd, { shapes: [
                 getRandomShape(),
                 getRandomShape()
@@ -375,17 +377,18 @@ describe('Test shapes:', function() {
                 expect(countShapePathsInLowerLayer()).toEqual(0);
                 expect(countShapePathsInSubplots()).toEqual(0);
                 expect(gd.layout.shapes.length).toBe(2);
+                expect(Lib.warn).not.toHaveBeenCalled();
             })
             .catch(failTest)
             .then(done);
         });
 
         it('should be able to update a shape layer', function(done) {
-            var index = countShapes(gd),
-                astr = 'shapes[' + index + ']',
-                shape = getRandomShape(),
-                shapesInLowerLayer = countShapePathsInLowerLayer(),
-                shapesInUpperLayer = countShapePathsInUpperLayer();
+            var index = countShapes(gd);
+            var astr = 'shapes[' + index + ']';
+            var shape = getRandomShape();
+            var shapesInLowerLayer = countShapePathsInLowerLayer();
+            var shapesInUpperLayer = countShapePathsInUpperLayer();
 
             shape.xref = 'paper';
             shape.yref = 'paper';
@@ -1072,9 +1075,9 @@ describe('A fixed size shape', function() {
     // and (ii) line has a different resize behavior.
     var shapeAndResizeTypes = combinations([{type: 'rect'}, {type: 'circle'}], resizeTypes);
     shapeAndResizeTypes.forEach(function(testCase) {
-        describe('@flaky of type ' + testCase.type + ' can be ' + testCase.resizeDisplayName, function() {
+        describe('of type ' + testCase.type + ' can be ' + testCase.resizeDisplayName, function() {
             resizeDirections.forEach(function(direction) {
-                it('over direction ' + direction, function(done) {
+                it('@flaky over direction ' + direction, function(done) {
                     layout.shapes[0].type = testCase.type;
 
                     Plotly.plot(gd, data, layout, {editable: true})
@@ -1102,14 +1105,14 @@ describe('A fixed size shape', function() {
         });
     });
 
-    describe('@flaky of type line', function() {
+    describe('of type line', function() {
         beforeEach(function() {
             layout.shapes[0].type = 'line';
             layout.shapes[0].yanchor = 3;
 
         });
 
-        it('can be moved by dragging the middle', function(done) {
+        it('@flaky can be moved by dragging the middle', function(done) {
             Plotly.plot(gd, data, layout, {editable: true})
               .then(function() {
                   var shapeNodeBeforeDrag = getFirstShapeNode();
@@ -1130,7 +1133,7 @@ describe('A fixed size shape', function() {
               });
         });
 
-        it('can be resized by dragging the start point', function(done) {
+        it('@flaky can be resized by dragging the start point', function(done) {
             Plotly.plot(gd, data, layout, {editable: true})
               .then(function() {
                   var shapeNodeBeforeDrag = getFirstShapeNode();
@@ -1153,7 +1156,7 @@ describe('A fixed size shape', function() {
               });
         });
 
-        it('can be resized by dragging the end point', function(done) {
+        it('@flaky can be resized by dragging the end point', function(done) {
             Plotly.plot(gd, data, layout, {editable: true})
               .then(function() {
                   var shapeNodeBeforeDrag = getFirstShapeNode();
@@ -1266,7 +1269,7 @@ describe('A fixed size shape', function() {
     });
 });
 
-describe('@flaky Test shapes', function() {
+describe('Test shapes', function() {
     'use strict';
 
     var gd, data, layout, config;
@@ -1308,7 +1311,7 @@ describe('@flaky Test shapes', function() {
     ];
 
     testCases.forEach(function(testCase) {
-        it(testCase.title + ' should be draggable', function(done) {
+        it('@flaky ' + testCase.title + ' should be draggable', function(done) {
             setupLayout(testCase, [{type: 'line'}, {type: 'rect'}, {type: 'circle'}, {type: 'path'}]);
             testDragEachShape(done);
         });
@@ -1319,7 +1322,7 @@ describe('@flaky Test shapes', function() {
             var testTitle = testCase.title +
                 ' should be resizeable over direction ' +
                 direction;
-            it(testTitle, function(done) {
+            it('@flaky ' + testTitle, function(done) {
                 // Exclude line because it has a different resize behavior
                 setupLayout(testCase, [{type: 'rect'}, {type: 'circle'}, {type: 'path'}]);
                 testResizeEachShape(direction, done);
@@ -1331,7 +1334,7 @@ describe('@flaky Test shapes', function() {
         ['start', 'end'].forEach(function(linePoint) {
             var testTitle = 'Line shape ' + testCase.title +
               ' should be resizable by dragging the ' + linePoint + ' point';
-            it(testTitle, function(done) {
+            it('@flaky ' + testTitle, function(done) {
                 setupLayout(testCase, [{type: 'line'}]);
                 testLineResize(linePoint, done);
             });
@@ -1341,14 +1344,14 @@ describe('@flaky Test shapes', function() {
     function setupLayout(testCase, layoutShapes) {
         Lib.extendDeep(layout, testCase);
 
-        var xrange = testCase.xaxis ? testCase.xaxis.range : [0.25, 0.75],
-            yrange = testCase.yaxis ? testCase.yaxis.range : [0.25, 0.75],
-            xref = testCase.xaxis ? 'x' : 'paper',
-            yref = testCase.yaxis ? 'y' : 'paper',
-            x0 = xrange[0],
-            x1 = xrange[1],
-            y0 = yrange[0],
-            y1 = yrange[1];
+        var xrange = testCase.xaxis ? testCase.xaxis.range : [0.25, 0.75];
+        var yrange = testCase.yaxis ? testCase.yaxis.range : [0.25, 0.75];
+        var xref = testCase.xaxis ? 'x' : 'paper';
+        var yref = testCase.yaxis ? 'y' : 'paper';
+        var x0 = xrange[0];
+        var x1 = xrange[1];
+        var y0 = yrange[0];
+        var y1 = yrange[1];
 
         if(testCase.xaxis && testCase.xaxis.type === 'log') {
             x0 = Math.pow(10, x0);
@@ -1370,9 +1373,9 @@ describe('@flaky Test shapes', function() {
             y1 = 1;
         }
 
-        var x0y0 = x0 + ',' + y0,
-            x1y1 = x1 + ',' + y1,
-            x1y0 = x1 + ',' + y0;
+        var x0y0 = x0 + ',' + y0;
+        var x1y1 = x1 + ',' + y1;
+        var x1y0 = x1 + ',' + y0;
 
         layoutShapes.forEach(function(s) {
             s.xref = xref;
@@ -1400,8 +1403,8 @@ describe('@flaky Test shapes', function() {
         expect(layoutShapes.length).toBe(4);  // line, rect, circle and path
 
         layoutShapes.forEach(function(layoutShape, index) {
-            var dx = 100,
-                dy = 100;
+            var dx = 100;
+            var dy = 100;
             promise = promise.then(function() {
                 var node = layoutShape.type === 'line' ?
                   getMoveLineDragElement(index) :
@@ -1429,8 +1432,8 @@ describe('@flaky Test shapes', function() {
         layoutShapes.forEach(function(layoutShape, index) {
             if(layoutShape.path) return;
 
-            var dx = dxToShrinkWidth[direction],
-                dy = dyToShrinkHeight[direction];
+            var dx = dxToShrinkWidth[direction];
+            var dy = dyToShrinkHeight[direction];
 
             promise = promise.then(function() {
                 var node = getShapeNode(index);
@@ -1457,10 +1460,10 @@ describe('@flaky Test shapes', function() {
     }
 
     function testShapeDrag(dx, dy, layoutShape, node) {
-        var xa = Axes.getFromId(gd, layoutShape.xref),
-            ya = Axes.getFromId(gd, layoutShape.yref),
-            x2p = helpers.getDataToPixel(gd, xa),
-            y2p = helpers.getDataToPixel(gd, ya, true);
+        var xa = Axes.getFromId(gd, layoutShape.xref);
+        var ya = Axes.getFromId(gd, layoutShape.yref);
+        var x2p = helpers.getDataToPixel(gd, xa);
+        var y2p = helpers.getDataToPixel(gd, ya, true);
 
         var initialCoordinates = getShapeCoordinates(layoutShape, x2p, y2p);
 
@@ -1484,25 +1487,25 @@ describe('@flaky Test shapes', function() {
     }
 
     function testPathDrag(dx, dy, layoutShape, node) {
-        var xa = Axes.getFromId(gd, layoutShape.xref),
-            ya = Axes.getFromId(gd, layoutShape.yref),
-            x2p = helpers.getDataToPixel(gd, xa),
-            y2p = helpers.getDataToPixel(gd, ya, true);
+        var xa = Axes.getFromId(gd, layoutShape.xref);
+        var ya = Axes.getFromId(gd, layoutShape.yref);
+        var x2p = helpers.getDataToPixel(gd, xa);
+        var y2p = helpers.getDataToPixel(gd, ya, true);
 
-        var initialPath = layoutShape.path,
-            initialCoordinates = getPathCoordinates(initialPath, x2p, y2p);
+        var initialPath = layoutShape.path;
+        var initialCoordinates = getPathCoordinates(initialPath, x2p, y2p);
 
         expect(initialCoordinates.length).toBe(6);
 
         return drag(node, dx, dy).then(function() {
-            var finalPath = layoutShape.path,
-                finalCoordinates = getPathCoordinates(finalPath, x2p, y2p);
+            var finalPath = layoutShape.path;
+            var finalCoordinates = getPathCoordinates(finalPath, x2p, y2p);
 
             expect(finalCoordinates.length).toBe(initialCoordinates.length);
 
             for(var i = 0; i < initialCoordinates.length; i++) {
-                var initialCoordinate = initialCoordinates[i],
-                    finalCoordinate = finalCoordinates[i];
+                var initialCoordinate = initialCoordinates[i];
+                var finalCoordinate = finalCoordinates[i];
 
                 if(initialCoordinate.x) {
                     expect(finalCoordinate.x - initialCoordinate.x)
@@ -1517,10 +1520,10 @@ describe('@flaky Test shapes', function() {
     }
 
     function testShapeResize(direction, dx, dy, layoutShape, node) {
-        var xa = Axes.getFromId(gd, layoutShape.xref),
-            ya = Axes.getFromId(gd, layoutShape.yref),
-            x2p = helpers.getDataToPixel(gd, xa),
-            y2p = helpers.getDataToPixel(gd, ya, true);
+        var xa = Axes.getFromId(gd, layoutShape.xref);
+        var ya = Axes.getFromId(gd, layoutShape.yref);
+        var x2p = helpers.getDataToPixel(gd, xa);
+        var y2p = helpers.getDataToPixel(gd, ya, true);
 
         var initialCoordinates = getShapeCoordinates(layoutShape, x2p, y2p);
 
@@ -1565,10 +1568,10 @@ describe('@flaky Test shapes', function() {
         var promise = Plotly.plot(gd, data, layout, config);
         var layoutShape = gd.layout.shapes[0];
 
-        var xa = Axes.getFromId(gd, layoutShape.xref),
-            ya = Axes.getFromId(gd, layoutShape.yref),
-            x2p = helpers.getDataToPixel(gd, xa),
-            y2p = helpers.getDataToPixel(gd, ya, true);
+        var xa = Axes.getFromId(gd, layoutShape.xref);
+        var ya = Axes.getFromId(gd, layoutShape.yref);
+        var x2p = helpers.getDataToPixel(gd, xa);
+        var y2p = helpers.getDataToPixel(gd, ya, true);
 
 
         promise = promise.then(function() {
@@ -1597,12 +1600,12 @@ describe('@flaky Test shapes', function() {
         var coordinates = [];
 
         pathString.match(constants.segmentRE).forEach(function(segment) {
-            var paramNumber = 0,
-                segmentType = segment.charAt(0),
-                xParams = constants.paramIsX[segmentType],
-                yParams = constants.paramIsY[segmentType],
-                nParams = constants.numParams[segmentType],
-                params = segment.substr(1).match(constants.paramRE);
+            var paramNumber = 0;
+            var segmentType = segment.charAt(0);
+            var xParams = constants.paramIsX[segmentType];
+            var yParams = constants.paramIsY[segmentType];
+            var nParams = constants.numParams[segmentType];
+            var params = segment.substr(1).match(constants.paramRE);
 
             if(params) {
                 params.forEach(function(param) {

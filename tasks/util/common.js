@@ -54,8 +54,8 @@ exports.getTimeLastModified = function(filePath) {
         throw new Error(filePath + ' does not exist');
     }
 
-    var stats = fs.statSync(filePath),
-        formattedTime = exports.formatTime(stats.mtime);
+    var stats = fs.statSync(filePath);
+    var formattedTime = exports.formatTime(stats.mtime);
 
     return formattedTime;
 };
@@ -104,4 +104,31 @@ exports.formatEnumeration = function(list) {
 
         return '`' + l + '`' + ending;
     }).join(' ');
+};
+
+exports.hasJasmineTestTag = function(node, tag) {
+    var re = tag ?
+        new RegExp('@' + tag + '\\s') :
+        new RegExp('@' + '\\w');
+    return re.test(node.source());
+};
+
+function isJasmineBase(block, node, tag) {
+    return (
+        node.type === 'Literal' &&
+        node.parent &&
+        node.parent.type === 'CallExpression' &&
+        node.parent.callee &&
+        node.parent.callee.type === 'Identifier' &&
+        node.parent.callee.name === block &&
+        (tag === undefined || exports.hasJasmineTestTag(node, tag))
+    );
+}
+
+exports.isJasmineTestIt = function(node, tag) {
+    return isJasmineBase('it', node, tag);
+};
+
+exports.isJasmineTestDescribe = function(node, tag) {
+    return isJasmineBase('describe', node, tag);
 };

@@ -105,7 +105,9 @@ function rotate(rad, point) {
 function generate(maxJitter) {
     var x = d3.range(-1, 1.5, 0.5); // left closed, right open interval
     var y = d3.range(-1, 1.5, 0.5); // left closed, right open interval
-    var i, j, p, z = new Array(x.length);
+    var z = new Array(x.length);
+    var i, j, p;
+
     for(i = 0; i < x.length; i++) {
         z[i] = new Array(y.length);
         for(j = 0; j < y.length; j++) {
@@ -167,7 +169,7 @@ function makePlot(gd, mock, done) {
         .then(done);
 }
 
-describe('@gl contourgl plots', function() {
+describe('contourgl plots', function() {
 
     var gd;
 
@@ -182,13 +184,13 @@ describe('@gl contourgl plots', function() {
 
     // this first dataset is a special case, very forgiving to the contour renderer, as it's convex,
     // contains no inflexion points etc.
-    it('render without raising an error', function(done) {
+    it('@gl render without raising an error', function(done) {
         makePlot(gd, plotData, done);
     });
 
-    it('render without raising an error', function(done) {
-        var mock = require('@mocks/simple_contour.json'),
-            mockCopy = Lib.extendDeep({}, mock);
+    it('@gl render without raising an error', function(done) {
+        var mock = require('@mocks/simple_contour.json');
+        var mockCopy = Lib.extendDeep({}, mock);
 
         mockCopy.data[0].type = 'contourgl';
         mockCopy.data[0].contours = { coloring: 'fill' };

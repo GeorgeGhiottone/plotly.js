@@ -1,5 +1,5 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
@@ -55,7 +55,7 @@ proto.handlePick = function(selection) {
             selection.data.divergence
         ];
 
-        selection.textLabel = this.data.text;
+        selection.textLabel = this.data.hovertext || this.data.text;
 
         return true;
     }
@@ -153,7 +153,7 @@ function convert(scene, trace) {
         tubeOpts.startingPositions = startingPositions;
     }
 
-    tubeOpts.colormap = parseColorScale(trace.colorscale);
+    tubeOpts.colormap = parseColorScale(trace);
     tubeOpts.tubeSize = trace.sizeref;
     tubeOpts.maxLength = trace.maxdisplayed;
 

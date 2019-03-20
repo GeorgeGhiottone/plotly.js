@@ -1,16 +1,15 @@
 /**
-* Copyright 2012-2018, Plotly, Inc.
+* Copyright 2012-2019, Plotly, Inc.
 * All rights reserved.
 *
 * This source code is licensed under the MIT license found in the
 * LICENSE file in the root directory of this source tree.
 */
 
-
 'use strict';
 
-var Colorscale = require('../colorscale');
 var drawColorbar = require('./draw');
+var flipScale = require('../colorscale/helpers').flipScale;
 
 /**
  * connectColorbar: create a colorbar from a trace, using its module to
@@ -42,26 +41,26 @@ module.exports = function connectColorbar(gd, cd, moduleOpts) {
 
     var trace = cd[0].trace;
     var cbId = 'cb' + trace.uid;
-    var containerName = moduleOpts.container;
-    var container = containerName ? trace[containerName] : trace;
+    moduleOpts = Array.isArray(moduleOpts) ? moduleOpts : [moduleOpts];
 
-    gd._fullLayout._infolayer.selectAll('.' + cbId).remove();
-    if(!container || !container.showscale) return;
+    for(var i = 0; i < moduleOpts.length; i++) {
+        var containerName = moduleOpts[i].container;
 
-    var zmin = container[moduleOpts.min];
-    var zmax = container[moduleOpts.max];
+        var container = containerName ? trace[containerName] : trace;
 
-    var cb = cd[0].t.cb = drawColorbar(gd, cbId);
-    var sclFunc = Colorscale.makeColorScaleFunc(
-        Colorscale.extractScale(
-            container.colorscale,
-            zmin,
-            zmax
-        ),
-        { noNumericCheck: true }
-    );
+        gd._fullLayout._infolayer.selectAll('.' + cbId).remove();
+        if(!container || !container.showscale) continue;
 
-    cb.fillcolor(sclFunc)
-        .filllevels({start: zmin, end: zmax, size: (zmax - zmin) / 254})
-        .options(container.colorbar)();
+        var cb = cd[0].t.cb = drawColorbar(gd, cbId);
+
+        var scl = container.reversescale ?
+            flipScale(container.colorscale) :
+            container.colorscale;
+
+        cb.fillgradient(scl)
+            .zrange([container[moduleOpts[i].min], container[moduleOpts[i].max]])
+            .options(container.colorbar)();
+
+        return;
+    }
 };

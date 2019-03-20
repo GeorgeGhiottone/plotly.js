@@ -12,6 +12,7 @@ var failTest = require('../assets/fail_test');
 var mouseEvent = require('../assets/mouse_event');
 var click = require('../assets/click');
 var supplyAllDefaults = require('../assets/supply_defaults');
+var readPixel = require('../assets/read_pixel');
 
 // mock with two dimensions (one panel); special case, e.g. left and right panel is obv. the same
 var mock2 = require('@mocks/gl2d_parcoords_2.json');
@@ -42,6 +43,23 @@ function purgeGraphDiv(done) {
     destroyGraphDiv();
 
     return delay(50)().then(done);
+}
+
+function getAvgPixelByChannel(id) {
+    var canvas = d3.select(id).node();
+
+    var imgData = readPixel(canvas, 0, 0, canvas.width, canvas.height);
+    var n = imgData.length * 0.25;
+    var r = 0;
+    var g = 0;
+    var b = 0;
+
+    for(var i = 0; i < imgData.length; i++) {
+        r += imgData[i++];
+        g += imgData[i++];
+        b += imgData[i++];
+    }
+    return [r / n, g / n, b / n];
 }
 
 describe('parcoords initialization tests', function() {
@@ -78,14 +96,22 @@ describe('parcoords initialization tests', function() {
             expect(gd._fullData[0].tickfont).toEqual(expected);
             expect(gd._fullData[0].rangefont).toEqual(expected);
         });
+
+        it('should not coerce hoverlabel', function() {
+            var gd = Lib.extendDeep({}, mock1);
+
+            supplyAllDefaults(gd);
+
+            expect(gd._fullData[0].hoverlabel).toBeUndefined();
+        });
     });
 
     describe('parcoords defaults', function() {
 
         function _supply(traceIn) {
-            var traceOut = { visible: true },
-                defaultColor = '#444',
-                layout = { font: Plots.layoutAttributes.font };
+            var traceOut = { visible: true };
+            var defaultColor = '#444';
+            var layout = { font: Plots.layoutAttributes.font };
 
             Parcoords.supplyDefaults(traceIn, traceOut, defaultColor, layout);
 
@@ -258,6 +284,8 @@ describe('parcoords initialization tests', function() {
                 cauto: true,
                 cmin: 21,
                 cmax: 63,
+                _cmin: 21,
+                _cmax: 63,
                 autocolorscale: false,
                 reversescale: false,
                 showscale: false
@@ -298,10 +326,34 @@ describe('parcoords initialization tests', function() {
                 color: '#444'
             });
         });
+
+        it('\'dimensions.values\' and \'line.color\' should convert typed arrays to normal arrays', function() {
+            var fullTrace = _calc(Lib.extendDeep({}, base, {
+                dimensions: [{
+                    range: [1, 5],
+                    label: 'A',
+                    values: [1, 4, 3]
+                }, {
+                    range: [1, 5],
+                    label: 'B',
+                    values: new Float64Array([3, 1.5, 2]),
+                }, {
+                    range: [1, 5],
+                    label: 'C',
+                    values: new Int32Array([2, 4, 1]),
+                }],
+                line: {
+                    color: new Int32Array([0, 1, 2])
+                }
+            }));
+            expect(Array.isArray(fullTrace.line.color) === true).toEqual(true);
+            expect(Array.isArray(fullTrace.dimensions[1].values) === true).toEqual(true);
+            expect(Array.isArray(fullTrace.dimensions[2].values) === true).toEqual(true);
+        });
     });
 });
 
-describe('@gl parcoords edge cases', function() {
+describe('parcoords edge cases', function() {
     var gd;
     beforeEach(function() {
         gd = createGraphDiv();
@@ -309,7 +361,7 @@ describe('@gl parcoords edge cases', function() {
 
     afterEach(purgeGraphDiv);
 
-    it('Works fine with one panel only', function(done) {
+    it('@gl Works fine with one panel only', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock2);
         Plotly.plot(gd, mockCopy.data, mockCopy.layout).then(function() {
@@ -329,7 +381,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Do something sensible if there is no panel i.e. dimension count is less than 2', function(done) {
+    it('@gl Do something sensible if there is no panel i.e. dimension count is less than 2', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock1);
         Plotly.plot(gd, mockCopy.data, mockCopy.layout).then(function() {
@@ -347,7 +399,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Does not error with zero dimensions', function(done) {
+    it('@gl Does not error with zero dimensions', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock0);
 
@@ -361,7 +413,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Works with duplicate dimension labels', function(done) {
+    it('@gl Works with duplicate dimension labels', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock2);
 
@@ -378,7 +430,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Works with a single line; also, use a longer color array than the number of lines', function(done) {
+    it('@gl Works with a single line; also, use a longer color array than the number of lines', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock2);
         var dim, i, j;
@@ -405,7 +457,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Does not raise an error with zero lines and no specified range', function(done) {
+    it('@gl Does not raise an error with zero lines and no specified range', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock2);
         var dim, i;
@@ -429,7 +481,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Works with non-finite `values` elements', function(done) {
+    it('@gl Works with non-finite `values` elements', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock2);
         var dim, i, j;
@@ -457,7 +509,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('@noCI Works with 60 dimensions', function(done) {
+    it('@noCI @gl Works with 60 dimensions', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock1);
         var newDimension, i, j;
@@ -487,7 +539,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('@noCI Truncates 60+ dimensions to 60', function(done) {
+    it('@noCI @gl Truncates 60+ dimensions to 60', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock1);
         var newDimension, i, j;
@@ -515,7 +567,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('@noCI Truncates dimension values to the shortest array, retaining only 3 lines', function(done) {
+    it('@noCI @gl Truncates dimension values to the shortest array, retaining only 3 lines', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock1);
         var newDimension, i, j;
@@ -544,7 +596,7 @@ describe('@gl parcoords edge cases', function() {
         .then(done);
     });
 
-    it('Skip dimensions which are not plain objects or whose `values` is not an array', function(done) {
+    it('@gl Skip dimensions which are not plain objects or whose `values` is not an array', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock1);
         var newDimension, i, j;
@@ -578,12 +630,13 @@ describe('@gl parcoords edge cases', function() {
     });
 });
 
-describe('@gl parcoords Lifecycle methods', function() {
+describe('parcoords Lifecycle methods', function() {
+    var gd;
+    beforeEach(function() { gd = createGraphDiv(); });
     afterEach(purgeGraphDiv);
 
     it('Plotly.deleteTraces with one trace removes the plot', function(done) {
 
-        var gd = createGraphDiv();
         var mockCopy = Lib.extendDeep({}, mock);
 
         mockCopy.data[0].line.showscale = false;
@@ -601,9 +654,8 @@ describe('@gl parcoords Lifecycle methods', function() {
         .then(done);
     });
 
-    it('Plotly.deleteTraces with two traces removes the deleted plot', function(done) {
+    it('@gl Plotly.deleteTraces with two traces removes the deleted plot', function(done) {
 
-        var gd = createGraphDiv();
         var mockCopy = Lib.extendDeep({}, mock);
         var mockCopy2 = Lib.extendDeep({}, mock);
         mockCopy2.data[0].dimensions.splice(3, 4);
@@ -635,11 +687,25 @@ describe('@gl parcoords Lifecycle methods', function() {
             .then(done);
     });
 
-    it('Calling `Plotly.restyle` with zero panels left should erase lines', function(done) {
+    function _assertVisibleData(visible, msg) {
+        return function() {
+            var canvases = d3.selectAll('.gl-canvas');
+            expect(canvases.size()).toBe(3, msg);
+            canvases.each(function() {
+                var imageArray = readPixel(this, 0, 0, this.width, this.height);
+                var foundPixel = false;
+                var i = 0;
+                do {
+                    foundPixel = foundPixel || imageArray[i++] !== 0;
+                } while(!foundPixel && i < imageArray.length);
+                expect(foundPixel).toBe(visible, msg + ' - ' + this.className);
+            });
+        };
+    }
+
+    it('@gl Calling `Plotly.restyle` with zero panels left should erase lines', function(done) {
 
         var mockCopy = Lib.extendDeep({}, mock2);
-        var gd = createGraphDiv();
-        Plotly.plot(gd, mockCopy.data, mockCopy.layout);
 
         function restyleDimension(key, dimIndex, setterValue) {
             var value = Array.isArray(setterValue) ? setterValue[0] : setterValue;
@@ -650,27 +716,31 @@ describe('@gl parcoords Lifecycle methods', function() {
             };
         }
 
-        restyleDimension('values', 1, [[]])()
-            .then(function() {
-                d3.selectAll('.parcoords-lines').each(function(d) {
-                    var imageArray = d.lineLayer.readPixels(0, 0, d.model.canvasWidth, d.model.canvasHeight);
-                    var foundPixel = false;
-                    var i = 0;
-                    do {
-                        foundPixel = foundPixel || imageArray[i++] !== 0;
-                    } while(!foundPixel && i < imageArray.length);
-                    expect(foundPixel).toEqual(false);
-                });
-            })
-            .catch(failTest)
-            .then(done);
+        Plotly.plot(gd, mockCopy)
+        .then(_assertVisibleData(true, 'initial'))
+        .then(restyleDimension('values', 1, [[]]))
+        .then(_assertVisibleData(false, 'no panels'))
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl displays focused and context data after relayout', function(done) {
+        var mockCopy = Lib.extendDeep({}, mock2);
+
+        Plotly.plot(gd, mockCopy)
+        .then(_assertVisibleData(true, 'initial'))
+        .then(function() {
+            return Plotly.relayout(gd, 'paper_bgcolor', '#eef');
+        })
+        .then(_assertVisibleData(true, 'after relayout'))
+        .catch(failTest)
+        .then(done);
     });
 
     describe('Having two datasets', function() {
 
-        it('Two subsequent calls to Plotly.plot should create two parcoords rows', function(done) {
+        it('@gl Two subsequent calls to Plotly.plot should create two parcoords rows', function(done) {
 
-            var gd = createGraphDiv();
             var mockCopy = Lib.extendDeep({}, mock);
             var mockCopy2 = Lib.extendDeep({}, mock);
             mockCopy.data[0].domain = {x: [0, 0.45]};
@@ -698,9 +768,8 @@ describe('@gl parcoords Lifecycle methods', function() {
                 .then(done);
         });
 
-        it('Plotly.addTraces should add a new parcoords row', function(done) {
+        it('@gl Plotly.addTraces should add a new parcoords row', function(done) {
 
-            var gd = createGraphDiv();
             var mockCopy = Lib.extendDeep({}, mock);
             var mockCopy2 = Lib.extendDeep({}, mock);
             mockCopy.data[0].domain = {y: [0, 0.35]};
@@ -725,9 +794,8 @@ describe('@gl parcoords Lifecycle methods', function() {
                 .then(done);
         });
 
-        it('Plotly.restyle should update the existing parcoords row', function(done) {
+        it('@gl Plotly.restyle should update the existing parcoords row', function(done) {
 
-            var gd = createGraphDiv();
             var mockCopy = Lib.extendDeep({}, mock);
             var mockCopy2 = Lib.extendDeep({}, mock);
 
@@ -773,9 +841,75 @@ describe('@gl parcoords Lifecycle methods', function() {
                 .then(done);
         });
     });
+
+    it('@gl line.color `Plotly.restyle` should change focus layer', function(done) {
+        var testLayer = '.gl-canvas-focus';
+        Plotly.plot(gd, [{
+            type: 'parcoords',
+            dimensions: [{
+                values: [1, 2]
+            }, {
+                values: [2, 4]
+            }],
+            line: {color: 'blue'}
+        }], {
+            width: 300,
+            height: 200
+        })
+        .then(function() {
+            var rgb = getAvgPixelByChannel(testLayer);
+            expect(rgb[0]).toBe(0, 'no red');
+            expect(rgb[2]).not.toBe(0, 'all blue');
+
+            return Plotly.restyle(gd, 'line.color', 'red');
+        })
+        .then(function() {
+            var rgb = getAvgPixelByChannel(testLayer);
+            expect(rgb[0]).not.toBe(0, 'all red');
+            expect(rgb[2]).toBe(0, 'no blue');
+        })
+        .catch(failTest)
+        .then(done);
+    });
+
+    it('@gl line.color `Plotly.restyle` should not change context layer', function(done) {
+        var testLayer = '.gl-canvas-context';
+        var oldRGB, newRGB;
+
+        Plotly.plot(gd, [{
+            type: 'parcoords',
+            dimensions: [{
+                values: [1, 2]
+            }, {
+                values: [2, 4]
+            }],
+            line: {color: 'blue'}
+        }], {
+            width: 300,
+            height: 200
+        })
+        .then(function() {
+            var rgb = getAvgPixelByChannel(testLayer);
+            oldRGB = rgb[0] + rgb[1] + rgb[2] / 3.0;
+            expect(oldRGB).toBeGreaterThan(0, 'not all black');
+            expect(oldRGB).toBeLessThan(255, 'not all white');
+
+            return Plotly.restyle(gd, 'line.color', 'red');
+        })
+        .then(function() {
+            var rgb = getAvgPixelByChannel(testLayer);
+            newRGB = rgb[0] + rgb[1] + rgb[2] / 3.0;
+            expect(newRGB).toBeGreaterThan(0, 'not all black');
+            expect(newRGB).toBeLessThan(255, 'not all white');
+
+            expect(newRGB).toBe(oldRGB, 'no change to context');
+        })
+        .catch(failTest)
+        .then(done);
+    });
 });
 
-describe('@gl parcoords basic use', function() {
+describe('parcoords basic use', function() {
     var mockCopy;
     var gd;
 
@@ -795,7 +929,7 @@ describe('@gl parcoords basic use', function() {
 
     afterAll(purgeGraphDiv);
 
-    it('should create three WebGL contexts per graph', function() {
+    it('@gl should create three WebGL contexts per graph', function() {
         var cnt = 0;
         d3.select(gd).selectAll('canvas').each(function(d) {
             if(d.regl) cnt++;
@@ -803,7 +937,7 @@ describe('@gl parcoords basic use', function() {
         expect(cnt).toBe(3);
     });
 
-    it('`Plotly.plot` should have proper fields on `gd.data` on initial rendering', function() {
+    it('@gl `Plotly.plot` should have proper fields on `gd.data` on initial rendering', function() {
 
         expect(gd.data.length).toEqual(1);
         expect(gd.data[0].dimensions.length).toEqual(11);
@@ -821,7 +955,7 @@ describe('@gl parcoords basic use', function() {
 
     });
 
-    it('Calling `Plotly.plot` again should add the new parcoords', function(done) {
+    it('@gl Calling `Plotly.plot` again should add the new parcoords', function(done) {
 
         var reversedMockCopy = Lib.extendDeep({}, mockCopy);
         reversedMockCopy.data[0].dimensions = reversedMockCopy.data[0].dimensions.slice().reverse();
@@ -851,7 +985,7 @@ describe('@gl parcoords basic use', function() {
 
     });
 
-    it('Calling `Plotly.restyle` with a string path should amend the preexisting parcoords', function(done) {
+    it('@gl Calling `Plotly.restyle` with a string path to colorscale should amend the preexisting parcoords', function(done) {
 
         expect(gd.data.length).toEqual(1);
 
@@ -871,7 +1005,7 @@ describe('@gl parcoords basic use', function() {
 
     });
 
-    it('Calling `Plotly.restyle` for a dimension should amend the preexisting dimension', function(done) {
+    it('@gl Calling `Plotly.restyle` for a dimension should amend the preexisting dimension', function(done) {
 
         function restyleDimension(key, setterValue) {
 
@@ -897,7 +1031,7 @@ describe('@gl parcoords basic use', function() {
             .then(done);
     });
 
-    it('Calling `Plotly.restyle` with an object should amend the preexisting parcoords', function(done) {
+    it('@gl Calling `Plotly.restyle` with an object should amend the preexisting parcoords', function(done) {
 
         var newStyle = Lib.extendDeep({}, mockCopy.data[0].line);
         newStyle.colorscale = 'Viridis';
@@ -919,7 +1053,7 @@ describe('@gl parcoords basic use', function() {
         .then(done);
     });
 
-    it('Should emit a \'plotly_restyle\' event', function(done) {
+    it('@gl Should emit a \'plotly_restyle\' event', function(done) {
 
         var tester = (function() {
 
@@ -945,7 +1079,7 @@ describe('@gl parcoords basic use', function() {
 
     });
 
-    it('Should emit a \'plotly_hover\' event', function(done) {
+    it('@gl Should emit a \'plotly_hover\' event', function(done) {
         var hoverCalls = 0;
         var unhoverCalls = 0;
 
@@ -974,7 +1108,7 @@ describe('@gl parcoords basic use', function() {
 
     });
 
-    it('Calling `Plotly.relayout` with string should amend the preexisting parcoords', function(done) {
+    it('@gl Calling `Plotly.relayout` with string should amend the preexisting parcoords', function(done) {
 
         expect(gd.layout.width).toEqual(1184);
 
@@ -994,7 +1128,7 @@ describe('@gl parcoords basic use', function() {
         .then(done);
     });
 
-    it('Calling `Plotly.relayout`with object should amend the preexisting parcoords', function(done) {
+    it('@gl Calling `Plotly.relayout`with object should amend the preexisting parcoords', function(done) {
 
         expect(gd.layout.width).toEqual(1184);
 
@@ -1014,7 +1148,7 @@ describe('@gl parcoords basic use', function() {
         .then(done);
     });
 
-    it('@flaky Calling `Plotly.animate` with patches targeting `dimensions` attributes should do the right thing', function(done) {
+    it('@gl Calling `Plotly.animate` with patches targeting `dimensions` attributes should do the right thing', function(done) {
         Plotly.react(gd, [{
             type: 'parcoords',
             line: {color: 'blue'},
@@ -1052,9 +1186,39 @@ describe('@gl parcoords basic use', function() {
         .catch(failTest)
         .then(done);
     });
+
+    it('@gl should fire *plotly_webglcontextlost* when on webgl context lost', function() {
+        var eventData;
+        var cnt = 0;
+        gd.on('plotly_webglcontextlost', function(d) {
+            eventData = d;
+            cnt++;
+        });
+
+        function trigger(name) {
+            var ev = new window.WebGLContextEvent('webglcontextlost');
+            var canvas = gd.querySelector('.gl-canvas-' + name);
+            canvas.dispatchEvent(ev);
+        }
+
+        function _assert(d, c) {
+            expect((eventData || {}).event).toBeDefined();
+            expect((eventData || {}).layer).toBe(d);
+            expect(cnt).toBe(c);
+        }
+
+        trigger('context');
+        _assert('contextLayer', 1);
+
+        trigger('focus');
+        _assert('focusLayer', 2);
+
+        trigger('pick');
+        _assert('pickLayer', 3);
+    });
 });
 
-describe('@gl @noCI parcoords constraint interactions', function() {
+describe('@noCI parcoords constraint interactions', function() {
     var gd, initialDashArray0, initialDashArray1;
 
     function initialFigure() {
@@ -1138,7 +1302,7 @@ describe('@gl @noCI parcoords constraint interactions', function() {
         expect(dashArray.length).toBe(segmentCount, dashArray);
     }
 
-    it('snaps ordinal constraints', function(done) {
+    it('@gl snaps ordinal constraints', function(done) {
         // first: drag almost to 2 but not quite - constraint will snap back to [2.75, 4]
         mostOfDrag(105, 165, 105, 190);
         var newDashArray = getDashArray(0);
@@ -1216,7 +1380,7 @@ describe('@gl @noCI parcoords constraint interactions', function() {
         .then(done);
     });
 
-    it('updates continuous constraints with no snap', function(done) {
+    it('@gl updates continuous constraints with no snap', function(done) {
         // first: extend 7 to 5
         mostOfDrag(295, 160, 295, 200);
         var newDashArray = getDashArray(1);
@@ -1258,7 +1422,7 @@ describe('@gl @noCI parcoords constraint interactions', function() {
         .then(done);
     });
 
-    it('will only select one region when multiselect is disabled', function(done) {
+    it('@gl will only select one region when multiselect is disabled', function(done) {
         var newDashArray;
 
         Plotly.restyle(gd, {'dimensions[1].multiselect': false})
