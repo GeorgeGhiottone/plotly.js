@@ -160,7 +160,7 @@
     "run-series": "^1.1.8",
     "through2": "^3.0.0",
     "true-case-path": "^1.0.3",
-    "watchify": "^3.11.0",
+    "watchify": "^3.11.1",
     "xml2js": "^0.4.16"
   }
 }
