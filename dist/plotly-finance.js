@@ -52233,7 +52233,7 @@ function drawTitle(gd, ax) {
         }
         y += titleOffset;
     } else {
-        y = ax._offset + ax._length / 2;
+        y = ax._offset + ax._length / 2 + 5; //TRAINEVENTS TE CUSTOM EDIT add 10 offset
 
         if(ax.side === 'right') {
             x = titleStandoff + fontSize * (ax.showticklabels ? 1 : 0.5);
@@ -52242,7 +52242,7 @@ function drawTitle(gd, ax) {
         }
         x += titleOffset;
 
-        transform = {rotate: '-90', offset: 0};
+        transform = {rotate: '0', offset: 0};//TRAINEVENTS TE CUSTOM EDIT change rotate from -90 to 0
     }
 
     var avoid;
